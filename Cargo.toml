@@ -1,6 +1,6 @@
 [package]
 name = "modslut"
-version = "0.12.2"
+version = "0.13.0"
 edition = "2021"
 description = "MO2 modlist organizer - sorts mods into separators, validates VR profile health"
 authors = ["outtamercy"]
