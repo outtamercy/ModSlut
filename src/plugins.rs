@@ -1,0 +1,232 @@
+// plugins.rs - native rust port of skygen's plugin extractor (phase 1:
+// structural layer). reads tes4 plugin binaries directly: header masters,
+// esm/esl flags, and a top-level GRUP census (which record types a plugin
+// carries and how many). no xedit, no nexus api, no mo2 metadata - the
+// plugin tells us what it is and what it needs.
+//
+// phase 2 (shared with skygen): full sub-record parsing (loom's WEAP dnam
+// offsets, ARMO bodt slots, KWDA material formids) for true functional
+// categorization.
+
+use std::fs;
+use std::path::Path;
+
+#[derive(Clone, Debug)]
+pub struct PluginInfo {
+    pub plugin: String,             // file name, e.g. "USSEP.esp"
+    pub masters: Vec<String>,       // MAST entries, in order
+    pub is_esm: bool,               // header flag 0x1
+    pub is_esl: bool,               // header flag 0x200
+    pub record_count: u32,          // HEDR numRecords
+    pub groups: Vec<(String, u32)>, // top-level GRUP label -> count
+}
+
+impl PluginInfo {
+    // one-line census for the debug trace: "WEAP:5 NPC_:12 CELL:3"
+    pub fn census_line(&self) -> String {
+        self.groups
+            .iter()
+            .map(|(g, n)| format!("{g}:{n}"))
+            .collect::<Vec<_>>()
+            .join(" ")
+    }
+}
+
+const REC_HEADER: usize = 24;
+
+fn u32le(b: &[u8], off: usize) -> u32 {
+    u32::from_le_bytes([b[off], b[off + 1], b[off + 2], b[off + 3]])
+}
+
+// parse a .esp/.esm/.esl. returns None on anything malformed - a weird file
+// should never take the sorter down with it.
+pub fn parse_plugin(path: &Path) -> Option<PluginInfo> {
+    let bytes = fs::read(path).ok()?;
+    parse_plugin_bytes(
+        &bytes,
+        &path.file_name()?.to_string_lossy().to_lowercase(),
+    )
+}
+
+pub fn parse_plugin_bytes(bytes: &[u8], file_name: &str) -> Option<PluginInfo> {
+    if bytes.len() < REC_HEADER || &bytes[0..4] != b"TES4" {
+        return None;
+    }
+    let flags = u32le(bytes, 8);
+    let data_size = u32le(bytes, 4) as usize;
+    let data_end = (REC_HEADER + data_size).min(bytes.len());
+
+    // TES4 data is a run of subrecords: [4 type][u16 size][data]
+    let mut masters = Vec::new();
+    let mut record_count = 0u32;
+    let mut off = REC_HEADER;
+    while off + 6 <= data_end {
+        let stype = &bytes[off..off + 4];
+        let ssize = u16::from_le_bytes([bytes[off + 4], bytes[off + 5]]) as usize;
+        let body = off + 6;
+        if body + ssize > data_end {
+            break;
+        }
+        match stype {
+            b"MAST" => {
+                let raw = &bytes[body..body + ssize];
+                let end = raw.iter().position(|&b| b == 0).unwrap_or(raw.len());
+                masters.push(String::from_utf8_lossy(&raw[..end]).to_lowercase());
+            }
+            b"HEDR" if ssize >= 8 => {
+                record_count = u32le(bytes, body + 4);
+            }
+            _ => {}
+        }
+        off = body + ssize;
+    }
+
+    // after the TES4 record: a run of top-level GRUPs. each header is
+    // [4 "GRUP"][u32 total size][4 label][i32 group type]... - for the
+    // census we only need the label and the skip distance.
+    let mut groups: Vec<(String, u32)> = Vec::new();
+    let mut pos = data_end;
+    while pos + REC_HEADER <= bytes.len() {
+        let sig = &bytes[pos..pos + 4];
+        let size = u32le(bytes, pos + 4) as usize;
+        if size < REC_HEADER || pos + size > bytes.len() {
+            break;
+        }
+        if sig == b"GRUP" {
+            let label = String::from_utf8_lossy(&bytes[pos + 8..pos + 12]).to_string();
+            match groups.iter_mut().find(|(g, _)| *g == label) {
+                Some((_, n)) => *n += 1,
+                None => groups.push((label, 1)),
+            }
+        }
+        pos += size;
+    }
+
+    Some(PluginInfo {
+        plugin: file_name.to_string(),
+        masters,
+        is_esm: flags & 0x1 != 0,
+        is_esl: flags & 0x200 != 0,
+        record_count,
+        groups,
+    })
+}
+
+// find every plugin file inside a mod folder (virtual tree root = the mod dir)
+pub fn plugins_in_mod(mod_dir: &Path) -> Vec<std::path::PathBuf> {
+    let mut out = Vec::new();
+    for entry in walkdir::WalkDir::new(mod_dir)
+        .into_iter()
+        .filter_map(|e| e.ok())
+    {
+        let p = entry.path();
+        if p.extension().is_some_and(|e| {
+            e.eq_ignore_ascii_case("esp")
+                || e.eq_ignore_ascii_case("esm")
+                || e.eq_ignore_ascii_case("esl")
+        }) {
+            out.push(p.to_path_buf());
+        }
+    }
+    out
+}
+
+// a master-order violation: plugin loads before something it requires
+pub struct MasterViolation {
+    pub mod_name: String,
+    pub plugin: String,
+    pub master: String,
+    pub section: String,
+}
+
+// `enabled` is (mod name, current section); `load_order` is the enabled
+// plugin list from plugins.txt (lines, '*' stripped, lowercased, in order).
+// base game + creation club masters are exempt - mo2 keeps those pinned.
+pub fn master_violations(
+    enabled: &[(String, String)],
+    mods_dir: &Path,
+    load_order: &[String],
+) -> (Vec<MasterViolation>, Vec<(String, String, PluginInfo)>) {
+    let pos_of = |name: &str| load_order.iter().position(|p| p == name);
+    let mut violations = Vec::new();
+    let mut census = Vec::new();
+    for (mod_name, section) in enabled {
+        let dir = mods_dir.join(mod_name);
+        if !dir.is_dir() {
+            continue;
+        }
+        for p in plugins_in_mod(&dir) {
+            let Some(info) = parse_plugin(&p) else { continue };
+            let Some(my_pos) = pos_of(&info.plugin) else {
+                census.push((mod_name.clone(), section.clone(), info));
+                continue;
+            };
+            for master in &info.masters {
+                // masters we don't even have enabled are mo2's red-text
+                // problem, not ours - only ordering is checked here
+                if let Some(m_pos) = pos_of(master) {
+                    if m_pos > my_pos {
+                        violations.push(MasterViolation {
+                            mod_name: mod_name.clone(),
+                            plugin: info.plugin.clone(),
+                            master: master.clone(),
+                            section: section.clone(),
+                        });
+                        break; // one per plugin is enough
+                    }
+                }
+            }
+            census.push((mod_name.clone(), section.clone(), info));
+        }
+    }
+    (violations, census)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // minimal synthetic plugin: TES4 header with HEDR + 2 MASTs, then two GRUPs
+    fn fake_plugin() -> Vec<u8> {
+        let mut data = Vec::new();
+        // HEDR: version f32 + numRecords u32 + nextObjID u32
+        data.extend_from_slice(b"HEDR");
+        data.extend_from_slice(&12u16.to_le_bytes());
+        data.extend_from_slice(&1.7f32.to_le_bytes());
+        data.extend_from_slice(&42u32.to_le_bytes());
+        data.extend_from_slice(&0u32.to_le_bytes());
+        for m in ["skyrim.esm\0", "update.esm\0"] {
+            data.extend_from_slice(b"MAST");
+            data.extend_from_slice(&(m.len() as u16).to_le_bytes());
+            data.extend_from_slice(m.as_bytes());
+        }
+        let mut out = Vec::new();
+        out.extend_from_slice(b"TES4");
+        out.extend_from_slice(&(data.len() as u32).to_le_bytes());
+        out.extend_from_slice(&0x1u32.to_le_bytes()); // esm flag
+        out.extend_from_slice(&[0u8; 12]); // formid/timestamp/version
+        out.extend_from_slice(&data);
+        for label in [b"WEAP", b"NPC_", b"WEAP"] {
+            out.extend_from_slice(b"GRUP");
+            out.extend_from_slice(&24u32.to_le_bytes()); // empty group
+            out.extend_from_slice(label);
+            out.extend_from_slice(&0i32.to_le_bytes());
+            out.extend_from_slice(&[0u8; 8]);
+        }
+        out
+    }
+
+    #[test]
+    fn parses_masters_flags_and_census() {
+        let bytes = fake_plugin();
+        let info = parse_plugin_bytes(&bytes, "test.esp").unwrap();
+        assert_eq!(info.masters, vec!["skyrim.esm", "update.esm"]);
+        assert!(info.is_esm);
+        assert!(!info.is_esl);
+        assert_eq!(info.record_count, 42);
+        assert_eq!(
+            info.groups,
+            vec![("WEAP".to_string(), 2), ("NPC_".to_string(), 1)]
+        );
+    }
+}
