@@ -1,8 +1,12 @@
 [package]
 name = "modslut"
-version = "0.1.0"
+version = "0.12.2"
 edition = "2021"
-description = "MO2 modlist.txt organizer - sorts mods into separators via keyword rules"
+description = "MO2 modlist organizer - sorts mods into separators, validates VR profile health"
+authors = ["outtamercy"]
+license = "GPL-3.0-only"
+repository = "https://github.com/outtamercy/ModSlut"
+homepage = "https://github.com/outtamercy/ModSlut"
 
 [dependencies]
 eframe = "0.31"
@@ -12,7 +16,7 @@ walkdir = "2"
 rayon = "1"
 
 [build-dependencies]
-embed-resource = "3"
+winres = "0.1"
 
 [profile.release]
 opt-level = 2

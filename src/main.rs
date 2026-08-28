@@ -165,7 +165,7 @@ const DEFAULT_RULES: &str = include_str!("../rules.txt");
 
 // bump every build - shown in the gui title and cli so we always know
 // which build a bug report came from
-pub const VERSION: &str = "0.12.2";
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 // patch-flavored names: these live and die with their master and must win
 // file conflicts against it. runtime patchers (skypatcher) don't care about

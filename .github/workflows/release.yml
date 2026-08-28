@@ -1,0 +1,44 @@
+name: release
+
+# builds the windows exe on github's runners. push a tag (v0.13.0 etc.)
+# or run it by hand from the actions tab. the exe lands on a github
+# release - that's the file you upload to nexus.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write # needed to attach the exe to the release
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: build
+        run: cargo build --release --locked
+
+      - name: stage exe
+        run: Copy-Item target\release\modslut.exe ModSlut.exe
+
+      # sanity: print the exe's version metadata so the log proves what shipped
+      - name: verify metadata
+        run: |
+          $vi = (Get-Item ModSlut.exe).VersionInfo
+          "$($vi.ProductName) $($vi.FileVersion) - $($vi.FileDescription)"
+
+      # --- signpath signing goes here once the oss application is approved ---
+      # their github action submits target\release\modslut.exe for signing
+      # and downloads the signed copy back before the release step.
+
+      - name: publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ModSlut.exe
+          generate_release_notes: true
