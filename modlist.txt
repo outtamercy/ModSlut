@@ -31,6 +31,13 @@
 -BHKS - TNG - Official Patch Collection
 +VR Performance Kit (Probably just use Upscaler)
 +VR FPS Stabilizer (REINSTALL FMOD AND CONFIGURE)
+-ENB Anti-Aliasing - AMD FSR 3.1 - NVIDIA DLAA
+-VRAMr
+-DVLASS
++ParallaxR
++BENDr
+-MisMatchR
+-NVIDIA Reflex Support
 -Performance_separator
 -LOD-Grass Generation_separator
 +Miscellaneous Embers XD Patches
@@ -95,38 +102,26 @@
 -Dynamic Body Distribution - DBD
 +Glowmapped 3D Lava
 -CoMAP
+-Jaxonz Map Markers (SSE Port)
 +Worldmap_separator
 +ENB Frame Generation
 -Unreal ENB
-+Cubemap Reflections
-+NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed
 +NAT3 HOSE - ENB Preset
 +ENB Light
 +ENB Binaries
-+NordwarUA Armours - ENB Dynamic Cubemaps - Sons of Skyrim etc
 +Dovahnique's Diverse Deadly Nightshade - (BOS - ENB Lights)
 +Dovahnique's Diverse Dark Elf Lanterns (BOS - ENB Lights - High Poly)
-+Bright Snow Fix for ENB
 +Optimized meshes for ENB lights Rustic Rudy Misc Silverware
 +Optimized meshes for ENB lights
 +ENB Lights For Effect Shaders VR
--ENB Anti-Aliasing - AMD FSR 3.1 - NVIDIA DLAA
--Holidays Lanterns ENB Light
-+Rock Grass for ENB Complex Grass SE (with Guide)
-+Artisto RWT texture tweaks for Water for ENB
-+Water for ENB
 +ENB Extender and Helper Skyrim
 +NAT.ENB - ENB PRESET v3.1.1C
 -Rudy ENB for NAT 3
-+Rudy ENB NAT ADDONS and REQUiRED Files
-+NAT-ENB SUMMER PATCH
 +NAT.ENB III - Natural and Atmospheric Tamriel ENB 3.1.1C
 +ENB Helper VR
 -ENB Helper SE
 +ENB Helper Plus
 -ENB_separator
--VRAMr
--DVLASS
 -Community Shaders - Particle Lights (Unofficial Fork)
 -Skylighting - Community Shaders
 -Effects 11 - Community Shaders
@@ -138,6 +133,7 @@
 -Hair Specular - Community Shaders
 -Community Shaders
 -Skylighting
++Light Placer
 +Community Shaders Mods {disable to use ENB}_separator
 -Spell Wheel VR
 -Hotkeys_separator
@@ -146,13 +142,8 @@
 +Screenshot Helper - Updated - Fixed 1.5.97 - 1.6.1170
 -Fam Faces 2.0
 -vMYC_FamiliarFaces
--NoDelete - Wabbajack.Customizer(read documentation on how to set up)
--Wabbajack customizer
 +Rogue Master Detector
 -Multiple Amulets and Rings... Automatically - MARA
-+ParallaxR
-+BENDr
--MisMatchR
 +Screenshot Location and Metadata
 -Modern Wait Menu
 +Gilded Spinning Main Menu Emblem - Chrome Version
@@ -163,31 +154,13 @@
 +Broom - The Loose File Sweeper - Sample Rules
 +Broom - The Loose File Sweeper
 +Shadow Boost
--Jaxonz Map Markers (SSE Port)
--NVIDIA Reflex Support
--Luma Utility
-+BodySlide and Outfit Studio
 +Animation Motion Revolution
-+Dynamic Wind Framework - SKSE Plugin
 +The Thieves Guild Ladder - Skyrim Special Edition
--DynDOLOD DLL NG and Scripts
--DynDOLOD 3 Alpha
-+Light Placer
-+RaceMenu High Heels (Height Fixes)
--L.v.x Magick's - Complete Bleak Falls Barrow Instantly
-+Mfg Fix NG
-+Autorun
 +AddItemMenu - NG
 -AddItemMenu - Ultimate Mod Explorer
-+Infinity UI
 +ConsoleUtil Extended
 +ConsoleUtilSSE NG
-+AddItemMenu search VR keyboard patch
-+VR Keyboard
 +Faster Decompression
-+Save Unbaker VR
-+Save Unbaker
-+Open Animation Replacer
 -Utilities_separator
 +Upgraded Fish for Distinct Interiors
 +Upgraded Silverware for Distinct Interiors
@@ -205,14 +178,13 @@
 +Divine Dragonscale Decor - A Skyrim Furniture Overhaul
 +Skyrim Overhauled Furniture Assembly-SOFA-Clean
 +Blue Retching Netch
++Decorator Helper
 -Interior (Re)Designs_separator
 -FormList Manipulator Patches_separator
 -Follower Compatibility Patches_separator
 -Parallax Mesh Patch Collection
 +FYX 3D Stockades - Compatibility Tweaks
-+Default Female at Character Creation
 +Dramatic Main Menu
-+Decorator Helper
 +Buy Lumber In Larger Stacks
 +Go On Ahead
 +Insects Begone REDUX
@@ -221,7 +193,6 @@
 +Thrones Expanded
 +Understone Keep Swept
 +Apachii Divine Elegance Store
--QuickLight - Real floating Candle replacer
 -Terrain Helper
 -Paraphernalia - Anti-Flicker
 +Fuz Ro D-oh - Silent Voice
@@ -267,7 +238,6 @@
 +EEKs Whiterun Interiors SSE
 +Meridia's Luxon Beacon Replacer
 -EEKs Whiterun Interiors - Lux and Embers XD Conflict Resolution
-+EEKs Dragonsreach - EEKs Dovahsreach SSE
 -Special Load After Lighting Mods_separator
 +Optional Lux Resource Pack (ENB light)
 -Cursed Crypts - MLO2 RELight Addon
@@ -289,21 +259,23 @@
 +Lux Via - Repaired Whiterun Bridge Add-on
 +Lux - Via
 +Lux - Via (patch hub)
+-Luma Utility
+-QuickLight - Real floating Candle replacer
 -Lux (Lighting)_separator
 +Eld-beri II - NPC Support (Spid Distribution file)
 +Quick Beri - Wearable particle light lanterns SPIDified (CS and ENB)
 +Dark Elf Lantern - ENB Light - Community Shader Light Limit Fix Light - Animated Glow
 +Particle Patch for ENB
 +Spider Webs and Particles for ENB
-+Eld-beri II - Full Particle Light lantern mod (CS LLF or ENB Light)
--Particle Lights - Christmas in Skyrim - Whiterun (ENB and Community Shaders)
 +ECPLW -ENB Complex Particle Lights for Windows
-+ENB Particle Light for Wearable Lanterns
++Eld-beri II - Full Particle Light lantern mod (CS LLF or ENB Light)
 +Dark Elf Lantern ENB Light - Particle Patch for ENB - Patch
++ENB Particle Light for Wearable Lanterns
 +Particle Patch -Glow Maps
 +Ghost Pile Seam Fix (Skyrim Particle Patch)
 -Particle Patch
 +Eld-beri II - Lanterns Reworked
+-Holidays Lanterns ENB Light
 -Particle Lights_separator
 -Optional Quick Start - SE
 -Alternate Perspective - Realm of Lorkhan Patch (Updated for v4)
@@ -318,6 +290,7 @@
 -Alternate Perspective 4.0.3 - Alternate Start
 -Alternate Perspective - Alternate Start
 +Realm of Lorkhan - Forgotten Shrines
+-L.v.x Magick's - Complete Bleak Falls Barrow Instantly
 -Alternate Start_separator
 +Ryn's Standing Stones
 +Crowded Streets
@@ -616,6 +589,7 @@
 +Sentinel - Required Resources
 +Refracting Stalhrim Armors and Weapons - ENB Refract Patch
 +Refracting Stalhrim Armors and Weapons
++NordwarUA Armours - ENB Dynamic Cubemaps - Sons of Skyrim etc
 -Armor and Weapons Retextures and Tweaks_separator
 +JS Essence Extractor SE
 +JS Dwarven Oil SE - 2k Textures
@@ -662,11 +636,7 @@
 +Pandorable's NPCs
 +Skypatcher - Diverse NPC Heights
 -NPCs and Behaviour_separator
-+Craftable Saddles from Witcher 3
--Phantom Horse - New Phantom Mounts
-+The Four Horses of the Apocalypse SSE port
 +No more glitchy textures. Witcher Horse Expansion compatibility patches (ENG)
-+Witcher Horse Expansion
 +Steeds of Ultima - VR Mounted combat
 +Stamina of Steeds
 -Horses_separator
@@ -683,14 +653,9 @@
 +HotD and GoT Dragons Standalone
 +HotD Dragons-Textures
 -Kojaks Inquisitive Dragons
-+Incubated Eggs SE (esl)
 +Dragon Nests Of Skyrim
 -Dragon Nests and Eggs
 -Dragon War - Rescaled
--Dragon War - Rebalanced
--Dragon War - A Dragon Overhaul
-+Nithhogg Dragon
-+Majestic Dragons - Larger and immersive proportions
 +Paraphernalia - VR Dragon Riding
 -Dragons_separator
 +SSS-CT - Slaughterfish Stay Submerged - Collision Tweak (Savage Skyrim Patch available)
@@ -719,10 +684,43 @@
 +Trolls SE
 +Falmer Overhaul - New models and textures
 +Bellyaches Animal and Creature Pack Revamp
-+SkyPatcher - Smaller Dogs
--Pelagius's Wildlife AI - Skypatcher
--Animals_separator
++Craftable Saddles from Witcher 3
+-Phantom Horse - New Phantom Mounts
++The Four Horses of the Apocalypse SSE port
++Witcher Horse Expansion
++Incubated Eggs SE (esl)
+-Dragon War - Rebalanced
+-Dragon War - A Dragon Overhaul
++Nithhogg Dragon
++Majestic Dragons - Larger and immersive proportions
 -The Killer Rabbit of Caerbannog- 2023 Easter Special (SE-AE version)
++Mammoth babies for the Mournful Giant
++New Dogs Replacers SE
++Dog Followers are Huskies - No Barking - Silent Stealth
+-Piglet - The courageous piggy companion - CC
++Arcs WispMother Redux 2k - 4k
+-High Fantasy Pack- Mihail Monsters and Animals (SE-AE version)
+-Skeletal Revenants- Mihail Monsters and Animals (SE-AE version) (''undead'')
+-Sea Giants and Ice Titans- Mihail Monsters and Animals (SE-AE version)
+-Dragonlings- Mihail Monsters and Animals (SE-AE version)
++Cliff Racers Fly So High- Mihail Monsters and Animals (SE-AE version)
++Wolves of Cyrodiil - Mihail Monsters and Animals (SE-AE version)
++Baby Mammoths - Mihail Monsters and Animals (SE-AE version)
++Mammoth Expansion - Mihail Monsters and Animals (SE-AE version) (''megafauna'')
++Trolls of Cyrodiil - Mihail Monsters and Animals (SE-AE version)
++Pigeons- Mihail Monsters and Animals (SE-AE version) (''bird'')
++More Cow Variants- Mihail Monsters and Animals (SE-AE)
++Frogs- Mihail Monsters and Animals (SE-AE version)
++Crows and Ravens- Mihail Monsters and Animals (SE-AE version)
++Cow Replacer- Mihail Monsters and Animals (SE-AE version)
++Chickens and Chicks- Mihail Monsters and Animals (SE-AE version)
++Mihail's Rabbit Replacers - Optimized Textures
++Optimized Meshes - Rabbit Replacer- Mihail Monsters and Animals (SE-AE version)
++Rabbit Replacer- Mihail Monsters and Animals (SE-AE version)
++Roosters- Mihail Monsters and Animals (SE-AE version) (''chicken'')
++Creatures Resized for VR - SE
++(ESP-ESL) Dwarven Motorcycle and other Vehicles SE
+-Animals_separator
 +Realistic Bears Project
 +Bears of the North Patches
 +Wall mounted dead animals fixes (Bears of the north patch available)
@@ -731,7 +729,6 @@
 +Dynamic Animal Variants (1.2.2)
 +Dream's Unique Dogs SE
 +High-Res Dartwing (Dragonfly) Texture
-+Mammoth babies for the Mournful Giant
 +HD Reworked Mammoths 4K
 -Enemy and Encounter Overhauls_separator
 -Dual Sheath_separator
@@ -745,12 +742,8 @@
 +Shang-Chi and Jason Statham with you in Skyrim
 +All in one pack Schwarzenegger
 +Duneborne Followers
-+New Dogs Replacers SE
-+Dog Followers are Huskies - No Barking - Silent Stealth
 +Aetherial girl CBBE 3BA bodyslide preset
--Piglet - The courageous piggy companion - CC
 -Fenrir the frost wolf sse
-+Arcs WispMother Redux 2k - 4k
 +Twins of Windhelm - Nord Followers
 -Dead and Daedric Guardians
 -New Followers and NPCs_separator
@@ -811,6 +804,8 @@
 -SexLab Framework SE
 -Sex Grants Experience
 -The Circle of Lust
++SkyPatcher - Smaller Dogs
+-Pelagius's Wildlife AI - Skypatcher
 -Ya Filthy Animal_separator
 +Mu Joint Fix
 +XP32 First Person Skeleton CTD Bugfix for VR
@@ -907,6 +902,7 @@
 -Vrayth's Racemenu Presets - Male and Female - EFM - High Poly Head
 -Dracula Racemenu Preset by AlenVex
 +Cathedral Armory - HIMBO BodySlide Compatibility Patch
++BodySlide and Outfit Studio
 -Skin & Body_separator
 -Goofy Dragonborn Macho Walk
 +Pandora Behaviour Engine Plus
@@ -974,34 +970,14 @@
 +Realistic RS Children Overhaul
 +RS Children Overhaul
 -NPC Retextures_separator
--High Fantasy Pack- Mihail Monsters and Animals (SE-AE version)
--Skeletal Revenants- Mihail Monsters and Animals (SE-AE version) (''undead'')
--Sea Giants and Ice Titans- Mihail Monsters and Animals (SE-AE version)
--Dragonlings- Mihail Monsters and Animals (SE-AE version)
-+Cliff Racers Fly So High- Mihail Monsters and Animals (SE-AE version)
 +Mihail Soul Cairn Drainlife Crystal - Retexture
 +Beef Unending - A Civil War Replacer
-+Wolves of Cyrodiil - Mihail Monsters and Animals (SE-AE version)
-+Baby Mammoths - Mihail Monsters and Animals (SE-AE version)
-+Mammoth Expansion - Mihail Monsters and Animals (SE-AE version) (''megafauna'')
-+Trolls of Cyrodiil - Mihail Monsters and Animals (SE-AE version)
 +Mihail's Animal VR resize
 +Sewer Rats - Mihail Monsters and Animals (SE-AE version)
 +Realistic Skin And Hair Shaders - Giants
-+Pigeons- Mihail Monsters and Animals (SE-AE version) (''bird'')
-+More Cow Variants- Mihail Monsters and Animals (SE-AE)
 +Giant.by.Kajuan
-+Frogs- Mihail Monsters and Animals (SE-AE version)
-+Crows and Ravens- Mihail Monsters and Animals (SE-AE version)
-+Cow Replacer- Mihail Monsters and Animals (SE-AE version)
-+Chickens and Chicks- Mihail Monsters and Animals (SE-AE version)
-+Mihail's Rabbit Replacers - Optimized Textures
-+Optimized Meshes - Rabbit Replacer- Mihail Monsters and Animals (SE-AE version)
-+Rabbit Replacer- Mihail Monsters and Animals (SE-AE version)
-+Roosters- Mihail Monsters and Animals (SE-AE version) (''chicken'')
 +Fancy Mihail's Roosters SPID or Replacer
 -New Monsters_separator
-+Creatures Resized for VR - SE
 +Chickens and Chicks - My optimized textures SE by Xtudo
 -Critters_separator
 +Festival Flags Upscaled
@@ -1061,7 +1037,6 @@
 -Player Homes_separator
 -Skyrim Teleportations
 -Paraglider Replacers 2k-4k
-+(ESP-ESL) Dwarven Motorcycle and other Vehicles SE
 +HFs - Wagon Wheel
 +Carriages HD UHD Wood Texture Replacer
 +Carriages HD UHD
@@ -1099,7 +1074,6 @@
 +Rally's Solstheim - Parallax
 -Raven Rock Architecture Retexture - 4K - Optimized
 +Rally's Solstheim Landscapes Complex Terrain Parallax Edition 2k
-+Raven Rock Building Tweaks
 +Shaders of Solstheim - Ash and Moss
 +Spiders of Solstheim - Transparency Fix
 -Solstheim City Overhauls_separator
@@ -1148,7 +1122,6 @@
 +Mrf's Solitude
 +Solitude farmhouses rework
 +Extravagant Interiors - Solitude
-+Solitude Watchtower
 +Sconces of Solitude - Unique Solitude Braziers - Base Object Swapper
 -Solitude_separator
 -Riften Bathhouse and JK's Bee and Barb Patch - ESL Flagged
@@ -1327,6 +1300,9 @@
 +FYX - Water Mesh Optimization
 -Alternate Perspective - Skyrim Landscape and Water Fixes Patch
 +Skyrim Landscape and Water Fixes
++Cubemap Reflections
++Artisto RWT texture tweaks for Water for ENB
++Water for ENB
 -Water_separator
 +Rally's Barsets
 +ladder 3d immersion vanilla style
@@ -1461,6 +1437,10 @@
 +JK's Arnleif and Sons Trading Company
 +Sweet Roll Hut SE
 -Civil War Repairs
++EEKs Dragonsreach - EEKs Dovahsreach SSE
+-Particle Lights - Christmas in Skyrim - Whiterun (ENB and Community Shaders)
++Raven Rock Building Tweaks
++Solitude Watchtower
 -Architecture - Base & Large Overhauls_separator
 +Fabled Forests - Ivy on Trees
 -Definitive Forest Overhauls & Regional Additions_separator
@@ -1526,6 +1506,7 @@
 +Simple Snow Improvements - Snow Forts (BOS)
 +Simple Snow Improvements - Giant Obelisk Fixes (BOS)
 +Simple Snow Improvements - Skyrim Fixes (BOS)
++Bright Snow Fix for ENB
 -Glacierslab SSE
 +Multilayer Glacier Replacer
 +Glaciers, Ice, Snow and Ash_separator
@@ -1537,6 +1518,7 @@
 +Riton Mountain
 +ERM - Complex Materials
 +Rapid Rocks
++Rock Grass for ENB Complex Grass SE (with Guide)
 +Rocks & Mountains_separator
 +Skyrim 3D roads
 +Medieval Blended Roads
@@ -1607,7 +1589,6 @@
 +ERM - Enhanced Rocks and Mountains
 +Shooting Stars SE
 +Storm Lightning for SSE and VR (Minty Lightning 2019)
-+Mists of Tamriel NAT III patch
 +Mists of Tamriel - Blue Haze
 +Mists of Tamriel
 -Aspens Ablaze Add-On - DynDOLOD 3 -Performance
@@ -1663,6 +1644,11 @@
 -Dynamic Candles - Blow Them Out and Light Again
 -NAT.CS - From Dusk Till Dawn
 +Pretty Lantern Replacer SE
++NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed
++Rudy ENB NAT ADDONS and REQUiRED Files
++NAT-ENB SUMMER PATCH
++Dynamic Wind Framework - SKSE Plugin
++Mists of Tamriel NAT III patch
 +Weather Systems_separator
 -Conquest of Skyrim (Don't enable before finishing the civil war)
 -HD LODs Textures SE
@@ -1704,6 +1690,8 @@
 -DynDolod - Darken texture for generation - The good one last one
 -DynDOLOD TexGen Fixes
 -LOD Mesh Fixes for DynDOLOD
+-DynDOLOD DLL NG and Scripts
+-DynDOLOD 3 Alpha
 +Dyndolod_separator
 -Dynamic Gamma SKSE
 -NAT Effect 11
@@ -1784,6 +1772,8 @@
 +HIMBO V3 Bodyhair Overlays for Racemenu
 -Young Wolverine- A RaceMenu Preset
 -The Wolverine - A RaceMenu Preset
++RaceMenu High Heels (Height Fixes)
++Default Female at Character Creation
 +Character Creation_separator
 -A Matter of Time - Edge UI Patch
 +A Matter of Time - A HUD clock widget
@@ -1855,6 +1845,7 @@
 +Fix Note icon for SkyUI (SKSE64 plugin)
 +SkyUI
 +MCM Helper
++Infinity UI
 +Interface - HUD_separator
 -AddItemMenuSE AE Fixed
 -AddItemMenuSE Fixed
@@ -1898,6 +1889,9 @@
 +Arctal's VRIK Tweaks
 +VRIK Player Avatar
 +MCM Helper VR
++AddItemMenu search VR keyboard patch
++VR Keyboard
++Save Unbaker VR
 +Interface - VR Specific_separator
 +SMIM Fix
 +OSHA-Compliant Sovengarde Mesh Fixes - Parallax
@@ -2031,6 +2025,8 @@
 -.1130 _ResourcePack fixes
 -CK64Fixes Release 3.2
 -Creation Kit Platform Extended for Skyrim
++Mfg Fix NG
++Save Unbaker
 +Essential Bug Fixes_separator
 -Unofficial Skyrim Creation Club Content Patches
 +Skyrim VR USSEP Dwarven Ballista missing texture fix
@@ -2049,6 +2045,23 @@
 +A-Pose Bug Fix - Universal Behavior Runtime
 +Animation Queue Fix
 +Animation Motion Fix
++Open Animation Replacer
++Optimised Scripts for Enhanced Blood Textures - SPID version
++PapyrusUtil ESL Patch
+-JContainers-master
++PapyrusUtil VR - Scripting Utility Functions
++Papyrus Extender VR
++Diverse Dog Textures - SPID
++Better Dressed Kids - Willybach Textures SPID
++Schlongs of Skyrim - PapyrusUtil SexLab Tweaks
++Orcish Lanterns for Orc Strongholds by Jjerem - Base Object Swapper
++Dynamic Things Alternative - Base Object Swapper
+-Blacksmith Forge and Anvil Variants - Base Object Swapper
++Diverse Archery Targets - Base Object Swapper
++Smaller Goblets Cups and Jugs - Base Object Swapper
++Dovahnique's Diverse Vendor Carts - Base Object Swapper
++Reimagined Mountain Flowers - Base Object Swapper - Seasons of Skyrim
++Soul Gem Universal Sorting - SkyPatcher
 +Extension Frameworks - Animation & Behavior Engine_separator
 -SKSE - Real Time Script Profiler
 -Enchantment Art Extender
@@ -2082,22 +2095,6 @@
 +Skyrim Priority SE AE - CPU Performance FPS Optimizer (SET AFFINITY WITH PLUGIN)
 +Faster File Copy
 +Keyword Item Distributor
-+Optimised Scripts for Enhanced Blood Textures - SPID version
-+PapyrusUtil ESL Patch
--JContainers-master
-+PapyrusUtil VR - Scripting Utility Functions
-+Papyrus Extender VR
-+Diverse Dog Textures - SPID
-+Better Dressed Kids - Willybach Textures SPID
-+Schlongs of Skyrim - PapyrusUtil SexLab Tweaks
-+Orcish Lanterns for Orc Strongholds by Jjerem - Base Object Swapper
-+Dynamic Things Alternative - Base Object Swapper
--Blacksmith Forge and Anvil Variants - Base Object Swapper
-+Diverse Archery Targets - Base Object Swapper
-+Smaller Goblets Cups and Jugs - Base Object Swapper
-+Dovahnique's Diverse Vendor Carts - Base Object Swapper
-+Reimagined Mountain Flowers - Base Object Swapper - Seasons of Skyrim
-+Soul Gem Universal Sorting - SkyPatcher
 +Extension Frameworks - Engines Patches_separator
 +Skyrim HD SE
 +Optimized Texture Baseline_separator
@@ -2116,6 +2113,9 @@
 +Skyrim VR Tools
 +VR Address Library for SKSEVR
 +Unlimited Sprinting
+-NoDelete - Wabbajack.Customizer(read documentation on how to set up)
+-Wabbajack customizer
++Autorun
 +Essentials_separator
 -Creation Club-Zombies- Draugr DLC Base Mod
 -Creation Club - Alternative Armors - Dwarven Plate
