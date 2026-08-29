@@ -22,7 +22,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: build
-        run: cargo build --release --locked
+        run: cargo build --release
 
       - name: stage exe
         run: Copy-Item target\release\modslut.exe ModSlut.exe

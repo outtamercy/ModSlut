@@ -1830,7 +1830,7 @@ dependencies = [
 
 [[package]]
 name = "modslut"
-version = "0.12.2"
+version = "0.13.1"
 dependencies = [
  "eframe",
  "image",
