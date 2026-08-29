@@ -40,42 +40,22 @@ conflict index: 1574 related pair(s) loaded
   [Community Shaders] -> [Community Shaders Mods {disable to use ENB}] (contains)
 
 --- pass 1: section assignment (per mod) ---
-  AI Overhaul SSE - Official Patch Hub | plugin family: master [Distinct Interiors - Fixes] sorts later | dest -> [Essential Bug Fixes]
-  JK's and Redbag's Dragonsreach Patch | plugin family: master [JK's Dragonsreach] sorts later | dest -> [Architecture - Base & Large Overhauls]
-  Silverstead Grass Patch | plugin family: master [Silverstead (SE)] sorts later | dest -> [Player Homes]
-  RedBag's Dragonsreach - GoT The Black Dread Skull Replacer Patch | plugin family: master [RedBag's Dragonsreach - SE] sorts later | dest -> [Locations]
-  MCM Helper VR | plugin family: master [SkyUI - VR] sorts later | dest -> [Interface - Controller Bindings]
-  JK's Interiors Patch Collection | plugin family: master [JK's Temple of Dibella] sorts later | dest -> [Architecture - Base & Large Overhauls]
-  JKs Guild HQ Interiors Patch Collection | plugin family: master [JK's Sky Haven Temple] sorts later | dest -> [Architecture - Base & Large Overhauls]
-  Gonzeh - Shor's Stone Overhaul - Spaghetti Patch | plugin family: master [Spaghetti's Towns - Shor's Stone] sorts later | dest -> [Expanded Cities, Towns, and Villages]
-  COTN Dawnstar Patch Collection | plugin family: master [Helgen Reborn] sorts later | dest -> [New Lands and Quests]
-  The Distinct JK's Ragged Flagon - Lux patch | plugin family: master [Distinct Interiors - Fixes] sorts later | dest -> [Essential Bug Fixes]
-  Unofficial Skyrim Modders Patch - USMP - Patch Emporium | plugin family: master [Unofficial Skyrim Modder's Patch - For VR Users (4.2.5b USSEP)] sorts later | dest -> [Fixes & Resources - Unofficial Patches]
-  JS Dragon Claws - Patches | plugin family: master [Helgen Reborn] sorts later | dest -> [New Lands and Quests]
-  Terrain Parallax Blending Fix | plugin family: master [Unofficial Skyrim Modder's Patch - For VR Users (4.2.5b USSEP)] sorts later | dest -> [Fixes & Resources - Unofficial Patches]
-  EmbersXD - Campfire Patch | plugin family: master [Campfire - Complete Camping System (Supports Skyrim VR)] sorts later | dest -> [NPCs and Behaviour]
-  Half Moon Mill Patches FOMOD | plugin family: master [RedBag's Falkreath - Half-Moon Mill Addon] sorts later | dest -> [Expanded Cities, Towns, and Villages]
-  No more glitchy textures. Witcher Horse Expansion compatibility patches (ENG) | plugin family: master [Silverstead (SE)] sorts later | dest -> [Player Homes]
-  Lively's Patches for Blackthorn and Tree Mods | plugin family: master [Blackthorn - A Buildable Town in The Rift (SE)] sorts later | dest -> [Player Homes]
-  Landscape Fixes For Grass Mods | plugin family: master [Helgen Reborn] sorts later | dest -> [New Lands and Quests]
-  Constructible Objects Custom Keyword Framework - Settlement Builder Patch | plugin family: master [Skyrim - Settlement Builder] sorts later | dest -> [Player Homes]
-  Realm of Lorkhan - Unbound Quest Fix | plugin family: master [Realm of Lorkhan - Freeform Alternate Start 4] sorts later | dest -> [Soul Trap Management Overhauls]
-  RedBag's Morthal Patches- FOMOD | plugin family: master [RS Children -- Red Kid Redemption --] sorts later | dest -> [NPCs and Behaviour]
-  Lux Orbis (patch hub) | plugin family: master [Winterhold Restored] sorts later | dest -> [Expanded Cities, Towns, and Villages]
-  Lux - Via (patch hub) | plugin family: master [Solitude Docks Updated] sorts later | dest -> [Expanded Cities, Towns, and Villages]
-  NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | plugin family: master [Solar Lens Flare Redux (SLFR)] sorts later | dest -> [Visual Control]
   Miscellaneous Blackthorn Manor Patches | plugin family: master [Landscape Fixes For Grass Mods] sorts later | dest -> [New Lands and Quests]
-  Blackthorn - A Buildable Town - Patches | plugin family: master [Blackthorn - A Buildable Town in The Rift (SE)] sorts later | dest -> [Player Homes]
-  Lux (patch hub) | plugin family: master [Winterhold Restored] sorts later | dest -> [Expanded Cities, Towns, and Villages]
+  Constructible Objects Custom Keyword Framework - Settlement Builder Patch | plugin family: master [Skyrim - Settlement Builder] sorts later | dest -> [Player Homes]
   A Clear Map Of Skyrim - Water for ENB Patch | plugin family: master [A Clear Map of Skyrim and Other Worlds] sorts later | dest -> [Interface - Controller Bindings]
+  Unofficial Skyrim Modders Patch - USMP - Patch Emporium | plugin family: master [Unofficial Skyrim Modder's Patch - For VR Users (4.2.5b USSEP)] sorts later | dest -> [Fixes & Resources - Unofficial Patches]
+  NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | plugin family: master [Solar Lens Flare Redux (SLFR)] sorts later | dest -> [Visual Control]
   Raven Rock Bathhouse and Raven Rock Reborn Patch (ESL) | plugin family: master [Raven Rock Reborn] sorts later | dest -> [Expanded Cities, Towns, and Villages]
-  Deadly Spell Impact - Patches | plugin family: master [Deadly Spell Impacts] sorts later | dest -> [Visual Control]
+  Blackthorn - A Buildable Town - Patches | plugin family: master [Blackthorn - A Buildable Town in The Rift (SE)] sorts later | dest -> [Player Homes]
+  Silverstead Grass Patch | plugin family: master [Silverstead (SE)] sorts later | dest -> [Player Homes]
   Landscape Seam Fixes | plugin family: master [Landscape Fixes For Grass Mods] sorts later | dest -> [New Lands and Quests]
-  RS Children Patch Compendium | plugin family: master [Solitude Docks Updated] sorts later | dest -> [Expanded Cities, Towns, and Villages]
+  JK's Interiors Patch Collection | plugin family: master [JK's Temple of Dibella] sorts later | dest -> [Architecture - Base & Large Overhauls]
+  Landscape Fixes For Grass Mods | plugin family: master [Helgen Reborn] sorts later | dest -> [New Lands and Quests]
+  Terrain Parallax Blending Fix | plugin family: master [Unofficial Skyrim Modder's Patch - For VR Users (4.2.5b USSEP)] sorts later | dest -> [Fixes & Resources - Unofficial Patches]
   Thuldor's Ivarstead Patch Hub | plugin family: master [Fabled Forests] sorts later | dest -> [Landscape and Environment]
-  RS Children Overhaul Patch Database | plugin family: master [Helgen Reborn] sorts later | dest -> [New Lands and Quests]
-  Miscellaneous Embers XD Patches | plugin family: master [Campfire - Complete Camping System (Supports Skyrim VR)] sorts later | dest -> [NPCs and Behaviour]
-  plugin family: 35 mod(s) pulled after their plugin masters
+  Lively's Patches for Blackthorn and Tree Mods | plugin family: master [Blackthorn - A Buildable Town in The Rift (SE)] sorts later | dest -> [Player Homes]
+  Gonzeh - Shor's Stone Overhaul - Spaghetti Patch | plugin family: master [Spaghetti's Towns - Shor's Stone] sorts later | dest -> [Expanded Cities, Towns, and Villages]
+  plugin family: 15 mod(s) pulled after their plugin masters
   FinalLookTuner - Author Presets | cat #15 "User Interface" | T1 exact name rule | MOVE -> [Visual Control]
   FinalLookTuner-1.4.1-CSHDR-WBAS-Improvement | cat #15 "User Interface" | T1 exact name rule | MOVE -> [Visual Control]
   Final Look Tuner FLT - Live Color Adjust | cat #15 "User Interface" | T1 exact name rule | MOVE -> [Visual Control]
@@ -114,12 +94,12 @@ conflict index: 1574 related pair(s) loaded
   VR Performance Kit (Probably just use Upscaler) | cat none | T4 no rule, category, or keyword matched | stay
   VR FPS Stabilizer (REINSTALL FMOD AND CONFIGURE) | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
   EEKs Whiterun Interiors - Lux and Embers XD Conflict Resolution | cat #7 "Miscellaneous" | T3 keyword [eeks] | MOVE -> [Special Load After Lighting Mods]
-  Miscellaneous Embers XD Patches | cat none | family: follows master [Campfire - Complete Camping System (Supports Skyrim VR)] | MOVE -> [NPCs and Behaviour]
+  Miscellaneous Embers XD Patches | cat none | T1 exact name rule | stay
   Jk's Rb and Eek Dragonsreach patch | cat none | T4 no rule, category, or keyword matched | stay
   Terrain Shadows - Mod Patches | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  Deadly Spell Impact - Patches | cat #34 "Patches" | family: follows master [Deadly Spell Impacts] | MOVE -> [Visual Control]
+  Deadly Spell Impact - Patches | cat #34 "Patches" | T1 exact name rule | stay
   Keyword Patch Collection | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  The Distinct JK's Ragged Flagon - Lux patch | cat #34 "Patches" | family: follows master [Distinct Interiors - Fixes] | MOVE -> [Essential Bug Fixes]
+  The Distinct JK's Ragged Flagon - Lux patch | cat #34 "Patches" | T1 exact name rule | stay
   Distinct JK's Ragged Flagon | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Realm of Lorkhan Lighting Patch for Lux | cat #34 "Patches" | T1 exact name rule | MOVE -> [Lux (Lighting)]
   Lux - RedBag's Falkreath Lanterns | cat #34 "Patches" | T1 exact name rule | MOVE -> [Lux (Lighting)]
@@ -127,22 +107,22 @@ conflict index: 1574 related pair(s) loaded
   Realm of Lorkhan Nicer Trees | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Realm of Lorkhan Better Bridges | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Realm of Lorkhan - Bleak Falls Barrow Dragonstone Skip | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  Realm of Lorkhan - Unbound Quest Fix | cat #34 "Patches" | family: follows master [Realm of Lorkhan - Freeform Alternate Start 4] | MOVE -> [Soul Trap Management Overhauls]
+  Realm of Lorkhan - Unbound Quest Fix | cat #34 "Patches" | T1 exact name rule | MOVE -> [Alternate Start]
   CC Fishing Campfire patch | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Pan NPCs DG - Legendary Skyrim Crossbows | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   RASS - NAT III Weather | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  RS Children Patch Compendium | cat #34 "Patches" | family: follows master [Solitude Docks Updated] | MOVE -> [Expanded Cities, Towns, and Villages]
+  RS Children Patch Compendium | cat #34 "Patches" | T1 exact name rule | stay
   Silverstead Grass Patch | cat #34 "Patches" | family: follows master [Silverstead (SE)] | MOVE -> [Player Homes]
   Lively's Patches for Blackthorn and Tree Mods | cat #34 "Patches" | family: follows master [Blackthorn - A Buildable Town in The Rift (SE)] | MOVE -> [Player Homes]
   Blackthorn - A Buildable Town - Patches | cat #34 "Patches" | family: follows master [Blackthorn - A Buildable Town in The Rift (SE)] | MOVE -> [Player Homes]
-  JK's and Redbag's Dragonsreach Patch | cat #34 "Patches" | family: follows master [JK's Dragonsreach] | MOVE -> [Architecture - Base & Large Overhauls]
-  RedBag's Morthal Patches- FOMOD | cat #34 "Patches" | family: follows master [RS Children -- Red Kid Redemption --] | MOVE -> [NPCs and Behaviour]
+  JK's and Redbag's Dragonsreach Patch | cat #34 "Patches" | T1 exact name rule | stay
+  RedBag's Morthal Patches- FOMOD | cat #34 "Patches" | T1 exact name rule | stay
   Redbag's Morthal Fixes | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Redbag's Morthal - Texture Fixes | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   RedBag's Morthal - FOMOD | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Thuldor's Ivarstead - Farmhouse Roofs | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Distinct Thuldor's Ivarstead | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  COTN Dawnstar Patch Collection | cat #34 "Patches" | family: follows master [Helgen Reborn] | MOVE -> [New Lands and Quests]
+  COTN Dawnstar Patch Collection | cat #34 "Patches" | T1 exact name rule | stay
   Lively's Deep Elf Race Patches | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Race Compatibility - At Your Own Pace Patch | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Folkvangr rocks, twigs and leaves remover | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
@@ -153,27 +133,27 @@ conflict index: 1574 related pair(s) loaded
   Stay At The System Page NG | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Relationship Dialogue Overhaul - Update and MCM | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Freed Prisoner Uses Items | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  Combat Music Fix NG Updated | cat #42 "Bug Fixes" | T2 @category rule [Bug Fixes] | MOVE -> [Essential Bug Fixes]
+  Combat Music Fix NG Updated | cat #42 "Bug Fixes" | T1 exact name rule | stay
   Combat Music Fix NG | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   In-Game Patcher - SKSE plugin | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Weapons Armor Clothing and Clutter Fixes - SkyPatcher | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   AI Overhaul SSE SkyPatcher Patch | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Creation Club - Misc Patches | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Mesh patches for Lux and Lux Orbis | cat #34 "Patches" | T1 exact name rule | MOVE -> [Lux (Lighting)]
-  Lux (patch hub) | cat #34 "Patches" | family: follows master [Winterhold Restored] | MOVE -> [Expanded Cities, Towns, and Villages]
-  Lux Orbis (patch hub) | cat #34 "Patches" | family: follows master [Winterhold Restored] | MOVE -> [Expanded Cities, Towns, and Villages]
+  Lux (patch hub) | cat #34 "Patches" | T1 exact name rule | MOVE -> [Lux (Lighting)]
+  Lux Orbis (patch hub) | cat #34 "Patches" | T1 exact name rule | MOVE -> [Lux (Lighting)]
   Grass Precache for Folkvangr Grass | cat none | T4 no rule, category, or keyword matched | stay
   ACMOS Road Generator | cat none | T4 no rule, category, or keyword matched | stay
   Grass Density INI - Quality | cat none | T4 no rule, category, or keyword matched | stay
   Grass Density INI - Performance | cat none | T4 no rule, category, or keyword matched | stay
-  JKs Ragged Flagon Water Fix | cat #42 "Bug Fixes" | T2 @category rule [Bug Fixes] | MOVE -> [Essential Bug Fixes]
-  NAT III ENB - A Clear Map of Skyrim Patch | cat #15 "User Interface" | T2 category~separator fuzzy [User Interface] shared=interface | MOVE -> [Interface - Controller Bindings]
-  Dynamic snow For Map | cat #3 "Gameplay" | T2 category==separator [Gameplay] | MOVE -> [Gameplay]
+  JKs Ragged Flagon Water Fix | cat #42 "Bug Fixes" | T1 exact name rule | stay
+  NAT III ENB - A Clear Map of Skyrim Patch | cat #15 "User Interface" | T1 exact name rule | stay
+  Dynamic snow For Map | cat #3 "Gameplay" | T1 exact name rule | stay
   Likeness | cat none | T4 no rule, category, or keyword matched | stay
   Dynamic Body Distribution - DBD | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Glowmapped 3D Lava | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   CoMAP | cat none | T4 no rule, category, or keyword matched | stay
-  ENB Frame Generation | cat #13 "Utilities" | T2 category==separator [Utilities] | MOVE -> [Utilities]
+  ENB Frame Generation | cat #13 "Utilities" | T1 exact name rule | stay
   Rudy ENB NAT ADDONS and REQUiRED Files | cat none | T3 keyword [enb] | stay
   Unreal ENB | cat none | T3 keyword [enb] | stay
   Cubemap Reflections | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
@@ -185,7 +165,7 @@ conflict index: 1574 related pair(s) loaded
   Dovahnique's Diverse Dark Elf Lanterns (BOS - ENB Lights - High Poly) | cat #8 "Models and Textures" | T3 keyword [enb] | stay
   Bright Snow Fix for ENB | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Winterhold Statue - Animated with ENB Lights | cat #8 "Models and Textures" | T3 keyword [winterhold] | MOVE -> [Winterhold]
-  Azura Statue Improved + ENB Particle Light | cat #8 "Models and Textures" | T3 keyword [particle light] | MOVE -> [Particle Lights]
+  Azura Statue Improved + ENB Particle Light | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Shrines & Statues]
   Optimized meshes for ENB lights Rustic Rudy Misc Silverware | cat #8 "Models and Textures" | T3 keyword [enb] | stay
   Optimized meshes for ENB lights | cat #22 "Visuals and Graphics" | T3 keyword [enb] | stay
   ENB Lights For Effect Shaders VR | cat #22 "Visuals and Graphics" | T3 keyword [enb] | stay
@@ -194,7 +174,7 @@ conflict index: 1574 related pair(s) loaded
   Rock Grass for ENB Complex Grass SE (with Guide) | cat #22 "Visuals and Graphics" | T3 keyword [enb] | stay
   VRAMr | cat none | T4 no rule, category, or keyword matched | stay
   DVLASS | cat none | T4 no rule, category, or keyword matched | stay
-  Community Shaders - Particle Lights (Unofficial Fork) | cat #22 "Visuals and Graphics" | T3 keyword [particle light] | MOVE -> [Particle Lights]
+  Community Shaders - Particle Lights (Unofficial Fork) | cat #22 "Visuals and Graphics" | T1 exact name rule | stay
   Skylighting - Community Shaders | cat none | T3 keyword [community shaders] | stay
   Effects 11 - Community Shaders | cat none | T3 keyword [community shaders] | stay
   Terrain Blending - Community Shaders | cat none | T3 keyword [community shaders] | stay
@@ -245,7 +225,7 @@ conflict index: 1574 related pair(s) loaded
   AddItemMenu - NG | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   AddItemMenu - Ultimate Mod Explorer | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   Infinity UI | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
-  MCM Helper VR | cat #13 "Utilities" | family: follows master [SkyUI - VR] | MOVE -> [Interface - Controller Bindings]
+  MCM Helper VR | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Interface - VR Specific]
   ConsoleUtil Extended | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   ConsoleUtilSSE NG | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   AddItemMenu search VR keyboard patch | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
@@ -290,8 +270,8 @@ conflict index: 1574 related pair(s) loaded
   Divine Dragonscale Decor - A Skyrim Furniture Overhaul | cat none | T4 no rule, category, or keyword matched | stay
   Skyrim Overhauled Furniture Assembly-SOFA-Clean | cat none | T4 no rule, category, or keyword matched | stay
   Blue Retching Netch | cat none | T4 no rule, category, or keyword matched | stay
-  Half Moon Mill Patches FOMOD | cat none | family: follows master [RedBag's Falkreath - Half-Moon Mill Addon] | MOVE -> [Expanded Cities, Towns, and Villages]
-  EmbersXD - Campfire Patch | cat none | family: follows master [Campfire - Complete Camping System (Supports Skyrim VR)] | MOVE -> [NPCs and Behaviour]
+  Half Moon Mill Patches FOMOD | cat none | T1 exact name rule | MOVE -> [Conflict Resolution]
+  EmbersXD - Campfire Patch | cat none | T1 exact name rule | MOVE -> [Basic Needs and Survival (Optional)]
   Parallax Mesh Patch Collection | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   FYX 3D Stockades - Compatibility Tweaks | cat none | T4 no rule, category, or keyword matched | stay
   Default Female at Character Creation | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
@@ -314,7 +294,7 @@ conflict index: 1574 related pair(s) loaded
   Crash Logger SSE AE VR - PDB support | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
   SkyrimVR PDB | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
   Survival Mode - Disable Permanently | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
-  JKs Guild HQ Interiors Patch Collection | cat none | family: follows master [JK's Sky Haven Temple] | MOVE -> [Architecture - Base & Large Overhauls]
+  JKs Guild HQ Interiors Patch Collection | cat none | T1 exact name rule | stay
   Distinct Interiors for Cities of the North | cat none | T4 no rule, category, or keyword matched | stay
   BLACKREACH OVERHAUL LUX PATCH Timelost Dwemer | cat #42 "Bug Fixes" | T1 exact name rule | MOVE -> [Lux (Lighting)]
   Blackreach Overhaul Lux Patch | cat #42 "Bug Fixes" | T1 exact name rule | MOVE -> [Lux (Lighting)]
@@ -346,8 +326,8 @@ conflict index: 1574 related pair(s) loaded
   FISSES DLL for VR | cat #32 "Modders Resources" | T2 category~separator fuzzy [Modders Resources] shared=modders | stay
   FileAccess Interface for Skyrim SE Scripts - FISSES | cat #32 "Modders Resources" | T2 category~separator fuzzy [Modders Resources] shared=modders | stay
   PAPER | cat #32 "Modders Resources" | T2 category~separator fuzzy [Modders Resources] shared=modders | stay
-  kryptopyr's Automated Patches | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | MOVE -> [Consistency Patches]
-  Fixed Texture Paths for Small Things in EEK's Whiterun Interiors | cat #8 "Models and Textures" | T3 keyword [whiterun] | MOVE -> [Whiterun]
+  kryptopyr's Automated Patches | cat #34 "Patches" | T1 exact name rule | stay
+  Fixed Texture Paths for Small Things in EEK's Whiterun Interiors | cat #8 "Models and Textures" | T1 exact name rule | stay
   EEKs Whiterun Interiors SSE | cat #7 "Miscellaneous" | T3 keyword [eeks] | stay
   Lux Variants | cat none | T3 keyword [lux] | MOVE -> [Lux (Lighting)]
   Mara Valentine lighting patch for Lux | cat #22 "Visuals and Graphics" | T1 exact name rule | MOVE -> [Lux (Lighting)]
@@ -355,19 +335,19 @@ conflict index: 1574 related pair(s) loaded
   Lux Orbis | cat #22 "Visuals and Graphics" | T1 exact name rule | MOVE -> [Lux (Lighting)]
   Meridia's Luxon Beacon Replacer | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Optional Lux Resource Pack (ENB light) | cat #31 "Overhauls" | T1 exact name rule | stay
-  Cursed Crypts - MLO2 RELight Addon | cat #26 "Environmental" | T2 @category rule [Environmental] | MOVE -> [Landscape and Environment]
-  Emberveil Lighting - A Cinematic ReLight Preset | cat none | T3 keyword [relight] | MOVE -> [Special Load After Lighting Mods]
-  RELight - Official Light Addon | cat #22 "Visuals and Graphics" | T3 keyword [relight] | MOVE -> [Special Load After Lighting Mods]
-  ReLight | cat #22 "Visuals and Graphics" | T3 keyword [relight] | MOVE -> [Special Load After Lighting Mods]
+  Cursed Crypts - MLO2 RELight Addon | cat #26 "Environmental" | T1 exact name rule | stay
+  Emberveil Lighting - A Cinematic ReLight Preset | cat none | T1 exact name rule | stay
+  RELight - Official Light Addon | cat #22 "Visuals and Graphics" | T1 exact name rule | stay
+  ReLight | cat #22 "Visuals and Graphics" | T1 exact name rule | stay
   CS Light | cat none | T4 no rule, category, or keyword matched | stay
-  Eld-beri II - NPC Support (Spid Distribution file) | cat none | T3 keyword [spid] | MOVE -> [Extension Frameworks - Engines Patches]
-  Quick Beri - Wearable particle light lanterns SPIDified (CS and ENB) | cat #21 "Clothing and Accessories" | T2 category~separator fuzzy [Clothing and Accessories] shared=clothing | MOVE -> [New Armors and Clothing]
+  Eld-beri II - NPC Support (Spid Distribution file) | cat none | T1 exact name rule | stay
+  Quick Beri - Wearable particle light lanterns SPIDified (CS and ENB) | cat #21 "Clothing and Accessories" | T1 exact name rule | stay
   Dark Elf Lantern - ENB Light - Community Shader Light Limit Fix Light - Animated Glow | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
-  Spider Webs and Particles for ENB | cat #8 "Models and Textures" | T3 keyword [enb] | MOVE -> [ENB]
-  Eld-beri II - Full Particle Light lantern mod (CS LLF or ENB Light) | cat #21 "Clothing and Accessories" | T2 category~separator fuzzy [Clothing and Accessories] shared=clothing | MOVE -> [New Armors and Clothing]
+  Spider Webs and Particles for ENB | cat #8 "Models and Textures" | T1 exact name rule | stay
+  Eld-beri II - Full Particle Light lantern mod (CS LLF or ENB Light) | cat #21 "Clothing and Accessories" | T1 exact name rule | stay
   Particle Lights - Christmas in Skyrim - Whiterun (ENB and Community Shaders) | cat #2 "Buildings" | T3 keyword [particle light] | stay
   ECPLW -ENB Complex Particle Lights for Windows | cat #22 "Visuals and Graphics" | T3 keyword [particle light] | stay
-  ENB Particle Light for Wearable Lanterns | cat #30 "Immersion" | T2 category~separator fuzzy [Immersion] shared=immersion | MOVE -> [AI & Immersion]
+  ENB Particle Light for Wearable Lanterns | cat #30 "Immersion" | T1 exact name rule | stay
   Dark Elf Lantern ENB Light - Particle Patch for ENB - Patch | cat #34 "Patches" | family: follows master [Particle Patch for ENB] | stay
   Particle Patch -Glow Maps | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
   Ghost Pile Seam Fix (Skyrim Particle Patch) | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -380,9 +360,9 @@ conflict index: 1574 related pair(s) loaded
   Realm of Lorkhan - Bring Back the Tamriel Shards Patch | cat none | T3 keyword [realm of lorkhan] | stay
   Alternate Perspective - Modded Armors In Wardrobe - SkyPatched | cat none | T3 keyword [alternate perspective] | stay
   Alternate Perspective - Voiced Addon | cat none | T3 keyword [alternate perspective] | stay
-  Realm of Lorkhan - Freeform Alternate Start 4 | cat #31 "Overhauls" | T2 category~separator fuzzy [Overhauls] shared=overhauls | MOVE -> [Soul Trap Management Overhauls]
+  Realm of Lorkhan - Freeform Alternate Start 4 | cat #31 "Overhauls" | T1 exact name rule | stay
   Realm of Lorkhan - Freeform Alternate Start | cat none | T3 keyword [realm of lorkhan] | stay
-  Realm of Lorkhan - Shard cost reversed | cat #3 "Gameplay" | T2 category==separator [Gameplay] | MOVE -> [Gameplay]
+  Realm of Lorkhan - Shard cost reversed | cat #3 "Gameplay" | T1 exact name rule | stay
   Alternate Perspective 4.0.3 - Alternate Start | cat none | T3 keyword [alternate perspective] | stay
   Alternate Perspective - Alternate Start | cat none | T3 keyword [alternate perspective] | stay
   Realm of Lorkhan - Forgotten Shrines | cat #7 "Miscellaneous" | T3 keyword [realm of lorkhan] | stay
@@ -450,8 +430,8 @@ conflict index: 1574 related pair(s) loaded
   Stacks of Septims - 3d Coin Piles | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Lux Via - Repaired Whiterun Bridge Add-on | cat #31 "Overhauls" | T1 exact name rule | MOVE -> [Lux (Lighting)]
   Lux - Via | cat #31 "Overhauls" | T1 exact name rule | MOVE -> [Lux (Lighting)]
-  Lux - Via (patch hub) | cat #31 "Overhauls" | family: follows master [Solitude Docks Updated] | MOVE -> [Expanded Cities, Towns, and Villages]
-  AI Overhaul SSE - Official Patch Hub | cat none | family: follows master [Distinct Interiors - Fixes] | MOVE -> [Essential Bug Fixes]
+  Lux - Via (patch hub) | cat #31 "Overhauls" | T1 exact name rule | MOVE -> [Lux (Lighting)]
+  AI Overhaul SSE - Official Patch Hub | cat none | T1 exact name rule | MOVE -> [Consistency Patches]
   AI Overhaul SSE | cat #31 "Overhauls" | T2 category~separator fuzzy [Overhauls] shared=overhauls | stay
   DMT's All Dogs Go To Sovngarde V3 Pet Overhaul | cat #31 "Overhauls" | T2 category~separator fuzzy [Overhauls] shared=overhauls | stay
   COtR - HQ Characters creation addon for RM | cat #31 "Overhauls" | T2 category~separator fuzzy [Overhauls] shared=overhauls | stay
@@ -534,31 +514,31 @@ conflict index: 1574 related pair(s) loaded
   Bathtubs Basins and Beyond | cat none | T4 no rule, category, or keyword matched | stay
   Bathing in Skyrim - Renewed | cat none | T4 no rule, category, or keyword matched | stay
   Lucidity Sound FX v2u | cat #49 "Audio" | T2 @category rule [Audio] | MOVE -> [Audio Fixes & Overhauls]
-  Wolverine Claws Impact SFX - Sound for Wolverine's Claws | cat #49 "Audio" | T2 @category rule [Audio] | MOVE -> [Audio Fixes & Overhauls]
-  Colossus -Giants SFX Voice Rework | cat #49 "Audio" | T2 @category rule [Audio] | MOVE -> [Audio Fixes & Overhauls]
-  FleshFX | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
-  Subtle Wind FX | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
-  Candle Flame VFX Edit | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Flame VFX Edit | cat #27 "Magic - Spells & Enchantments" | T2 category~separator fuzzy [Magic - Spells & Enchantments] shared=magic+spells+enchantments | MOVE -> [Magic, Spells, and Enchantments]
-  Healing VFX Edit | cat #27 "Magic - Spells & Enchantments" | T2 category~separator fuzzy [Magic - Spells & Enchantments] shared=magic+spells+enchantments | MOVE -> [Magic, Spells, and Enchantments]
-  Dragon Breath VFX Edit | cat #27 "Magic - Spells & Enchantments" | T2 category~separator fuzzy [Magic - Spells & Enchantments] shared=magic+spells+enchantments | MOVE -> [Magic, Spells, and Enchantments]
-  Lightning VFX Edit | cat #27 "Magic - Spells & Enchantments" | T2 category~separator fuzzy [Magic - Spells & Enchantments] shared=magic+spells+enchantments | MOVE -> [Magic, Spells, and Enchantments]
-  JS Dragon Claws - Patches | cat #8 "Models and Textures" | family: follows master [Helgen Reborn] | MOVE -> [New Lands and Quests]
-  Soulgem Stand Redone | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Crystalline Soul Gems | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  [Melodic] Lacey dress SE | cat none | T4 no rule, category, or keyword matched | stay
-  [Melodic] Goldbikini SE | cat none | T4 no rule, category, or keyword matched | stay
-  MultiLayer Parallax Soul Gems SSE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Soulgems Azura's star realm and holders HD SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Tera Armors Collection Skyim Special Edition | cat none | T4 no rule, category, or keyword matched | stay
-  Invisible Armors Enhanced | cat none | T4 no rule, category, or keyword matched | stay
-  Paraphernalia - VR Dragon Riding | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
+  Wolverine Claws Impact SFX - Sound for Wolverine's Claws | cat #49 "Audio" | T1 exact name rule | stay
+  Colossus -Giants SFX Voice Rework | cat #49 "Audio" | T1 exact name rule | stay
+  FleshFX | cat #22 "Visuals and Graphics" | T1 exact name rule | MOVE -> [Special Effects]
+  Subtle Wind FX | cat #22 "Visuals and Graphics" | T1 exact name rule | MOVE -> [Special Effects]
+  Candle Flame VFX Edit | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Special Effects]
+  Flame VFX Edit | cat #27 "Magic - Spells & Enchantments" | T1 exact name rule | stay
+  Healing VFX Edit | cat #27 "Magic - Spells & Enchantments" | T1 exact name rule | MOVE -> [Special Effects]
+  Dragon Breath VFX Edit | cat #27 "Magic - Spells & Enchantments" | T1 exact name rule | MOVE -> [Special Effects]
+  Lightning VFX Edit | cat #27 "Magic - Spells & Enchantments" | T1 exact name rule | MOVE -> [Special Effects]
+  JS Dragon Claws - Patches | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Clutter & Miscellaneous]
+  Soulgem Stand Redone | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Soul Trap Management Overhauls]
+  Crystalline Soul Gems | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Soul Trap Management Overhauls]
+  [Melodic] Lacey dress SE | cat none | T1 exact name rule | MOVE -> [New Armors and Clothing]
+  [Melodic] Goldbikini SE | cat none | T1 exact name rule | stay
+  MultiLayer Parallax Soul Gems SSE | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Soul Trap Management Overhauls]
+  Soulgems Azura's star realm and holders HD SE | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Soul Trap Management Overhauls]
+  Tera Armors Collection Skyim Special Edition | cat none | T1 exact name rule | MOVE -> [New Armors and Clothing]
+  Invisible Armors Enhanced | cat none | T1 exact name rule | MOVE -> [New Armors and Clothing]
+  Paraphernalia - VR Dragon Riding | cat #48 "VR" | T1 exact name rule | MOVE -> [Dragons]
   Palantirs of Skyrim | cat #6 "Items and Objects - Player" | T2 category~separator fuzzy [Items and Objects - Player] shared=items | stay
-  JS Dragon Claws SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Dragon Claws Auto-Unlock | cat none | T4 no rule, category, or keyword matched | stay
+  JS Dragon Claws SE | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Clutter & Miscellaneous]
+  Dragon Claws Auto-Unlock | cat none | T1 exact name rule | MOVE -> [Security]
   PROTEUS | cat #14 "Cheats and God items" | T2 category~separator fuzzy [Cheats and God items] shared=items | stay
   Q10s Convenient Cheat Tools and NPC Controls | cat #14 "Cheats and God items" | T2 category~separator fuzzy [Cheats and God items] shared=items | stay
-  Unlimited Sprinting | cat #14 "Cheats and God items" | T2 category~separator fuzzy [Cheats and God items] shared=items | stay
+  Unlimited Sprinting | cat #14 "Cheats and God items" | T1 exact name rule | MOVE -> [Essentials]
   Automatic Item Storage | cat #6 "Items and Objects - Player" | T2 category~separator fuzzy [Items and Objects - Player] shared=items | stay
   Simple God Ring | cat #14 "Cheats and God items" | T2 category~separator fuzzy [Cheats and God items] shared=items | stay
   The Ghoulish Pendant | cat #6 "Items and Objects - Player" | T2 category~separator fuzzy [Items and Objects - Player] shared=items | stay
@@ -671,8 +651,8 @@ conflict index: 1574 related pair(s) loaded
   Calyps's adult toys chest SE (ported) NSFW | cat #21 "Clothing and Accessories" | T2 category~separator fuzzy [Clothing and Accessories] shared=clothing | stay
   Arcane Blacksmith's Apron - Hood Fixes | cat #21 "Clothing and Accessories" | T2 category~separator fuzzy [Clothing and Accessories] shared=clothing | stay
   Vanity Mirror SE | cat #21 "Clothing and Accessories" | T2 category~separator fuzzy [Clothing and Accessories] shared=clothing | stay
-  Divine Daedric Cloaks - Skypatched | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | MOVE -> [Consistency Patches]
-  Artesian Cloaks of Skyrim | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | MOVE -> [Consistency Patches]
+  Divine Daedric Cloaks - Skypatched | cat #34 "Patches" | T1 exact name rule | stay
+  Artesian Cloaks of Skyrim | cat #34 "Patches" | T1 exact name rule | stay
   Sentinel - Patch Collection | cat none | T4 no rule, category, or keyword matched | stay
   Sons of Skyrim - HDT Physics for Cloaks Patch | cat #34 "Patches" | family: follows master [Sons of Skyrim] | stay
   Sons of Skyrim - My patches and fixes SE by Xtudo - Desaturated 2K textures | cat none | T4 no rule, category, or keyword matched | stay
@@ -688,31 +668,31 @@ conflict index: 1574 related pair(s) loaded
   JS Dwarven Oil SE - 2k Textures | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   JS Attunement Sphere and Lexicons SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Cathedral Armory - Fur Shader | cat none | T4 no rule, category, or keyword matched | stay
-  Busy Follower Framework | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | MOVE -> [New Followers and NPCs]
-  Nether's Follower Framework | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | MOVE -> [New Followers and NPCs]
-  Horde - A Light-Weight SKSE Follower Management System | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | MOVE -> [New Followers and NPCs]
+  Busy Follower Framework | cat #43 "Followers & Companions" | T1 exact name rule | stay
+  Nether's Follower Framework | cat #43 "Followers & Companions" | T1 exact name rule | stay
+  Horde - A Light-Weight SKSE Follower Management System | cat #43 "Followers & Companions" | T1 exact name rule | stay
   Dynamic Dialogue Replacer | cat none | T4 no rule, category, or keyword matched | stay
   Riley Steel Follower SE | cat none | T4 no rule, category, or keyword matched | stay
   !Beefcake Adventurers | cat none | T4 no rule, category, or keyword matched | stay
-  Dead and Daedric Guardians | cat none | T4 no rule, category, or keyword matched | stay
-  Better Males Remesh for Skyrim SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Heartbreaker - Male CS Advanced Skin | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  REALORE MEN'S Skin Texture | cat none | T4 no rule, category, or keyword matched | stay
-  BnP male skin (Replacer+Player version) | cat none | T4 no rule, category, or keyword matched | stay
-  To Your Face SE - AE - VR | cat none | T4 no rule, category, or keyword matched | stay
-  slightly Better Dust aka Dust not Clouds | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Realistic Dust (formerly Less Noticeable Dust SE) | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
+  Dead and Daedric Guardians | cat none | T1 exact name rule | MOVE -> [New Followers and NPCs]
+  Better Males Remesh for Skyrim SE | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Male Body Additions]
+  Heartbreaker - Male CS Advanced Skin | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Male Body Additions]
+  REALORE MEN'S Skin Texture | cat none | T1 exact name rule | MOVE -> [Male Body Additions]
+  BnP male skin (Replacer+Player version) | cat none | T1 exact name rule | MOVE -> [Male Body Additions]
+  To Your Face SE - AE - VR | cat none | T1 exact name rule | MOVE -> [Essential Bug Fixes]
+  slightly Better Dust aka Dust not Clouds | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Special Effects]
+  Realistic Dust (formerly Less Noticeable Dust SE) | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Special Effects]
   Shut Up Heimskr | cat none | T4 no rule, category, or keyword matched | stay
-  RUSTIC SPRIGGAN EFFECTS | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Arctic - Frost Effects Redux | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
+  RUSTIC SPRIGGAN EFFECTS | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Special Effects]
+  Arctic - Frost Effects Redux | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Special Effects]
   Parallax Spell Impacts | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Eternal Flames | cat none | T4 no rule, category, or keyword matched | stay
+  Eternal Flames | cat none | T1 exact name rule | MOVE -> [Special Effects]
   Producing Unique Personas of Skyrim (PUPS) | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Kalilies NPCs AI Overhaul Patch | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Helgen and Alternate Perspective NPC replacer | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Campfire - Complete Camping System (Supports Skyrim VR) | cat #9 "NPC" | T2 @category rule [NPC] | stay
-  Masculine Housecarls | cat #9 "NPC" | T2 @category rule [NPC] | stay
-  Relationship Dialogue Overhaul (RDO) NPCs - a replacer | cat #9 "NPC" | T2 @category rule [NPC] | stay
+  Masculine Housecarls | cat #9 "NPC" | T1 exact name rule | MOVE -> [For the Ladies]
+  Relationship Dialogue Overhaul (RDO) NPCs - a replacer | cat #9 "NPC" | T1 exact name rule | MOVE -> [Dialogue and NPC Interaction]
   EBD SSE - EveryBodys Different Redone for SSE | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Creation Club - Botox Patch - NPC Overhaul | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Phenderix Magic World - Botox Patch | cat #9 "NPC" | T2 @category rule [NPC] | stay
@@ -722,17 +702,17 @@ conflict index: 1574 related pair(s) loaded
   Lionheart - SerketHetyt's Mjoll Overhaul | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Brynjolf NPC Overhaul | cat #9 "NPC" | T2 @category rule [NPC] | stay
   RS Children -- Red Kid Redemption -- | cat #9 "NPC" | T2 @category rule [NPC] | stay
-  RS Children Overhaul Patch Database | cat #34 "Patches" | family: follows master [Helgen Reborn] | MOVE -> [New Lands and Quests]
-  RS Children Overhaul | cat #9 "NPC" | T2 @category rule [NPC] | stay
+  RS Children Overhaul Patch Database | cat #34 "Patches" | T1 exact name rule | MOVE -> [Conflict Resolution]
+  RS Children Overhaul | cat #9 "NPC" | T1 exact name rule | MOVE -> [NPC Retextures]
   Diamond Skin - RS Children | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Brynjolf has Time for You SE | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Craftable Saddles from Witcher 3 | cat #33 "Creatures and Mounts" | T4 no rule, category, or keyword matched | stay
   Phantom Horse - New Phantom Mounts | cat #33 "Creatures and Mounts" | T4 no rule, category, or keyword matched | stay
   The Four Horses of the Apocalypse SSE port | cat #33 "Creatures and Mounts" | T4 no rule, category, or keyword matched | stay
-  No more glitchy textures. Witcher Horse Expansion compatibility patches (ENG) | cat #34 "Patches" | family: follows master [Silverstead (SE)] | MOVE -> [Player Homes]
+  No more glitchy textures. Witcher Horse Expansion compatibility patches (ENG) | cat #34 "Patches" | T1 exact name rule | stay
   Witcher Horse Expansion | cat #33 "Creatures and Mounts" | T4 no rule, category, or keyword matched | stay
   Steeds of Ultima - VR Mounted combat | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
-  RedBag's Dragonsreach - GoT The Black Dread Skull Replacer Patch | cat #34 "Patches" | family: follows master [RedBag's Dragonsreach - SE] | MOVE -> [Locations]
+  RedBag's Dragonsreach - GoT The Black Dread Skull Replacer Patch | cat #34 "Patches" | T1 exact name rule | MOVE -> [Worldspace Late Load (& Optionals)]
   GoT The Black Dread Skull Replacer | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Drogon Alduin - Xila's Monstrrous GoT Dragons | cat none | T4 no rule, category, or keyword matched | stay
   Rhaegal Paarthurnax - Monstrrous GoT Dragons | cat none | T4 no rule, category, or keyword matched | stay
@@ -780,8 +760,8 @@ conflict index: 1574 related pair(s) loaded
   Trolls SE | cat #33 "Creatures and Mounts" | T4 no rule, category, or keyword matched | stay
   Falmer Overhaul - New models and textures | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Bellyaches Animal and Creature Pack Revamp | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  SkyPatcher - Smaller Dogs | cat #33 "Creatures and Mounts" | T3 keyword [skypatcher] | MOVE -> [Extension Frameworks - Engines Patches]
-  Pelagius's Wildlife AI - Skypatcher | cat #33 "Creatures and Mounts" | T3 keyword [skypatcher] | MOVE -> [Extension Frameworks - Engines Patches]
+  SkyPatcher - Smaller Dogs | cat #33 "Creatures and Mounts" | T1 exact name rule | stay
+  Pelagius's Wildlife AI - Skypatcher | cat #33 "Creatures and Mounts" | T1 exact name rule | stay
   The Killer Rabbit of Caerbannog- 2023 Easter Special (SE-AE version) | cat #33 "Creatures and Mounts" | T4 no rule, category, or keyword matched | stay
   Realistic Bears Project | cat none | T4 no rule, category, or keyword matched | stay
   Bears of the North Patches | cat none | T4 no rule, category, or keyword matched | stay
@@ -2145,14 +2125,100 @@ conflict index: 1574 related pair(s) loaded
   DLC: Dragonborn | cat none | T4 no rule, category, or keyword matched | stay
   DLC: HearthFires | cat none | T4 no rule, category, or keyword matched | stay
 
+--- pass 2: reorder [ENB] ---
+  Unreal ENB | parent <none> | depth 0 | file index 2 -> 1 (file-earlier = wins)
+  Cubemap Reflections | parent <none> | depth 0 | file index 3 -> 2 (file-earlier = wins)
+  NAT3 HOSE - ENB Preset | parent <none> | depth 0 | file index 4 -> 3 (file-earlier = wins)
+  ENB Light | parent <none> | depth 0 | file index 5 -> 4 (file-earlier = wins)
+  ENB Binaries | parent <none> | depth 0 | file index 6 -> 5 (file-earlier = wins)
+  NordwarUA Armours - ENB Dynamic Cubemaps - Sons of Skyrim etc | parent <none> | depth 0 | file index 7 -> 6 (file-earlier = wins)
+  Dovahnique's Diverse Deadly Nightshade - (BOS - ENB Lights) | parent <none> | depth 0 | file index 8 -> 7 (file-earlier = wins)
+  Dovahnique's Diverse Dark Elf Lanterns (BOS - ENB Lights - High Poly) | parent <none> | depth 0 | file index 9 -> 8 (file-earlier = wins)
+  Bright Snow Fix for ENB | parent <none> | depth 0 | file index 10 -> 9 (file-earlier = wins)
+  Optimized meshes for ENB lights Rustic Rudy Misc Silverware | parent Optimized meshes for ENB lights | depth 1 | file index 11 -> 10 (file-earlier = wins)
+  Optimized meshes for ENB lights | parent <none> | depth 0 | file index 12 -> 11 (file-earlier = wins)
+  ENB Lights For Effect Shaders VR | parent <none> | depth 0 | file index 13 -> 12 (file-earlier = wins)
+  ENB Anti-Aliasing - AMD FSR 3.1 - NVIDIA DLAA | parent <none> | depth 0 | file index 14 -> 13 (file-earlier = wins)
+  Holidays Lanterns ENB Light | parent <none> | depth 0 | file index 15 -> 14 (file-earlier = wins)
+  Rock Grass for ENB Complex Grass SE (with Guide) | parent <none> | depth 0 | file index 16 -> 15 (file-earlier = wins)
+  Artisto RWT texture tweaks for Water for ENB | parent Water for ENB | depth 1 | file index 17 -> 16 (file-earlier = wins)
+  Water for ENB | parent <none> | depth 0 | file index 18 -> 17 (file-earlier = wins)
+  ENB Extender and Helper Skyrim | parent <none> | depth 0 | file index 20 -> 18 (file-earlier = wins)
+  NAT.ENB - ENB PRESET v3.1.1C | parent <none> | depth 0 | file index 21 -> 19 (file-earlier = wins)
+  Rudy ENB for NAT 3 | parent <none> | depth 0 | file index 22 -> 20 (file-earlier = wins)
+  Rudy ENB NAT ADDONS and REQUiRED Files | parent NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed | depth 1 | file index 1 -> 21 (file-earlier = wins)
+  NAT-ENB SUMMER PATCH | parent NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed | depth 1 | file index 19 -> 22 (file-earlier = wins)
+
 --- pass 2: reorder [Particle Lights] ---
-  Particle Patch for ENB | parent Particle Patch | depth 1 | file index 8 -> 6 (file-earlier = wins)
-  Particle Patch | parent <none> | depth 0 | file index 6 -> 7 (file-earlier = wins)
-  Eld-beri II - Lanterns Reworked | parent <none> | depth 0 | file index 7 -> 8 (file-earlier = wins)
+  Particle Patch for ENB | parent Particle Patch | depth 1 | file index 13 -> 11 (file-earlier = wins)
+  Particle Patch | parent <none> | depth 0 | file index 11 -> 12 (file-earlier = wins)
+  Eld-beri II - Lanterns Reworked | parent <none> | depth 0 | file index 12 -> 13 (file-earlier = wins)
+
+--- pass 2: reorder [Alternate Start] ---
+  Realm of Lorkhan - Unbound Quest Fix | parent Realm of Lorkhan - Freeform Alternate Start 4 | depth 2 | file index 12 -> 6 (file-earlier = wins)
+  Realm of Lorkhan - Freeform Alternate Start 4 | parent Realm of Lorkhan - Freeform Alternate Start | depth 1 | file index 6 -> 7 (file-earlier = wins)
+  Realm of Lorkhan - Freeform Alternate Start | parent <none> | depth 0 | file index 7 -> 8 (file-earlier = wins)
+  Realm of Lorkhan - Shard cost reversed | parent <none> | depth 0 | file index 8 -> 9 (file-earlier = wins)
+  Alternate Perspective 4.0.3 - Alternate Start | parent <none> | depth 0 | file index 9 -> 10 (file-earlier = wins)
+  Alternate Perspective - Alternate Start | parent <none> | depth 0 | file index 10 -> 11 (file-earlier = wins)
+  Realm of Lorkhan - Forgotten Shrines | parent <none> | depth 0 | file index 11 -> 12 (file-earlier = wins)
+
+--- pass 2: reorder [Armor and Weapons Retextures and Tweaks] ---
+  Sons of Skyrim - HDT Physics for Cloaks Patch | parent Sons of Skyrim | depth 1 | file index 1 -> 0 (file-earlier = wins)
+  Sons of Skyrim - My patches and fixes SE by Xtudo - Desaturated 2K textures | parent Sons of Skyrim | depth 1 | file index 2 -> 1 (file-earlier = wins)
+  Sons of Skyrim Complex Material | parent Sons of Skyrim | depth 1 | file index 4 -> 2 (file-earlier = wins)
+  Sons of Skyrim for v2.0 - Dawnstar Guard Armor Fix | parent Sons of Skyrim | depth 1 | file index 5 -> 3 (file-earlier = wins)
+  Sons of Skyrim | parent <none> | depth 0 | file index 6 -> 4 (file-earlier = wins)
+  Sentinel - Patch Collection | parent Sentinel - An Equipment Overhaul | depth 1 | file index 0 -> 5 (file-earlier = wins)
+  Sentinel Patch for Sons of Skyrim - HDT-SMP Cloaks | parent Sentinel - An Equipment Overhaul | depth 1 | file index 3 -> 6 (file-earlier = wins)
 
 --- pass 2: reorder [Dragons] ---
   GoT Dragons 16K-8K - Cleaned and Upscaled Textures (Game of Thrones) | parent <none> | depth 0 | file index 4 -> 3 (file-earlier = wins)
   GoT Dragons Textures - Fixed Soul Absorb And Optimized | parent GoT Dragons-Textures | depth 1 | file index 3 -> 4 (file-earlier = wins)
+
+--- pass 2: reorder [NPC Retextures] ---
+  Botox of Skyrim - Patch Hub | parent <none> | depth 0 | file index 11 -> 10 (file-earlier = wins)
+  Realistic RS Children Overhaul | parent RS Children Overhaul | depth 1 | file index 10 -> 11 (file-earlier = wins)
+
+--- pass 2: reorder [New Monsters] ---
+  Mihail's Animal VR resize | parent Sewer Rats - Mihail Monsters and Animals (SE-AE version) | depth 1 | file index 15 -> 11 (file-earlier = wins)
+  Sewer Rats - Mihail Monsters and Animals (SE-AE version) | parent <none> | depth 0 | file index 11 -> 12 (file-earlier = wins)
+  Realistic Skin And Hair Shaders - Giants | parent <none> | depth 0 | file index 12 -> 13 (file-earlier = wins)
+  Pigeons- Mihail Monsters and Animals (SE-AE version) (''bird'') | parent <none> | depth 0 | file index 13 -> 14 (file-earlier = wins)
+  More Cow Variants- Mihail Monsters and Animals (SE-AE) | parent <none> | depth 0 | file index 14 -> 15 (file-earlier = wins)
+
+--- pass 2: reorder [Worldspace Late Load (& Optionals)] ---
+  BURP Spell Tomes Patches | parent BURP - Spell Tomes (SkyPatched) | depth 2 | file index 13 -> 12 (file-earlier = wins)
+  BURP - Spell Tomes (SkyPatched) | parent BURP Spell Tomes | depth 1 | file index 12 -> 13 (file-earlier = wins)
+
+--- pass 2: reorder [Player Homes] ---
+  Constructible Objects Custom Keyword Framework - Settlement Builder Patch | parent Skyrim - Settlement Builder | depth 1 | file index 27 -> 4 (file-earlier = wins)
+  Skyrim - Settlement Builder | parent <none> | depth 0 | file index 4 -> 5 (file-earlier = wins)
+  Lively's Patches for Blackthorn and Tree Mods | parent Blackthorn - A Buildable Town in The Rift (SE) | depth 1 | file index 29 -> 6 (file-earlier = wins)
+  Blackthorn - A Buildable Town - Patches | parent Blackthorn - A Buildable Town in The Rift (SE) | depth 1 | file index 30 -> 7 (file-earlier = wins)
+  Blackthorn - A Buildable Town in The Rift (SE) | parent <none> | depth 0 | file index 5 -> 8 (file-earlier = wins)
+  Dimensional Rift Home | parent <none> | depth 0 | file index 6 -> 9 (file-earlier = wins)
+  Snow Globe House CTD Fix | parent <none> | depth 0 | file index 7 -> 10 (file-earlier = wins)
+  Snow Globe House AE | parent <none> | depth 0 | file index 8 -> 11 (file-earlier = wins)
+  Havardr | parent <none> | depth 0 | file index 9 -> 12 (file-earlier = wins)
+  Silverstead Grass Patch | parent Silverstead (SE) | depth 1 | file index 28 -> 13 (file-earlier = wins)
+  Silverstead (SE) | parent <none> | depth 0 | file index 10 -> 14 (file-earlier = wins)
+  Morskom Estate Retexture | parent <none> | depth 0 | file index 11 -> 15 (file-earlier = wins)
+  Mörskom Estate | parent <none> | depth 0 | file index 12 -> 16 (file-earlier = wins)
+  Tranquil Windstad | parent <none> | depth 0 | file index 13 -> 17 (file-earlier = wins)
+  HS Player Homes - Severin Manor | parent <none> | depth 0 | file index 14 -> 18 (file-earlier = wins)
+  HS Player Homes - Vlindrel Hall | parent <none> | depth 0 | file index 15 -> 19 (file-earlier = wins)
+  Hjertesten Hall - Player Home and Settlement | parent <none> | depth 0 | file index 16 -> 20 (file-earlier = wins)
+  HS Player Homes - Proudspire Manor | parent <none> | depth 0 | file index 17 -> 21 (file-earlier = wins)
+  Lakeview Manor Upgrades Enhanced Edition | parent <none> | depth 0 | file index 18 -> 22 (file-earlier = wins)
+  HS Player Homes - Hjerim | parent <none> | depth 0 | file index 19 -> 23 (file-earlier = wins)
+  Breezehome Fully Upgraded for Group Bathing | parent <none> | depth 0 | file index 20 -> 24 (file-earlier = wins)
+  Breezehome Fully Upgradable | parent <none> | depth 0 | file index 21 -> 25 (file-earlier = wins)
+  Mannequin Designs | parent <none> | depth 0 | file index 22 -> 26 (file-earlier = wins)
+  Unlimited Bookshelves - SkyPatcher Edition | parent Unlimited Bookshelves | depth 1 | file index 23 -> 27 (file-earlier = wins)
+  Unlimited Bookshelves | parent <none> | depth 0 | file index 24 -> 28 (file-earlier = wins)
+  LvxMagicks - Eclipse - Airship - Flying - Alpha | parent <none> | depth 0 | file index 25 -> 29 (file-earlier = wins)
+  Dwemer Pocket Dimension | parent <none> | depth 0 | file index 26 -> 30 (file-earlier = wins)
 
 --- pass 2: reorder [Whiterun] ---
   Dark Whiterun Walls by infinition | parent <none> | depth 0 | file index 3 -> 2 (file-earlier = wins)
@@ -2169,47 +2235,47 @@ conflict index: 1574 related pair(s) loaded
   Whiterun Roof Repair | parent <none> | depth 0 | file index 14 -> 13 (file-earlier = wins)
   Whiterun Tablecloth Replacer | parent <none> | depth 0 | file index 15 -> 14 (file-earlier = wins)
   Whiterun Bench - Replacer | parent <none> | depth 0 | file index 16 -> 15 (file-earlier = wins)
-  Fixed Texture Paths for Small Things in EEK's Whiterun Interiors | parent <none> | depth 0 | file index 17 -> 16 (file-earlier = wins)
-  Cannabis Whiterun Road test | parent Cannabis Whiterun Road | depth 1 | file index 2 -> 17 (file-earlier = wins)
+  Cannabis Whiterun Road test | parent Cannabis Whiterun Road | depth 1 | file index 2 -> 16 (file-earlier = wins)
 
 --- pass 2: reorder [Expanded Cities, Towns, and Villages] ---
-  Raven Rock Bathhouse and Raven Rock Reborn Patch (ESL) | parent Raven Rock Reborn | depth 1 | file index 48 -> 12 (file-earlier = wins)
-  Raven Rock Reborn | parent <none> | depth 0 | file index 12 -> 13 (file-earlier = wins)
-  Winterhold Restored | parent <none> | depth 0 | file index 13 -> 14 (file-earlier = wins)
-  Racc's College Bridge Overhaul | parent <none> | depth 0 | file index 14 -> 15 (file-earlier = wins)
-  Turquaz Floor - Whiterun Mosaic | parent <none> | depth 0 | file index 15 -> 16 (file-earlier = wins)
-  Ivy - Whiterun - Well Overhaul | parent <none> | depth 0 | file index 16 -> 17 (file-earlier = wins)
-  JK's Whiterun Outskirts - Parallax Wall Fix | parent JK's Whiterun Outskirts | depth 1 | file index 17 -> 18 (file-earlier = wins)
-  JK's Whiterun Outskirts | parent <none> | depth 0 | file index 18 -> 19 (file-earlier = wins)
-  BHKS - JK's Solitude Outskirts Patch - ESL-Flagged | parent JK's Solitude Outskirts | depth 1 | file index 19 -> 20 (file-earlier = wins)
-  JK's Solitude Outskirts Patch Collection | parent JK's Solitude Outskirts | depth 1 | file index 20 -> 21 (file-earlier = wins)
-  JK's Solitude Outskirts | parent <none> | depth 0 | file index 21 -> 22 (file-earlier = wins)
-  BHKS - Solitude Docks Updated Patch - ESL Flagged | parent Solitude Docks Updated | depth 1 | file index 22 -> 23 (file-earlier = wins)
-  Solitude Docks Updated | parent <none> | depth 0 | file index 23 -> 24 (file-earlier = wins)
-  Novigrad my Solitude | parent <none> | depth 0 | file index 24 -> 25 (file-earlier = wins)
-  Mayhem In Riften | parent <none> | depth 0 | file index 25 -> 26 (file-earlier = wins)
-  RedBag's Morthal - SE | parent <none> | depth 0 | file index 26 -> 27 (file-earlier = wins)
-  Markarth - City of Stone | parent <none> | depth 0 | file index 27 -> 28 (file-earlier = wins)
-  RedBag's Falkreath - Pinewatch Addon | parent RedBag's Falkreath | depth 1 | file index 28 -> 29 (file-earlier = wins)
-  RedBag's Falkreath - Half-Moon Mill Addon | parent RedBag's Falkreath | depth 1 | file index 29 -> 30 (file-earlier = wins)
-  RedBag's Falkreath - Patch Collection | parent RedBag's Falkreath | depth 1 | file index 30 -> 31 (file-earlier = wins)
-  RedBag's Falkreath | parent <none> | depth 0 | file index 31 -> 32 (file-earlier = wins)
-  Ivy - Riverwood Well Addon | parent <none> | depth 0 | file index 32 -> 33 (file-earlier = wins)
-  Spaghetti's Towns - Shor's Stone | parent <none> | depth 0 | file index 33 -> 34 (file-earlier = wins)
-  Cities of the North - Dawnstar | parent <none> | depth 0 | file index 34 -> 35 (file-earlier = wins)
-  RedBag's Rorikstead | parent <none> | depth 0 | file index 35 -> 36 (file-earlier = wins)
-  Riverwood Revitalized my Patch | parent Riverwood Revitalized | depth 1 | file index 36 -> 37 (file-earlier = wins)
-  Riverwood Revitalized Sign Fix | parent Riverwood Revitalized | depth 1 | file index 37 -> 38 (file-earlier = wins)
-  Riverwood Revitalized | parent <none> | depth 0 | file index 38 -> 39 (file-earlier = wins)
-  Riverwood Mushroom Village | parent <none> | depth 0 | file index 39 -> 40 (file-earlier = wins)
-  Thuldor's Ivarstead - Riften Stone Alternate Texture | parent Thuldor's Ivarstead | depth 1 | file index 40 -> 41 (file-earlier = wins)
-  Thuldor's Ivarstead - Tweaks and Addons | parent Thuldor's Ivarstead | depth 1 | file index 41 -> 42 (file-earlier = wins)
-  Thuldor's Ivarstead | parent <none> | depth 0 | file index 42 -> 43 (file-earlier = wins)
-  Rodryk's Dragon Bridge - Patch Collection | parent Rodryk's Dragon Bridge | depth 1 | file index 43 -> 44 (file-earlier = wins)
-  Rodryk's Dragon Bridge | parent <none> | depth 0 | file index 44 -> 45 (file-earlier = wins)
-  Hanging Moss to Climbing Roses - Base Object Swapper | parent <none> | depth 0 | file index 45 -> 46 (file-earlier = wins)
-  Journey to Baan Malur Addon - Silgrad | parent <none> | depth 0 | file index 46 -> 47 (file-earlier = wins)
-  Unique Helgen Reborn | parent <none> | depth 0 | file index 47 -> 48 (file-earlier = wins)
+  Raven Rock Bathhouse and Raven Rock Reborn Patch (ESL) | parent Raven Rock Reborn | depth 1 | file index 43 -> 7 (file-earlier = wins)
+  Raven Rock Reborn | parent <none> | depth 0 | file index 7 -> 8 (file-earlier = wins)
+  Winterhold Restored | parent <none> | depth 0 | file index 8 -> 9 (file-earlier = wins)
+  Racc's College Bridge Overhaul | parent <none> | depth 0 | file index 9 -> 10 (file-earlier = wins)
+  Turquaz Floor - Whiterun Mosaic | parent <none> | depth 0 | file index 10 -> 11 (file-earlier = wins)
+  Ivy - Whiterun - Well Overhaul | parent <none> | depth 0 | file index 11 -> 12 (file-earlier = wins)
+  JK's Whiterun Outskirts - Parallax Wall Fix | parent JK's Whiterun Outskirts | depth 1 | file index 12 -> 13 (file-earlier = wins)
+  JK's Whiterun Outskirts | parent <none> | depth 0 | file index 13 -> 14 (file-earlier = wins)
+  BHKS - JK's Solitude Outskirts Patch - ESL-Flagged | parent JK's Solitude Outskirts | depth 1 | file index 14 -> 15 (file-earlier = wins)
+  JK's Solitude Outskirts Patch Collection | parent JK's Solitude Outskirts | depth 1 | file index 15 -> 16 (file-earlier = wins)
+  JK's Solitude Outskirts | parent <none> | depth 0 | file index 16 -> 17 (file-earlier = wins)
+  BHKS - Solitude Docks Updated Patch - ESL Flagged | parent Solitude Docks Updated | depth 1 | file index 17 -> 18 (file-earlier = wins)
+  Solitude Docks Updated | parent <none> | depth 0 | file index 18 -> 19 (file-earlier = wins)
+  Novigrad my Solitude | parent <none> | depth 0 | file index 19 -> 20 (file-earlier = wins)
+  Mayhem In Riften | parent <none> | depth 0 | file index 20 -> 21 (file-earlier = wins)
+  RedBag's Morthal - SE | parent <none> | depth 0 | file index 21 -> 22 (file-earlier = wins)
+  Markarth - City of Stone | parent <none> | depth 0 | file index 22 -> 23 (file-earlier = wins)
+  RedBag's Falkreath - Pinewatch Addon | parent RedBag's Falkreath | depth 1 | file index 23 -> 24 (file-earlier = wins)
+  RedBag's Falkreath - Half-Moon Mill Addon | parent RedBag's Falkreath | depth 1 | file index 24 -> 25 (file-earlier = wins)
+  RedBag's Falkreath - Patch Collection | parent RedBag's Falkreath | depth 1 | file index 25 -> 26 (file-earlier = wins)
+  RedBag's Falkreath | parent <none> | depth 0 | file index 26 -> 27 (file-earlier = wins)
+  Ivy - Riverwood Well Addon | parent <none> | depth 0 | file index 27 -> 28 (file-earlier = wins)
+  Gonzeh - Shor's Stone Overhaul - Spaghetti Patch | parent Spaghetti's Towns - Shor's Stone | depth 1 | file index 44 -> 29 (file-earlier = wins)
+  Spaghetti's Towns - Shor's Stone | parent <none> | depth 0 | file index 28 -> 30 (file-earlier = wins)
+  Cities of the North - Dawnstar | parent <none> | depth 0 | file index 29 -> 31 (file-earlier = wins)
+  RedBag's Rorikstead | parent <none> | depth 0 | file index 30 -> 32 (file-earlier = wins)
+  Riverwood Revitalized my Patch | parent Riverwood Revitalized | depth 1 | file index 31 -> 33 (file-earlier = wins)
+  Riverwood Revitalized Sign Fix | parent Riverwood Revitalized | depth 1 | file index 32 -> 34 (file-earlier = wins)
+  Riverwood Revitalized | parent <none> | depth 0 | file index 33 -> 35 (file-earlier = wins)
+  Riverwood Mushroom Village | parent <none> | depth 0 | file index 34 -> 36 (file-earlier = wins)
+  Thuldor's Ivarstead - Riften Stone Alternate Texture | parent Thuldor's Ivarstead | depth 1 | file index 35 -> 37 (file-earlier = wins)
+  Thuldor's Ivarstead - Tweaks and Addons | parent Thuldor's Ivarstead | depth 1 | file index 36 -> 38 (file-earlier = wins)
+  Thuldor's Ivarstead | parent <none> | depth 0 | file index 37 -> 39 (file-earlier = wins)
+  Rodryk's Dragon Bridge - Patch Collection | parent Rodryk's Dragon Bridge | depth 1 | file index 38 -> 40 (file-earlier = wins)
+  Rodryk's Dragon Bridge | parent <none> | depth 0 | file index 39 -> 41 (file-earlier = wins)
+  Hanging Moss to Climbing Roses - Base Object Swapper | parent <none> | depth 0 | file index 40 -> 42 (file-earlier = wins)
+  Journey to Baan Malur Addon - Silgrad | parent <none> | depth 0 | file index 41 -> 43 (file-earlier = wins)
+  Unique Helgen Reborn | parent <none> | depth 0 | file index 42 -> 44 (file-earlier = wins)
 
 --- pass 2: reorder [Dwemer Tech] ---
   JS Dwemer Puzzle Cube SE - Glowmapped | parent JS Dwemer Puzzle Cube SE | depth 1 | file index 12 -> 1 (file-earlier = wins)
@@ -2227,143 +2293,278 @@ conflict index: 1574 related pair(s) loaded
   Dwemer Weapons Glowmapped | parent <none> | depth 0 | file index 10 -> 13 (file-earlier = wins)
   Dwemer Armor Glowmapped | parent <none> | depth 0 | file index 11 -> 14 (file-earlier = wins)
 
+--- pass 2: reorder [Architecture - Base & Large Overhauls] ---
+  JK's Interiors Patch Collection | parent JK's Temple of Dibella | depth 1 | file index 31 -> 26 (file-earlier = wins)
+  JK's Temple of Dibella | parent <none> | depth 0 | file index 26 -> 27 (file-earlier = wins)
+  JK's The Hag's Cure | parent <none> | depth 0 | file index 27 -> 28 (file-earlier = wins)
+  JK's Arnleif and Sons Trading Company | parent <none> | depth 0 | file index 28 -> 29 (file-earlier = wins)
+  Sweet Roll Hut SE | parent <none> | depth 0 | file index 29 -> 30 (file-earlier = wins)
+  Civil War Repairs | parent <none> | depth 0 | file index 30 -> 31 (file-earlier = wins)
+
+--- pass 2: reorder [Glaciers, Ice, Snow and Ash] ---
+  Simple Snow Improvements - Giant Obelisk Fixes (BOS) | parent Simple Snow Improvements - Skyrim Fixes (BOS) | depth 1 | file index 17 -> 16 (file-earlier = wins)
+  Simple Snow Improvements - Skyrim Fixes (BOS) | parent <none> | depth 0 | file index 16 -> 17 (file-earlier = wins)
+
 --- pass 2: reorder [Landscape and Environment] ---
-  Cathedral - 3D Mountain Flowers - Base Object Swapper | parent Cathedral - 3D Mountain Flowers | depth 1 | file index 67 -> 54 (file-earlier = wins)
-  Cathedral - 3D Mountain Flowers | parent <none> | depth 0 | file index 54 -> 55 (file-earlier = wins)
-  Remove Blurry Snowflakes | parent <none> | depth 0 | file index 55 -> 56 (file-earlier = wins)
-  Better Dynamic Snow SE | parent <none> | depth 0 | file index 56 -> 57 (file-earlier = wins)
-  ERM - Enhanced Rocks and Mountains | parent <none> | depth 0 | file index 57 -> 58 (file-earlier = wins)
-  Shooting Stars SE | parent <none> | depth 0 | file index 58 -> 59 (file-earlier = wins)
-  Storm Lightning for SSE and VR (Minty Lightning 2019) | parent <none> | depth 0 | file index 59 -> 60 (file-earlier = wins)
-  Mists of Tamriel NAT III patch | parent Mists of Tamriel | depth 1 | file index 60 -> 61 (file-earlier = wins)
-  Mists of Tamriel - Blue Haze | parent Mists of Tamriel | depth 1 | file index 61 -> 62 (file-earlier = wins)
-  Mists of Tamriel | parent <none> | depth 0 | file index 62 -> 63 (file-earlier = wins)
-  Cursed Crypts - MLO2 RELight Addon | parent <none> | depth 0 | file index 63 -> 64 (file-earlier = wins)
-  Thuldor's Ivarstead Patch Hub | parent <none> | depth 0 | file index 64 -> 65 (file-earlier = wins)
-  Aspens Ablaze Add-On - DynDOLOD 3 -Performance | parent <none> | depth 0 | file index 65 -> 66 (file-earlier = wins)
-  Aspens Ablaze Add-On - DynDOLOD 3 -Quality | parent <none> | depth 0 | file index 66 -> 67 (file-earlier = wins)
+  Fabled Forests - Floating Trees fix BOS version | parent Fabled Forests | depth 1 | file index 36 -> 35 (file-earlier = wins)
+  Fabled Forests Patch Compendium | parent Fabled Forests | depth 1 | file index 37 -> 36 (file-earlier = wins)
+  Fabled Forests - Exclude Morthal Marsh (Plus Various Enhanced Landscape - Dead Marsh Standalone Patches) | parent Fabled Forests | depth 1 | file index 38 -> 37 (file-earlier = wins)
+  Thuldor's Ivarstead Patch Hub | parent Fabled Forests | depth 1 | file index 63 -> 38 (file-earlier = wins)
+  Fabled Forests - Arboreal Ascension Pines Mixed Patch | parent Arboreal Ascension - Enhanced Pine Trees of Skyrim | depth 1 | file index 35 -> 46 (file-earlier = wins)
+  Arboreal Ascension - Enhanced Pine Trees of Skyrim | parent <none> | depth 0 | file index 46 -> 47 (file-earlier = wins)
+  Blubbo_Shrubs_Replacer_darker_Patch.zip | parent <none> | depth 0 | file index 47 -> 48 (file-earlier = wins)
+  Cathedral - 3D Tundra Shrubs | parent <none> | depth 0 | file index 48 -> 49 (file-earlier = wins)
+  Plant Size Variety | parent <none> | depth 0 | file index 49 -> 50 (file-earlier = wins)
+  No More Dead Shrub | parent <none> | depth 0 | file index 50 -> 51 (file-earlier = wins)
+  Blubbos Shrub Replacer | parent <none> | depth 0 | file index 51 -> 52 (file-earlier = wins)
+  Cathedral - 3D Pine Shrubs | parent <none> | depth 0 | file index 52 -> 53 (file-earlier = wins)
+  Cathedral - 3D Sword Ferns | parent <none> | depth 0 | file index 53 -> 54 (file-earlier = wins)
+  Cathedral - 3D Mountain Flowers - Base Object Swapper | parent Cathedral - 3D Mountain Flowers | depth 1 | file index 66 -> 55 (file-earlier = wins)
+  Cathedral - 3D Mountain Flowers | parent <none> | depth 0 | file index 54 -> 56 (file-earlier = wins)
+  Remove Blurry Snowflakes | parent <none> | depth 0 | file index 55 -> 57 (file-earlier = wins)
+  Better Dynamic Snow SE | parent <none> | depth 0 | file index 56 -> 58 (file-earlier = wins)
+  ERM - Enhanced Rocks and Mountains | parent <none> | depth 0 | file index 57 -> 59 (file-earlier = wins)
+  Shooting Stars SE | parent <none> | depth 0 | file index 58 -> 60 (file-earlier = wins)
+  Storm Lightning for SSE and VR (Minty Lightning 2019) | parent <none> | depth 0 | file index 59 -> 61 (file-earlier = wins)
+  Mists of Tamriel NAT III patch | parent Mists of Tamriel | depth 1 | file index 60 -> 62 (file-earlier = wins)
+  Mists of Tamriel - Blue Haze | parent Mists of Tamriel | depth 1 | file index 61 -> 63 (file-earlier = wins)
+  Mists of Tamriel | parent <none> | depth 0 | file index 62 -> 64 (file-earlier = wins)
+  Aspens Ablaze Add-On - DynDOLOD 3 -Performance | parent <none> | depth 0 | file index 64 -> 65 (file-earlier = wins)
+  Aspens Ablaze Add-On - DynDOLOD 3 -Quality | parent <none> | depth 0 | file index 65 -> 66 (file-earlier = wins)
+
+--- pass 2: reorder [Grass] ---
+  No Grassias - A Universal Grass Fix For Grass Mods | parent <none> | depth 0 | file index 2 -> 1 (file-earlier = wins)
+  QW's Grass Patch 2 - Origins of Forest - Cathedral - Folkvangr | parent Origins Of Forest - 3D Forest Grass | depth 1 | file index 1 -> 2 (file-earlier = wins)
 
 --- pass 2: reorder [Audio Fixes & Overhauls] ---
-  Acoustic Space Improvement Fixes - SkyPatcher | parent Acoustic Space Improvement Fixes | depth 1 | file index 28 -> 19 (file-earlier = wins)
-  Patches for Water for ENB - Acoustic Space Improvement Fixes - Lighting Overhauls | parent Acoustic Space Improvement Fixes | depth 1 | file index 29 -> 20 (file-earlier = wins)
-  Acoustic Space Improvement Fixes | parent <none> | depth 0 | file index 19 -> 21 (file-earlier = wins)
+  Acoustic Space Improvement Fixes - SkyPatcher | parent Acoustic Space Improvement Fixes | depth 2 | file index 26 -> 14 (file-earlier = wins)
+  Patches for Water for ENB - Acoustic Space Improvement Fixes - Lighting Overhauls | parent Acoustic Space Improvement Fixes | depth 2 | file index 27 -> 15 (file-earlier = wins)
+  Acoustic Space Improvement Fixes | parent Reverb Interior Sounds Expansion | depth 1 | file index 19 -> 16 (file-earlier = wins)
+  Reverb Interior Sounds Expansion | parent <none> | depth 0 | file index 15 -> 17 (file-earlier = wins)
+  Immersive Sounds Compendium - SkyPatched | parent Immersive Sounds - Compendium | depth 1 | file index 16 -> 18 (file-earlier = wins)
+  Immersive Sounds - Compendium | parent <none> | depth 0 | file index 17 -> 19 (file-earlier = wins)
+  Audio Overhaul - Immersive Sounds Integration (AOS - ISC Compatibility Patch) | parent Audio Overhaul for Skyrim (4.1.2) | depth 1 | file index 14 -> 20 (file-earlier = wins)
+  Audio Overhaul for Skyrim (4.1.2) | parent <none> | depth 0 | file index 18 -> 21 (file-earlier = wins)
   Auto Audio Switch | parent <none> | depth 0 | file index 20 -> 22 (file-earlier = wins)
   Heels - Sound Record Distributor (SRD) - Patch Hub | parent Sound Record Distributor | depth 1 | file index 21 -> 23 (file-earlier = wins)
   Sound Record Distributor | parent <none> | depth 0 | file index 22 -> 24 (file-earlier = wins)
   Distant Rolling Thunder | parent <none> | depth 0 | file index 23 -> 25 (file-earlier = wins)
   Bard Instrumentals Mostly - Sing Rarely | parent <none> | depth 0 | file index 24 -> 26 (file-earlier = wins)
   Lucidity Sound FX v2u | parent <none> | depth 0 | file index 25 -> 27 (file-earlier = wins)
-  Wolverine Claws Impact SFX - Sound for Wolverine's Claws | parent <none> | depth 0 | file index 26 -> 28 (file-earlier = wins)
-  Colossus -Giants SFX Voice Rework | parent <none> | depth 0 | file index 27 -> 29 (file-earlier = wins)
+
+--- pass 2: reorder [New Lands and Quests] ---
+  Miscellaneous Blackthorn Manor Patches | parent Landscape Fixes For Grass Mods | depth 2 | file index 23 -> 4 (file-earlier = wins)
+  Landscape Seam Fixes | parent Landscape Fixes For Grass Mods | depth 2 | file index 25 -> 5 (file-earlier = wins)
+  Alternate Perspective - Helgen Reborn Patch | parent Helgen Reborn | depth 1 | file index 4 -> 6 (file-earlier = wins)
+  Landscape Fixes For Grass Mods | parent Helgen Reborn | depth 1 | file index 26 -> 7 (file-earlier = wins)
+  Helgen Reborn | parent <none> | depth 0 | file index 5 -> 8 (file-earlier = wins)
+  Vvardenfell The New South | parent <none> | depth 0 | file index 6 -> 9 (file-earlier = wins)
+  Spirit of Saturalia - A Christmas Quest - Snow Globe House | parent <none> | depth 0 | file index 7 -> 10 (file-earlier = wins)
+  Revealing Rune | parent <none> | depth 0 | file index 8 -> 11 (file-earlier = wins)
+  Localized Thieves Guild Jobs | parent <none> | depth 0 | file index 9 -> 12 (file-earlier = wins)
+  The Companions - Don't be a Milk Drinker | parent <none> | depth 0 | file index 10 -> 13 (file-earlier = wins)
+  Blood on the Ice Redux - Re-Voiced | parent <none> | depth 0 | file index 11 -> 14 (file-earlier = wins)
+  Blood on the Ice Redux - Voiced ESP-FE | parent <none> | depth 0 | file index 12 -> 15 (file-earlier = wins)
+  Blood on the Ice Redux SE | parent <none> | depth 0 | file index 13 -> 16 (file-earlier = wins)
+  Namira for Good Guys | parent <none> | depth 0 | file index 14 -> 17 (file-earlier = wins)
+  Boethiah for Good Guys | parent <none> | depth 0 | file index 15 -> 18 (file-earlier = wins)
+  Favor Quests Seperated - USSEP Patch | parent <none> | depth 0 | file index 16 -> 19 (file-earlier = wins)
+  Favor Quests Separated | parent <none> | depth 0 | file index 17 -> 20 (file-earlier = wins)
+  Even Better Quest Objectives - Quests Are In Skyrim Patch | parent Quests Are In Skyrim | depth 1 | file index 18 -> 21 (file-earlier = wins)
+  Quests Are In Skyrim | parent <none> | depth 0 | file index 19 -> 22 (file-earlier = wins)
+  Wild Horses Quest Markers (CC) | parent <none> | depth 0 | file index 20 -> 23 (file-earlier = wins)
+  Paarthurnax - Quest Expansion patch for Navigate VR or Even Better Quest Objectives | parent Paarthurnax - Quest Expansion | depth 1 | file index 21 -> 24 (file-earlier = wins)
+  Paarthurnax - Quest Expansion | parent <none> | depth 0 | file index 22 -> 25 (file-earlier = wins)
+  Skeleton Key Dilemma | parent <none> | depth 0 | file index 24 -> 26 (file-earlier = wins)
+
+--- pass 2: reorder [Visual Control] ---
+  NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | parent Solar Lens Flare Redux (SLFR) | depth 1 | file index 70 -> 58 (file-earlier = wins)
+  Solar Lens Flare Redux (SLFR) | parent <none> | depth 0 | file index 58 -> 59 (file-earlier = wins)
+  SSAssist Tools SSE | parent <none> | depth 0 | file index 59 -> 60 (file-earlier = wins)
+  ElSopa - Azura's Star Redone SE - Light Placer | parent <none> | depth 0 | file index 60 -> 61 (file-earlier = wins)
+  Street Lights of Skyrim | parent <none> | depth 0 | file index 61 -> 62 (file-earlier = wins)
+  NAT.CS III | parent <none> | depth 0 | file index 62 -> 63 (file-earlier = wins)
+  Radiant - Candles | parent <none> | depth 0 | file index 63 -> 64 (file-earlier = wins)
+  HD Enhanced Terrain | parent <none> | depth 0 | file index 64 -> 65 (file-earlier = wins)
+  Improved Loading Screen Colors | parent <none> | depth 0 | file index 65 -> 66 (file-earlier = wins)
+  Argonian Loading Screen Fix | parent <none> | depth 0 | file index 66 -> 67 (file-earlier = wins)
+  FinalLookTuner - Author Presets | parent <none> | depth 0 | file index 67 -> 68 (file-earlier = wins)
+  FinalLookTuner-1.4.1-CSHDR-WBAS-Improvement | parent <none> | depth 0 | file index 68 -> 69 (file-earlier = wins)
+  Final Look Tuner FLT - Live Color Adjust | parent <none> | depth 0 | file index 69 -> 70 (file-earlier = wins)
+
+--- pass 2: reorder [Interface - Controller Bindings] ---
+  A Clear Map Of Skyrim - Water for ENB Patch | parent A Clear Map of Skyrim and Other Worlds | depth 1 | file index 59 -> 6 (file-earlier = wins)
+  A Clear Map of Skyrim and Other Worlds | parent <none> | depth 0 | file index 6 -> 7 (file-earlier = wins)
+  Remove Map Camera Limits - Skyrim and Solstheim | parent <none> | depth 0 | file index 7 -> 8 (file-earlier = wins)
+  R.A.S.S. Rain Ash And Snow Shaders - Wet Frost Cold Dust - Settings Loader | parent <none> | depth 0 | file index 8 -> 9 (file-earlier = wins)
+  RaceMenu VR Layout Fix | parent RaceMenu VR | depth 1 | file index 9 -> 10 (file-earlier = wins)
+  RaceMenu VR | parent <none> | depth 0 | file index 10 -> 11 (file-earlier = wins)
+  More Informative Console | parent <none> | depth 0 | file index 11 -> 12 (file-earlier = wins)
+  Extended UI ESP Fix | parent Extended UI | depth 1 | file index 12 -> 13 (file-earlier = wins)
+  Extended UI - Settings Loader | parent Extended UI | depth 1 | file index 13 -> 14 (file-earlier = wins)
+  Extended UI | parent <none> | depth 0 | file index 14 -> 15 (file-earlier = wins)
+  ConsolePlusPlus VR | parent ConsolePlusPlus | depth 1 | file index 15 -> 16 (file-earlier = wins)
+  ConsolePlusPlus | parent <none> | depth 0 | file index 16 -> 17 (file-earlier = wins)
+  Unique Region Names SE | parent <none> | depth 0 | file index 17 -> 18 (file-earlier = wins)
+  Subtitles VR | parent <none> | depth 0 | file index 18 -> 19 (file-earlier = wins)
+  Starlit Lakes Loading Screens | parent <none> | depth 0 | file index 19 -> 20 (file-earlier = wins)
+  Loading Menu Overhaul | parent <none> | depth 0 | file index 20 -> 21 (file-earlier = wins)
+  MCM Menu Redone | parent <none> | depth 0 | file index 21 -> 22 (file-earlier = wins)
+  PrismaUI Teleport Menu | parent <none> | depth 0 | file index 22 -> 23 (file-earlier = wins)
+  Prisma Mod Configuration Manager - PMCM | parent <none> | depth 0 | file index 23 -> 24 (file-earlier = wins)
+  Remove Bethesda Logo Among Other Things | parent <none> | depth 0 | file index 24 -> 25 (file-earlier = wins)
+  SkyPrompt | parent <none> | depth 0 | file index 25 -> 26 (file-earlier = wins)
+  Prisma UI - Next-Gen Web UI Framework | parent <none> | depth 0 | file index 26 -> 27 (file-earlier = wins)
+  Favorites Menu Effects Description | parent <none> | depth 0 | file index 27 -> 28 (file-earlier = wins)
+  SkyUI - VR | parent <none> | depth 0 | file index 28 -> 29 (file-earlier = wins)
+  Untarnished UI | parent <none> | depth 0 | file index 29 -> 30 (file-earlier = wins)
+  Dear Diary Dark Mode - SkyUI Menus Replacer SE | parent <none> | depth 0 | file index 30 -> 31 (file-earlier = wins)
+  Crafting Categories for SkyUI VR | parent Crafting Categories for SkyUI | depth 1 | file index 31 -> 32 (file-earlier = wins)
+  Crafting Categories for SkyUI | parent <none> | depth 0 | file index 32 -> 33 (file-earlier = wins)
+  SkyUI - Ghost Item Bug Fix | parent <none> | depth 0 | file index 33 -> 34 (file-earlier = wins)
+  SSIRT v4.1 | parent <none> | depth 0 | file index 34 -> 35 (file-earlier = wins)
+  UIExtensions VR | parent UIExtensions | depth 1 | file index 35 -> 36 (file-earlier = wins)
+  UIExtensions | parent <none> | depth 0 | file index 36 -> 37 (file-earlier = wins)
+  Yes Im Sure NG | parent <none> | depth 0 | file index 37 -> 38 (file-earlier = wins)
+  Tween Menu Overhaul | parent <none> | depth 0 | file index 38 -> 39 (file-earlier = wins)
+  SkyUI 3D Item Offset Fix (Centered Item Card - Script Fix - Improvement) | parent <none> | depth 0 | file index 39 -> 40 (file-earlier = wins)
+  Remove QuickSave Button from SkyUI System Menu | parent <none> | depth 0 | file index 40 -> 41 (file-earlier = wins)
+  Gauntlet Cursors Collection | parent <none> | depth 0 | file index 41 -> 42 (file-earlier = wins)
+  Azurite Weathers - MCM and Settings Loader | parent <none> | depth 0 | file index 42 -> 43 (file-earlier = wins)
+  Unread Books Glow SSE with MCM | parent <none> | depth 0 | file index 43 -> 44 (file-earlier = wins)
+  Console Commander - Add and Execute Console Commands - SKSE Menu Framework | parent <none> | depth 0 | file index 44 -> 45 (file-earlier = wins)
+  Favorite Misc Items VR | parent Favorite Misc Items | depth 1 | file index 45 -> 46 (file-earlier = wins)
+  Favorite Misc Items | parent <none> | depth 0 | file index 46 -> 47 (file-earlier = wins)
+  Dialogue Movement Enabler VR | parent <none> | depth 0 | file index 47 -> 48 (file-earlier = wins)
+  Description Framework | parent <none> | depth 0 | file index 48 -> 49 (file-earlier = wins)
+  Scaleform Translation Plus Plus VR | parent <none> | depth 0 | file index 49 -> 50 (file-earlier = wins)
+  Scaleform Translation Plus Plus NG | parent <none> | depth 0 | file index 50 -> 51 (file-earlier = wins)
+  Yes Im Sure | parent <none> | depth 0 | file index 51 -> 52 (file-earlier = wins)
+  Whose Quest Is It Anyway VR | parent Whose Quest Is It Anyway | depth 1 | file index 52 -> 53 (file-earlier = wins)
+  Whose Quest Is It Anyway | parent <none> | depth 0 | file index 53 -> 54 (file-earlier = wins)
+  Dynamic String Distributor (DSD) | parent <none> | depth 0 | file index 54 -> 55 (file-earlier = wins)
+  ImGui Icons | parent <none> | depth 0 | file index 55 -> 56 (file-earlier = wins)
+  Inventory Interface Information Injector | parent <none> | depth 0 | file index 56 -> 57 (file-earlier = wins)
+  I'm walkin' here NG | parent <none> | depth 0 | file index 57 -> 58 (file-earlier = wins)
+  Achievements Mods Enabler | parent <none> | depth 0 | file index 58 -> 59 (file-earlier = wins)
 
 --- pass 2: reorder [Essential Bug Fixes] ---
-  Rock Traps Trigger Fixes (FOMOD MAY NEED TO REPATCH) | parent <none> | depth 0 | file index 15 -> 14 (file-earlier = wins)
-  Creation Club Asset Patch | parent <none> | depth 0 | file index 16 -> 15 (file-earlier = wins)
-  DPI Scaling Fix | parent <none> | depth 0 | file index 17 -> 16 (file-earlier = wins)
-  LOD Unloading Bug Fix | parent <none> | depth 0 | file index 18 -> 17 (file-earlier = wins)
-  Universal (SKSE) Rim Lighting Fix | parent <none> | depth 0 | file index 19 -> 18 (file-earlier = wins)
-  Serana's Hood Fix | parent <none> | depth 0 | file index 20 -> 19 (file-earlier = wins)
-  dunPOISoldiersRaidOnStart Script Tweak | parent <none> | depth 0 | file index 21 -> 20 (file-earlier = wins)
-  High Gate Ruins Puzzle Reset Fix | parent <none> | depth 0 | file index 22 -> 21 (file-earlier = wins)
-  Scare my Enemy Bug Fix | parent <none> | depth 0 | file index 23 -> 22 (file-earlier = wins)
-  Universal Cured Serana Eye Fix | parent <none> | depth 0 | file index 24 -> 23 (file-earlier = wins)
-  Chillwind Depths CTD Fix | parent <none> | depth 0 | file index 25 -> 24 (file-earlier = wins)
-  Barter Limit Fix | parent <none> | depth 0 | file index 26 -> 25 (file-earlier = wins)
-  Disable Character Lighting | parent <none> | depth 0 | file index 27 -> 26 (file-earlier = wins)
-  Bug Fixes SSE | parent <none> | depth 0 | file index 28 -> 27 (file-earlier = wins)
-  Stuck on Screen Load Door Prompt Fix | parent <none> | depth 0 | file index 29 -> 28 (file-earlier = wins)
-  Vampire Loading Screen Eye Fix | parent <none> | depth 0 | file index 30 -> 29 (file-earlier = wins)
-  Load Screen Shading Fix | parent <none> | depth 0 | file index 31 -> 30 (file-earlier = wins)
-  Modern Clap Bug Fix | parent <none> | depth 0 | file index 32 -> 31 (file-earlier = wins)
-  World Encounter Hostility Fix -Performance Version | parent <none> | depth 0 | file index 33 -> 32 (file-earlier = wins)
-  FUS RO DON'T - PushActorAway Crash Prevention Script Tweak | parent <none> | depth 0 | file index 34 -> 33 (file-earlier = wins)
-  SCROTE BSA Version | parent <none> | depth 0 | file index 35 -> 34 (file-earlier = wins)
-  Optimized MagicPlayEffectShaderOnHitScript | parent <none> | depth 0 | file index 36 -> 35 (file-earlier = wins)
-  OnMagicEffectApply Replacer | parent <none> | depth 0 | file index 37 -> 36 (file-earlier = wins)
-  CritterSpawn Congestion Fix | parent <none> | depth 0 | file index 38 -> 37 (file-earlier = wins)
-  WE05 Script Fix | parent <none> | depth 0 | file index 39 -> 38 (file-earlier = wins)
-  Zero Bounty Hostility Fix | parent <none> | depth 0 | file index 40 -> 39 (file-earlier = wins)
-  Beard Mask Fix | parent <none> | depth 0 | file index 41 -> 40 (file-earlier = wins)
-  SMP-NPC crash fix | parent <none> | depth 0 | file index 42 -> 41 (file-earlier = wins)
-  NPC Stuck in Bleedout fix | parent <none> | depth 0 | file index 43 -> 42 (file-earlier = wins)
-  Dual Casting Fix VR | parent <none> | depth 0 | file index 44 -> 43 (file-earlier = wins)
-  Bone Wolf Shutdown Fix | parent <none> | depth 0 | file index 45 -> 44 (file-earlier = wins)
-  Grass Cache Helper NG | parent <none> | depth 0 | file index 46 -> 45 (file-earlier = wins)
-  VR Parallax Shader Fix | parent <none> | depth 0 | file index 47 -> 46 (file-earlier = wins)
-  Auto Parallax | parent <none> | depth 0 | file index 48 -> 47 (file-earlier = wins)
-  eFPS - Exterior FPS boost | parent <none> | depth 0 | file index 49 -> 48 (file-earlier = wins)
-  Grass Sampler Fix | parent <none> | depth 0 | file index 50 -> 49 (file-earlier = wins)
-  Distinct Interiors - Fixes | parent Distinct Interiors | depth 1 | file index 51 -> 50 (file-earlier = wins)
-  Distinct Interiors Patch Collection | parent Distinct Interiors | depth 1 | file index 52 -> 51 (file-earlier = wins)
-  Distinct Interiors | parent <none> | depth 0 | file index 53 -> 52 (file-earlier = wins)
-  Navigator Patch Collection | parent <none> | depth 0 | file index 54 -> 53 (file-earlier = wins)
-  Flickering Meshes Fix | parent <none> | depth 0 | file index 55 -> 54 (file-earlier = wins)
-  Alternate Perspective - Assorted Fixes and Patches | parent <none> | depth 0 | file index 56 -> 55 (file-earlier = wins)
-  Mage Armor Script Fix | parent <none> | depth 0 | file index 57 -> 56 (file-earlier = wins)
-  Sky Reflection Fix | parent <none> | depth 0 | file index 58 -> 57 (file-earlier = wins)
-  Staves (Creation) - Minor Fixes | parent <none> | depth 0 | file index 59 -> 58 (file-earlier = wins)
-  Farm Hat 01 Clipping Fix | parent <none> | depth 0 | file index 60 -> 59 (file-earlier = wins)
-  AutoCrossbow - Remesh | parent <none> | depth 0 | file index 61 -> 60 (file-earlier = wins)
-  Vanilla Civil War Dialogue Fix | parent <none> | depth 0 | file index 62 -> 61 (file-earlier = wins)
-  Universal Unwanted Effects Clearer - Visual Effects - Imagespace Modifiers - Effect Shaders - Clairvoyance | parent <none> | depth 0 | file index 63 -> 62 (file-earlier = wins)
-  Dragonactorscript infinite loop fix (FOMOD Repatch if using Dragonwar) | parent <none> | depth 0 | file index 64 -> 63 (file-earlier = wins)
-  Mount Anthor Dragon Fix | parent <none> | depth 0 | file index 65 -> 64 (file-earlier = wins)
-  Ice Wraith Teeth Collision Fixes (FOMOD check for Repatch) | parent <none> | depth 0 | file index 66 -> 65 (file-earlier = wins)
-  Unaggressive Dragon Priests Fix | parent <none> | depth 0 | file index 67 -> 66 (file-earlier = wins)
-  Butterflies Land True | parent <none> | depth 0 | file index 68 -> 67 (file-earlier = wins)
-  Face Discoloration Fix VR | parent Face Discoloration Fix | depth 1 | file index 69 -> 68 (file-earlier = wins)
-  Face Discoloration Fix | parent <none> | depth 0 | file index 70 -> 69 (file-earlier = wins)
-  MuJointFix | parent <none> | depth 0 | file index 71 -> 70 (file-earlier = wins)
-  Mannequin Management | parent <none> | depth 0 | file index 72 -> 71 (file-earlier = wins)
-  Hearthfires Houses Building Fix | parent <none> | depth 0 | file index 73 -> 72 (file-earlier = wins)
-  College of Winterhold Quest Start Fixes | parent <none> | depth 0 | file index 74 -> 73 (file-earlier = wins)
-  Windhelm Lighthouse (Bug Fixes) | parent <none> | depth 0 | file index 75 -> 74 (file-earlier = wins)
-  Whiterun Mesh Fixes (Wizkid Hall of dead patch available) | parent <none> | depth 0 | file index 76 -> 75 (file-earlier = wins)
-  Whiterun Wall Rubble Fixed - meshes without seams | parent <none> | depth 0 | file index 77 -> 76 (file-earlier = wins)
-  Whiterun Fence Base Seam Fix Parallax | parent Whiterun Fence Base Seam Fix | depth 1 | file index 78 -> 77 (file-earlier = wins)
-  Whiterun Fence Base Seam Fix | parent <none> | depth 0 | file index 79 -> 78 (file-earlier = wins)
-  Lights Out. Solitude Lighthouse Fix | parent <none> | depth 0 | file index 80 -> 79 (file-earlier = wins)
-  Dovahkiin No The Mirmulnir Fix | parent <none> | depth 0 | file index 81 -> 80 (file-earlier = wins)
-  Sound Fix for Large Sector Drives | parent <none> | depth 0 | file index 82 -> 81 (file-earlier = wins)
-  Return From A Room With A View | parent <none> | depth 0 | file index 83 -> 82 (file-earlier = wins)
-  Fish Plaque Fixes and Improvements | parent <none> | depth 0 | file index 84 -> 83 (file-earlier = wins)
-  Ore Vein Texture Fix | parent <none> | depth 0 | file index 85 -> 84 (file-earlier = wins)
-  Ore Vein Cube Map and Shader Fixes | parent <none> | depth 0 | file index 86 -> 85 (file-earlier = wins)
-  Dwemer Ballista Crash fix | parent <none> | depth 0 | file index 87 -> 86 (file-earlier = wins)
-  Glowing Mushroom Collision Fixes | parent <none> | depth 0 | file index 88 -> 87 (file-earlier = wins)
-  Mari's Reach Ferns - Vanilla Mesh Tweaks | parent <none> | depth 0 | file index 89 -> 88 (file-earlier = wins)
-  Ugly Shine Wet Gloss begone R.A.S.S. Fix | parent <none> | depth 0 | file index 90 -> 89 (file-earlier = wins)
-  Floating Ash Pile Fix | parent <none> | depth 0 | file index 91 -> 90 (file-earlier = wins)
-  Misc. Blended Road Fixes | parent <none> | depth 0 | file index 92 -> 91 (file-earlier = wins)
-  DALC Fix Preset | parent <none> | depth 0 | file index 93 -> 92 (file-earlier = wins)
-  Aurora Fix | parent <none> | depth 0 | file index 94 -> 93 (file-earlier = wins)
-  Magic Student (WIChangeLocation04) Quest Fix | parent <none> | depth 0 | file index 95 -> 94 (file-earlier = wins)
-  King Olaf's Fire Festival Not Ending Fix | parent <none> | depth 0 | file index 96 -> 95 (file-earlier = wins)
-  Guild Master's Armor First Person Texture Fix | parent <none> | depth 0 | file index 97 -> 96 (file-earlier = wins)
-  Dustman's Cairn Farkas Scene Fix | parent <none> | depth 0 | file index 98 -> 97 (file-earlier = wins)
-  Proving Honor Companions Quest Progression Fix | parent <none> | depth 0 | file index 99 -> 98 (file-earlier = wins)
-  Finding Susanna Alive | parent <none> | depth 0 | file index 100 -> 99 (file-earlier = wins)
-  Source of Stalhrim Quest Fix | parent <none> | depth 0 | file index 101 -> 100 (file-earlier = wins)
-  DynDOLOD Modders Resource Fixes | parent <none> | depth 0 | file index 102 -> 101 (file-earlier = wins)
-  DyndoLOD FX Glow Accurate Disabler - Quality of Life | parent <none> | depth 0 | file index 103 -> 102 (file-earlier = wins)
-  Mfg Fix | parent <none> | depth 0 | file index 104 -> 103 (file-earlier = wins)
-  Animated Static Reload Fix - NG | parent <none> | depth 0 | file index 105 -> 104 (file-earlier = wins)
-  Dlizzio's Mesh Fixes | parent <none> | depth 0 | file index 106 -> 105 (file-earlier = wins)
-  Assorted Mesh Fixes | parent <none> | depth 0 | file index 107 -> 106 (file-earlier = wins)
-  Unofficial Material Fix - Stunning Statues of Skyrim patch | parent Unofficial Material Fix | depth 1 | file index 14 -> 107 (file-earlier = wins)
+  Rock Traps Trigger Fixes (FOMOD MAY NEED TO REPATCH) | parent <none> | depth 0 | file index 12 -> 11 (file-earlier = wins)
+  Creation Club Asset Patch | parent <none> | depth 0 | file index 13 -> 12 (file-earlier = wins)
+  DPI Scaling Fix | parent <none> | depth 0 | file index 14 -> 13 (file-earlier = wins)
+  LOD Unloading Bug Fix | parent <none> | depth 0 | file index 15 -> 14 (file-earlier = wins)
+  Universal (SKSE) Rim Lighting Fix | parent <none> | depth 0 | file index 16 -> 15 (file-earlier = wins)
+  Serana's Hood Fix | parent <none> | depth 0 | file index 17 -> 16 (file-earlier = wins)
+  dunPOISoldiersRaidOnStart Script Tweak | parent <none> | depth 0 | file index 18 -> 17 (file-earlier = wins)
+  High Gate Ruins Puzzle Reset Fix | parent <none> | depth 0 | file index 19 -> 18 (file-earlier = wins)
+  Scare my Enemy Bug Fix | parent <none> | depth 0 | file index 20 -> 19 (file-earlier = wins)
+  Universal Cured Serana Eye Fix | parent <none> | depth 0 | file index 21 -> 20 (file-earlier = wins)
+  Chillwind Depths CTD Fix | parent <none> | depth 0 | file index 22 -> 21 (file-earlier = wins)
+  Barter Limit Fix | parent <none> | depth 0 | file index 23 -> 22 (file-earlier = wins)
+  Disable Character Lighting | parent <none> | depth 0 | file index 24 -> 23 (file-earlier = wins)
+  Bug Fixes SSE | parent <none> | depth 0 | file index 25 -> 24 (file-earlier = wins)
+  Stuck on Screen Load Door Prompt Fix | parent <none> | depth 0 | file index 26 -> 25 (file-earlier = wins)
+  Vampire Loading Screen Eye Fix | parent <none> | depth 0 | file index 27 -> 26 (file-earlier = wins)
+  Load Screen Shading Fix | parent <none> | depth 0 | file index 28 -> 27 (file-earlier = wins)
+  Modern Clap Bug Fix | parent <none> | depth 0 | file index 29 -> 28 (file-earlier = wins)
+  World Encounter Hostility Fix -Performance Version | parent <none> | depth 0 | file index 30 -> 29 (file-earlier = wins)
+  FUS RO DON'T - PushActorAway Crash Prevention Script Tweak | parent <none> | depth 0 | file index 31 -> 30 (file-earlier = wins)
+  SCROTE BSA Version | parent <none> | depth 0 | file index 32 -> 31 (file-earlier = wins)
+  Optimized MagicPlayEffectShaderOnHitScript | parent <none> | depth 0 | file index 33 -> 32 (file-earlier = wins)
+  OnMagicEffectApply Replacer | parent <none> | depth 0 | file index 34 -> 33 (file-earlier = wins)
+  CritterSpawn Congestion Fix | parent <none> | depth 0 | file index 35 -> 34 (file-earlier = wins)
+  WE05 Script Fix | parent <none> | depth 0 | file index 36 -> 35 (file-earlier = wins)
+  Zero Bounty Hostility Fix | parent <none> | depth 0 | file index 37 -> 36 (file-earlier = wins)
+  Beard Mask Fix | parent <none> | depth 0 | file index 38 -> 37 (file-earlier = wins)
+  SMP-NPC crash fix | parent <none> | depth 0 | file index 39 -> 38 (file-earlier = wins)
+  NPC Stuck in Bleedout fix | parent <none> | depth 0 | file index 40 -> 39 (file-earlier = wins)
+  Dual Casting Fix VR | parent <none> | depth 0 | file index 41 -> 40 (file-earlier = wins)
+  Bone Wolf Shutdown Fix | parent <none> | depth 0 | file index 42 -> 41 (file-earlier = wins)
+  Grass Cache Helper NG | parent <none> | depth 0 | file index 43 -> 42 (file-earlier = wins)
+  VR Parallax Shader Fix | parent <none> | depth 0 | file index 44 -> 43 (file-earlier = wins)
+  Auto Parallax | parent <none> | depth 0 | file index 45 -> 44 (file-earlier = wins)
+  eFPS - Exterior FPS boost | parent <none> | depth 0 | file index 46 -> 45 (file-earlier = wins)
+  Grass Sampler Fix | parent <none> | depth 0 | file index 47 -> 46 (file-earlier = wins)
+  Distinct Interiors Patch Collection | parent Distinct Interiors - Fixes | depth 2 | file index 49 -> 47 (file-earlier = wins)
+  Distinct Interiors | parent <none> | depth 0 | file index 50 -> 49 (file-earlier = wins)
+  Navigator Patch Collection | parent <none> | depth 0 | file index 51 -> 50 (file-earlier = wins)
+  Flickering Meshes Fix | parent <none> | depth 0 | file index 52 -> 51 (file-earlier = wins)
+  Alternate Perspective - Assorted Fixes and Patches | parent <none> | depth 0 | file index 53 -> 52 (file-earlier = wins)
+  Mage Armor Script Fix | parent <none> | depth 0 | file index 54 -> 53 (file-earlier = wins)
+  Sky Reflection Fix | parent <none> | depth 0 | file index 55 -> 54 (file-earlier = wins)
+  Staves (Creation) - Minor Fixes | parent <none> | depth 0 | file index 56 -> 55 (file-earlier = wins)
+  Farm Hat 01 Clipping Fix | parent <none> | depth 0 | file index 57 -> 56 (file-earlier = wins)
+  AutoCrossbow - Remesh | parent <none> | depth 0 | file index 58 -> 57 (file-earlier = wins)
+  Vanilla Civil War Dialogue Fix | parent <none> | depth 0 | file index 59 -> 58 (file-earlier = wins)
+  Universal Unwanted Effects Clearer - Visual Effects - Imagespace Modifiers - Effect Shaders - Clairvoyance | parent <none> | depth 0 | file index 60 -> 59 (file-earlier = wins)
+  Dragonactorscript infinite loop fix (FOMOD Repatch if using Dragonwar) | parent <none> | depth 0 | file index 61 -> 60 (file-earlier = wins)
+  Mount Anthor Dragon Fix | parent <none> | depth 0 | file index 62 -> 61 (file-earlier = wins)
+  Ice Wraith Teeth Collision Fixes (FOMOD check for Repatch) | parent <none> | depth 0 | file index 63 -> 62 (file-earlier = wins)
+  Unaggressive Dragon Priests Fix | parent <none> | depth 0 | file index 64 -> 63 (file-earlier = wins)
+  Butterflies Land True | parent <none> | depth 0 | file index 65 -> 64 (file-earlier = wins)
+  Face Discoloration Fix VR | parent Face Discoloration Fix | depth 1 | file index 66 -> 65 (file-earlier = wins)
+  Face Discoloration Fix | parent <none> | depth 0 | file index 67 -> 66 (file-earlier = wins)
+  MuJointFix | parent <none> | depth 0 | file index 68 -> 67 (file-earlier = wins)
+  Mannequin Management | parent <none> | depth 0 | file index 69 -> 68 (file-earlier = wins)
+  Hearthfires Houses Building Fix | parent <none> | depth 0 | file index 70 -> 69 (file-earlier = wins)
+  College of Winterhold Quest Start Fixes | parent <none> | depth 0 | file index 71 -> 70 (file-earlier = wins)
+  Windhelm Lighthouse (Bug Fixes) | parent <none> | depth 0 | file index 72 -> 71 (file-earlier = wins)
+  Whiterun Mesh Fixes (Wizkid Hall of dead patch available) | parent <none> | depth 0 | file index 73 -> 72 (file-earlier = wins)
+  Whiterun Wall Rubble Fixed - meshes without seams | parent <none> | depth 0 | file index 74 -> 73 (file-earlier = wins)
+  Whiterun Fence Base Seam Fix Parallax | parent Whiterun Fence Base Seam Fix | depth 1 | file index 75 -> 74 (file-earlier = wins)
+  Whiterun Fence Base Seam Fix | parent <none> | depth 0 | file index 76 -> 75 (file-earlier = wins)
+  Lights Out. Solitude Lighthouse Fix | parent <none> | depth 0 | file index 77 -> 76 (file-earlier = wins)
+  Dovahkiin No The Mirmulnir Fix | parent <none> | depth 0 | file index 78 -> 77 (file-earlier = wins)
+  Sound Fix for Large Sector Drives | parent <none> | depth 0 | file index 79 -> 78 (file-earlier = wins)
+  Return From A Room With A View | parent <none> | depth 0 | file index 80 -> 79 (file-earlier = wins)
+  Fish Plaque Fixes and Improvements | parent <none> | depth 0 | file index 81 -> 80 (file-earlier = wins)
+  Ore Vein Texture Fix | parent <none> | depth 0 | file index 82 -> 81 (file-earlier = wins)
+  Ore Vein Cube Map and Shader Fixes | parent <none> | depth 0 | file index 83 -> 82 (file-earlier = wins)
+  Dwemer Ballista Crash fix | parent <none> | depth 0 | file index 84 -> 83 (file-earlier = wins)
+  Glowing Mushroom Collision Fixes | parent <none> | depth 0 | file index 85 -> 84 (file-earlier = wins)
+  Mari's Reach Ferns - Vanilla Mesh Tweaks | parent <none> | depth 0 | file index 86 -> 85 (file-earlier = wins)
+  Ugly Shine Wet Gloss begone R.A.S.S. Fix | parent <none> | depth 0 | file index 87 -> 86 (file-earlier = wins)
+  Floating Ash Pile Fix | parent <none> | depth 0 | file index 88 -> 87 (file-earlier = wins)
+  Misc. Blended Road Fixes | parent <none> | depth 0 | file index 89 -> 88 (file-earlier = wins)
+  DALC Fix Preset | parent <none> | depth 0 | file index 90 -> 89 (file-earlier = wins)
+  Aurora Fix | parent <none> | depth 0 | file index 91 -> 90 (file-earlier = wins)
+  Magic Student (WIChangeLocation04) Quest Fix | parent <none> | depth 0 | file index 92 -> 91 (file-earlier = wins)
+  King Olaf's Fire Festival Not Ending Fix | parent <none> | depth 0 | file index 93 -> 92 (file-earlier = wins)
+  Guild Master's Armor First Person Texture Fix | parent <none> | depth 0 | file index 94 -> 93 (file-earlier = wins)
+  Dustman's Cairn Farkas Scene Fix | parent <none> | depth 0 | file index 95 -> 94 (file-earlier = wins)
+  Proving Honor Companions Quest Progression Fix | parent <none> | depth 0 | file index 96 -> 95 (file-earlier = wins)
+  Finding Susanna Alive | parent <none> | depth 0 | file index 97 -> 96 (file-earlier = wins)
+  Source of Stalhrim Quest Fix | parent <none> | depth 0 | file index 98 -> 97 (file-earlier = wins)
+  DynDOLOD Modders Resource Fixes | parent <none> | depth 0 | file index 99 -> 98 (file-earlier = wins)
+  DyndoLOD FX Glow Accurate Disabler - Quality of Life | parent <none> | depth 0 | file index 100 -> 99 (file-earlier = wins)
+  Mfg Fix | parent <none> | depth 0 | file index 101 -> 100 (file-earlier = wins)
+  Animated Static Reload Fix - NG | parent <none> | depth 0 | file index 102 -> 101 (file-earlier = wins)
+  Dlizzio's Mesh Fixes | parent <none> | depth 0 | file index 103 -> 102 (file-earlier = wins)
+  Assorted Mesh Fixes | parent <none> | depth 0 | file index 104 -> 103 (file-earlier = wins)
+  Unofficial Material Fix - Stunning Statues of Skyrim patch | parent Unofficial Material Fix | depth 1 | file index 11 -> 104 (file-earlier = wins)
+
+--- pass 2: reorder [Fixes & Resources - Unofficial Patches] ---
+  Unofficial Skyrim Modder's Patch - USMP SE (Only for AE Import) | parent Unofficial Skyrim Modder's Patch - USMP SE | depth 1 | file index 4 -> 2 (file-earlier = wins)
+  Unofficial Skyrim Modder's Patch - USMP SE | parent <none> | depth 0 | file index 5 -> 3 (file-earlier = wins)
+  Unofficial Skyrim Special Edition Patch - USSEP (4.2.5b) | parent Unofficial Skyrim Special Edition Patch | depth 1 | file index 6 -> 4 (file-earlier = wins)
+  Unofficial Skyrim Special Edition Patch (FOR IMPORTED AE CONTENT) | parent Unofficial Skyrim Special Edition Patch | depth 1 | file index 7 -> 5 (file-earlier = wins)
+  Unofficial Skyrim Special Edition Patch | parent <none> | depth 0 | file index 8 -> 6 (file-earlier = wins)
+  Unofficial Skyrim Modders Patch - USMP - Patch Emporium | parent Unofficial Skyrim Modder's Patch - For VR Users (4.2.5b USSEP) | depth 1 | file index 2 -> 7 (file-earlier = wins)
+  Terrain Parallax Blending Fix | parent Unofficial Skyrim Modder's Patch - For VR Users (4.2.5b USSEP) | depth 1 | file index 3 -> 8 (file-earlier = wins)
 
 --- pass 2.5: conflict-proven auto-fix ---
-  [ENB] Rudy ENB NAT ADDONS and REQUiRED Files vs NAT.ENB III - Natural and Atmospheric Tamriel ENB 3.1.1C: 4 shared files -> patch must win
+  [Consistency Patches] RedBag's Morthal Patches- FOMOD vs RedBag's Morthal - FOMOD: 10 shared files -> patch must win
   [ENB] NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed vs NAT3 HOSE - ENB Preset: 18 shared files -> patch must win
+  [ENB] Rudy ENB NAT ADDONS and REQUiRED Files vs NAT.ENB III - Natural and Atmospheric Tamriel ENB 3.1.1C: 4 shared files -> patch must win
+  [Special Load After Lighting Mods] Fixed Texture Paths for Small Things in EEK's Whiterun Interiors vs EEKs Whiterun Interiors SSE: 3 shared files -> patch must win
   [Lux (Lighting)] Mesh patches for Lux and Lux Orbis vs Lux: 3 shared files -> patch must win
   [Lux (Lighting)] Mara Valentine lighting patch for Lux vs Lux: 8 shared files -> patch must win
+  [Particle Lights] Particle Patch for ENB vs Spider Webs and Particles for ENB: 3 shared files -> patch must win
   [Soul Trap Management Overhauls] COtR - HQ Characters creation addon for RM vs BnP - COTR Teeth Overhaul: 3 shared files -> patch must win
   [Armor and Weapons Retextures and Tweaks] Sons of Skyrim - My patches and fixes SE by Xtudo - Desaturated 2K textures vs Sons of Skyrim Complex Material: 69 shared files -> patch must win
-  [NPCs and Behaviour] RedBag's Morthal Patches- FOMOD vs RS Children Overhaul: 4 shared files -> patch must win
   [Dragons] GoT Dragons Textures - Fixed Soul Absorb And Optimized vs GoT Dragons 16K-8K - Cleaned and Upscaled Textures (Game of Thrones): 8 shared files -> patch must win
   [Skin & Body] Female Hands Redone 3BA Patch for CBBE vs Female Hands Redone: 8 shared files -> patch must win
   [Animations] XP32 Maximum Skeleton Special Extended - Fixed Scripts vs XP32 Maximum Skeleton Special Extended: 3 shared files -> patch must win
-  [Expanded Cities, Towns, and Villages] RS Children Patch Compendium vs Solitude Docks Updated: 4 shared files -> patch must win
   [Races] Race Compatibility SKSE - Patch Hub vs Race Compatibility SKSE: 4 shared files -> patch must win
   [Dungeons and Ruins] Underground - Complex Parallax Addon vs Skyrim Remastered - Caves: 6 shared files -> patch must win
   [General Flora, Ferns & Ground Clutter] High Poly Project - My fixes SE-AE by Xtudo vs High Poly Project: 14 shared files -> patch must win
@@ -2379,14 +2580,14 @@ conflict index: 1574 related pair(s) loaded
 
 --- pass 3: promote rules ---
   [Extension Frameworks - Extended Functionality] SkyPatcher - VR@9 vs SkyPatcher - AE@10 (file-earlier wins): already correct
-  [Essential Bug Fixes] powerofthree's Tweaks VR@115 vs powerofthree's Tweaks@116 (file-earlier wins): already correct
+  [Essential Bug Fixes] powerofthree's Tweaks VR@112 vs powerofthree's Tweaks@113 (file-earlier wins): already correct
   [Extension Frameworks - Extended Functionality] Base Object Swapper VR@20 vs Base Object Swapper@21 (file-earlier wins): already correct
   [Extension Frameworks - Extended Functionality] AnimObject Swapper VR@11 vs AnimObject Swapper@12 (file-earlier wins): already correct
   [Unofficial Skyrim Modders Patch Emporium] FISSES DLL for VR@23 vs FileAccess Interface for Skyrim SE Scripts - FISSES@24 (file-earlier wins): already correct
-  [Interface - Controller Bindings] Scaleform Translation Plus Plus VR@49 vs Scaleform Translation Plus Plus NG@50 (file-earlier wins): already correct
-  [Essential Bug Fixes] Better Combat Escape - NG@117 vs Better Combat Escape - SSE@118 (file-earlier wins): already correct
+  [Interface - Controller Bindings] Scaleform Translation Plus Plus VR@50 vs Scaleform Translation Plus Plus NG@51 (file-earlier wins): already correct
+  [Essential Bug Fixes] Better Combat Escape - NG@114 vs Better Combat Escape - SSE@115 (file-earlier wins): already correct
   [Extension Frameworks - Extended Functionality] Spell Perk Item Distributor (SPID) VR@22 vs Spell Perk Item Distributor@23 (file-earlier wins): already correct
-  [Interface - Controller Bindings] UIExtensions VR@35 vs UIExtensions@36 (file-earlier wins): already correct
+  [Interface - Controller Bindings] UIExtensions VR@36 vs UIExtensions@37 (file-earlier wins): already correct
   [ENB] ENB Helper VR@25 vs ENB Helper SE@26 (file-earlier wins): already correct
   [Gameplay] YASTM - Yet Another Soul Trap Manager VR@9 vs YASTM - Yet Another Soul Trap Manager@10 (file-earlier wins): already correct
 
