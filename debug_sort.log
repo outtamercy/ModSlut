@@ -1,18 +1,16 @@
 === modslut v0.13.3 debug trace ===
 built: 0.13.3 local
 categories.dat: found
-conflict index: 1561 related pair(s) loaded
-  [Animals] + '- Creatures and Mounts' (9/9 categorized mods, runner-up 0)
+conflict index: 1562 related pair(s) loaded
+  [Animals] + '- Creatures and Mounts' (32/35 categorized mods, runner-up 3)
   [Ya Filthy Animal] + '- NSFW' (3 framework mods inside)
-  [New Monsters] + '- Creatures and Mounts' (15/15 categorized mods, runner-up 0)
-  [Architecture - Base & Large Overhauls] + '- Buildings' (20/21 categorized mods, runner-up 1)
+  [Architecture - Base & Large Overhauls] + '- Buildings' (23/24 categorized mods, runner-up 1)
   [Extension Frameworks - Extended Functionality] + '- Utilities' (14/14 categorized mods, runner-up 0)
-  [Extension Frameworks - Engines Patches] + '- Utilities' (4/6 categorized mods, runner-up 1)
+  [Extension Frameworks - Engines Patches] + '- Utilities' (4/5 categorized mods, runner-up 1)
 
---- pass 0: separator auto-rename (6 separator(s)) ---
+--- pass 0: separator auto-rename (5 separator(s)) ---
   REN   [Animals] -> [Animals - Creatures and Mounts]
   REN   [Ya Filthy Animal] -> [Ya Filthy Animal - NSFW]
-  REN   [New Monsters] -> [New Monsters - Creatures and Mounts]
   REN   [Architecture - Base & Large Overhauls] -> [Architecture - Base & Large Overhauls - Buildings]
   REN   [Extension Frameworks - Extended Functionality] -> [Extension Frameworks - Extended Functionality - Utilities]
   REN   [Extension Frameworks - Engines Patches] -> [Extension Frameworks - Engines Patches - Utilities]
@@ -55,7 +53,6 @@ conflict index: 1561 related pair(s) loaded
   [Ya Filthy Animal] -> [Ya Filthy Animal - NSFW] (contains)
   [Ya Filthy Animal] -> [Ya Filthy Animal - NSFW] (contains)
   [Ya Filthy Animal] -> [Ya Filthy Animal - NSFW] (contains)
-  [New Monsters] -> [New Monsters - Creatures and Mounts] (contains)
   [Unofficial Patches] -> [Fixes & Resources - Unofficial Patches] (contains)
   [Unofficial Patches] -> [Fixes & Resources - Unofficial Patches] (contains)
   [Extension Frameworks] -> [Extension Frameworks - Animation & Behavior Engine] (contains)
@@ -92,21 +89,21 @@ conflict index: 1561 related pair(s) loaded
   [Community Shaders] -> [Community Shaders Mods {disable to use ENB}] (contains)
 
 --- pass 1: section assignment (per mod) ---
-  Raven Rock Bathhouse and Raven Rock Reborn Patch (ESL) | plugin family: master [Raven Rock Reborn] sorts later | dest -> [Expanded Cities, Towns, and Villages]
-  Gonzeh - Shor's Stone Overhaul - Spaghetti Patch | plugin family: master [Spaghetti's Towns - Shor's Stone] sorts later | dest -> [Expanded Cities, Towns, and Villages]
-  NAT-ENB SUMMER PATCH | plugin family: master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] sorts later | dest -> [Weather Systems]
-  Mists of Tamriel NAT III patch | plugin family: master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] sorts later | dest -> [Weather Systems]
-  Blackthorn - A Buildable Town - Patches | plugin family: master [Blackthorn - A Buildable Town in The Rift (SE)] sorts later | dest -> [Player Homes]
-  Thuldor's Ivarstead Patch Hub | plugin family: master [Fabled Forests] sorts later | dest -> [Landscape and Environment]
-  Landscape Fixes For Grass Mods | plugin family: master [Helgen Reborn] sorts later | dest -> [New Lands and Quests]
-  A Clear Map Of Skyrim - Water for ENB Patch | plugin family: master [A Clear Map of Skyrim and Other Worlds] sorts later | dest -> [Interface - Controller Bindings]
-  Terrain Parallax Blending Fix | plugin family: master [Unofficial Skyrim Modder's Patch - For VR Users (4.2.5b USSEP)] sorts later | dest -> [Fixes & Resources - Unofficial Patches]
-  JK's Interiors Patch Collection | plugin family: master [JK's Temple of Dibella] sorts later | dest -> [Architecture - Base & Large Overhauls - Buildings]
-  Silverstead Grass Patch | plugin family: master [Silverstead (SE)] sorts later | dest -> [Player Homes]
-  Landscape Seam Fixes | plugin family: master [Landscape Fixes For Grass Mods] sorts later | dest -> [New Lands and Quests]
-  Lively's Patches for Blackthorn and Tree Mods | plugin family: master [Blackthorn - A Buildable Town in The Rift (SE)] sorts later | dest -> [Player Homes]
   NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | plugin family: master [Solar Lens Flare Redux (SLFR)] sorts later | dest -> [Visual Control]
   Rudy ENB NAT ADDONS and REQUiRED Files | plugin family: master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] sorts later | dest -> [Weather Systems]
+  Terrain Parallax Blending Fix | plugin family: master [Unofficial Skyrim Modder's Patch - For VR Users (4.2.5b USSEP)] sorts later | dest -> [Fixes & Resources - Unofficial Patches]
+  Raven Rock Bathhouse and Raven Rock Reborn Patch (ESL) | plugin family: master [Raven Rock Reborn] sorts later | dest -> [Expanded Cities, Towns, and Villages]
+  Mists of Tamriel NAT III patch | plugin family: master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] sorts later | dest -> [Weather Systems]
+  Thuldor's Ivarstead Patch Hub | plugin family: master [Fabled Forests] sorts later | dest -> [Landscape and Environment]
+  Silverstead Grass Patch | plugin family: master [Silverstead (SE)] sorts later | dest -> [Player Homes]
+  Gonzeh - Shor's Stone Overhaul - Spaghetti Patch | plugin family: master [Spaghetti's Towns - Shor's Stone] sorts later | dest -> [Expanded Cities, Towns, and Villages]
+  JK's Interiors Patch Collection | plugin family: master [JK's Temple of Dibella] sorts later | dest -> [Architecture - Base & Large Overhauls - Buildings]
+  A Clear Map Of Skyrim - Water for ENB Patch | plugin family: master [A Clear Map of Skyrim and Other Worlds] sorts later | dest -> [Interface - Controller Bindings]
+  Blackthorn - A Buildable Town - Patches | plugin family: master [Blackthorn - A Buildable Town in The Rift (SE)] sorts later | dest -> [Player Homes]
+  Lively's Patches for Blackthorn and Tree Mods | plugin family: master [Blackthorn - A Buildable Town in The Rift (SE)] sorts later | dest -> [Player Homes]
+  NAT-ENB SUMMER PATCH | plugin family: master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] sorts later | dest -> [Weather Systems]
+  Landscape Seam Fixes | plugin family: master [Landscape Fixes For Grass Mods] sorts later | dest -> [New Lands and Quests]
+  Landscape Fixes For Grass Mods | plugin family: master [Helgen Reborn] sorts later | dest -> [New Lands and Quests]
   plugin family: 15 mod(s) pulled after their plugin masters
   Output - Synthesis SFW | cat none | guard: generated output, never moves | stay
   Output - Synthesis | cat none | guard: generated output, never moves | stay
@@ -125,7 +122,7 @@ conflict index: 1561 related pair(s) loaded
   VRIK Rift-Index-WMR Controller Bindings | cat #48 "VR" | T1 exact name rule | stay
   Controller Bindings - Kvite | cat none | T4 no rule, category, or keyword matched | stay
   Open Composite - Oclulus Default Controller Bindings | cat none | T4 no rule, category, or keyword matched | stay
-  Stable Hands - VR Mouse Stabilization mod | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
+  Stable Hands - VR Mouse Stabilization mod | cat #48 "VR" | T1 exact name rule | MOVE -> [Interface - VR Specific]
   Open Composite - Main (No VR Keyboard) | cat none | T4 no rule, category, or keyword matched | stay
   Open Composite - Main | cat none | T4 no rule, category, or keyword matched | stay
   Open Composite - ENB Fix (Wireless Only) | cat none | T4 no rule, category, or keyword matched | stay
@@ -133,31 +130,38 @@ conflict index: 1561 related pair(s) loaded
   Open Composite skyrim vr fixes | cat #42 "Bug Fixes" | T1 exact name rule | stay
   Open Composite SkyUIVR Fix ReverbG2 | cat #42 "Bug Fixes" | T1 exact name rule | stay
   Open Composite | cat none | T4 no rule, category, or keyword matched | stay
-  BHKS - TNG - Official Patch Collection | cat none | T4 no rule, category, or keyword matched | stay
+  BHKS - TNG - Official Patch Collection | cat none | T1 exact name rule | MOVE -> [Conflict Resolution]
   VR Performance Kit (Probably just use Upscaler) | cat none | T4 no rule, category, or keyword matched | stay
   VR FPS Stabilizer (REINSTALL FMOD AND CONFIGURE) | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
+  ENB Anti-Aliasing - AMD FSR 3.1 - NVIDIA DLAA | cat #22 "Visuals and Graphics" | T1 exact name rule | stay
+  VRAMr | cat none | T1 exact name rule | stay
+  DVLASS | cat none | T1 exact name rule | stay
+  ParallaxR | cat none | T1 exact name rule | stay
+  BENDr | cat none | T1 exact name rule | stay
+  MisMatchR | cat none | T1 exact name rule | stay
+  NVIDIA Reflex Support | cat #13 "Utilities" | T1 exact name rule | stay
   Miscellaneous Embers XD Patches | cat none | T1 exact name rule | stay
   Jk's Rb and Eek Dragonsreach patch | cat none | T4 no rule, category, or keyword matched | stay
   Terrain Shadows - Mod Patches | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Deadly Spell Impact - Patches | cat #34 "Patches" | T1 exact name rule | stay
-  Keyword Patch Collection | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
+  Keyword Patch Collection | cat #34 "Patches" | T1 exact name rule | MOVE -> [Extension Frameworks - Extended Functionality - Utilities]
   The Distinct JK's Ragged Flagon - Lux patch | cat #34 "Patches" | T1 exact name rule | stay
   Distinct JK's Ragged Flagon | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Realistic RS Children and Alternate Perspective Patch | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  Realm of Lorkhan Nicer Trees | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  Realm of Lorkhan Better Bridges | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  Realm of Lorkhan - Bleak Falls Barrow Dragonstone Skip | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
+  Realm of Lorkhan Nicer Trees | cat #34 "Patches" | T1 exact name rule | MOVE -> [Alternate Start]
+  Realm of Lorkhan Better Bridges | cat #34 "Patches" | T1 exact name rule | MOVE -> [Alternate Start]
+  Realm of Lorkhan - Bleak Falls Barrow Dragonstone Skip | cat #34 "Patches" | T1 exact name rule | MOVE -> [Alternate Start]
   CC Fishing Campfire patch | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Pan NPCs DG - Legendary Skyrim Crossbows | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   RASS - NAT III Weather | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   RS Children Patch Compendium | cat #34 "Patches" | T1 exact name rule | stay
   JK's and Redbag's Dragonsreach Patch | cat #34 "Patches" | T1 exact name rule | stay
   RedBag's Morthal Patches- FOMOD | cat #34 "Patches" | T1 exact name rule | stay
-  Redbag's Morthal Fixes | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  Redbag's Morthal - Texture Fixes | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  RedBag's Morthal - FOMOD | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
+  Redbag's Morthal Fixes | cat #34 "Patches" | T1 exact name rule | MOVE -> [Morthal]
+  Redbag's Morthal - Texture Fixes | cat #34 "Patches" | T1 exact name rule | MOVE -> [Morthal]
+  RedBag's Morthal - FOMOD | cat #34 "Patches" | T1 exact name rule | MOVE -> [Morthal]
   Thuldor's Ivarstead - Farmhouse Roofs | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
-  Distinct Thuldor's Ivarstead | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
+  Distinct Thuldor's Ivarstead | cat #34 "Patches" | T1 exact name rule | MOVE -> [Minor Town and City Overhauls]
   COTN Dawnstar Patch Collection | cat #34 "Patches" | T1 exact name rule | stay
   Lively's Deep Elf Race Patches | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
   Race Compatibility - At Your Own Pace Patch | cat #34 "Patches" | T2 category~separator fuzzy [Patches] shared=patches | stay
@@ -196,36 +200,24 @@ conflict index: 1561 related pair(s) loaded
   Dynamic Body Distribution - DBD | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Glowmapped 3D Lava | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   CoMAP | cat none | T4 no rule, category, or keyword matched | stay
+  Jaxonz Map Markers (SSE Port) | cat #13 "Utilities" | T1 exact name rule | stay
   ENB Frame Generation | cat #13 "Utilities" | T1 exact name rule | stay
   Unreal ENB | cat none | T3 keyword [enb] | stay
-  Cubemap Reflections | cat #48 "VR" | T1 exact name rule | MOVE -> [Water]
-  NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed | cat #44 "Presets - ENB and ReShade" | T1 exact name rule | MOVE -> [Weather Systems]
   NAT3 HOSE - ENB Preset | cat none | T3 keyword [enb] | stay
   ENB Light | cat none | T3 keyword [enb] | stay
   ENB Binaries | cat none | T3 keyword [enb] | stay
-  NordwarUA Armours - ENB Dynamic Cubemaps - Sons of Skyrim etc | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Armor and Weapons Retextures and Tweaks]
   Dovahnique's Diverse Deadly Nightshade - (BOS - ENB Lights) | cat none | T3 keyword [enb] | stay
   Dovahnique's Diverse Dark Elf Lanterns (BOS - ENB Lights - High Poly) | cat #8 "Models and Textures" | T3 keyword [enb] | stay
-  Bright Snow Fix for ENB | cat #8 "Models and Textures" | T1 exact name rule | MOVE -> [Glaciers, Ice, Snow and Ash]
   Optimized meshes for ENB lights Rustic Rudy Misc Silverware | cat #8 "Models and Textures" | T3 keyword [enb] | stay
   Optimized meshes for ENB lights | cat #22 "Visuals and Graphics" | T3 keyword [enb] | stay
   ENB Lights For Effect Shaders VR | cat #22 "Visuals and Graphics" | T3 keyword [enb] | stay
-  ENB Anti-Aliasing - AMD FSR 3.1 - NVIDIA DLAA | cat #22 "Visuals and Graphics" | T1 exact name rule | MOVE -> [Performance]
-  Holidays Lanterns ENB Light | cat #22 "Visuals and Graphics" | T1 exact name rule | MOVE -> [Particle Lights]
-  Rock Grass for ENB Complex Grass SE (with Guide) | cat #22 "Visuals and Graphics" | T1 exact name rule | MOVE -> [Rocks & Mountains]
-  Artisto RWT texture tweaks for Water for ENB | cat none | T1 exact name rule | MOVE -> [Water]
-  Water for ENB | cat none | T1 exact name rule | MOVE -> [Water]
   ENB Extender and Helper Skyrim | cat #44 "Presets - ENB and ReShade" | T2 @category rule [Presets - ENB and ReShade] | stay
   NAT.ENB - ENB PRESET v3.1.1C | cat #44 "Presets - ENB and ReShade" | T2 @category rule [Presets - ENB and ReShade] | stay
   Rudy ENB for NAT 3 | cat #44 "Presets - ENB and ReShade" | T2 @category rule [Presets - ENB and ReShade] | stay
-  Rudy ENB NAT ADDONS and REQUiRED Files | cat none | family: follows master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] | MOVE -> [Weather Systems]
-  NAT-ENB SUMMER PATCH | cat #44 "Presets - ENB and ReShade" | family: follows master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] | MOVE -> [Weather Systems]
   NAT.ENB III - Natural and Atmospheric Tamriel ENB 3.1.1C | cat #44 "Presets - ENB and ReShade" | T2 @category rule [Presets - ENB and ReShade] | stay
   ENB Helper VR | cat #44 "Presets - ENB and ReShade" | T2 @category rule [Presets - ENB and ReShade] | stay
   ENB Helper SE | cat #44 "Presets - ENB and ReShade" | T2 @category rule [Presets - ENB and ReShade] | stay
   ENB Helper Plus | cat #44 "Presets - ENB and ReShade" | T2 @category rule [Presets - ENB and ReShade] | stay
-  VRAMr | cat none | T1 exact name rule | MOVE -> [Performance]
-  DVLASS | cat none | T1 exact name rule | MOVE -> [Performance]
   Community Shaders - Particle Lights (Unofficial Fork) | cat #22 "Visuals and Graphics" | T1 exact name rule | stay
   Skylighting - Community Shaders | cat none | T3 keyword [community shaders] | stay
   Effects 11 - Community Shaders | cat none | T3 keyword [community shaders] | stay
@@ -237,19 +229,15 @@ conflict index: 1561 related pair(s) loaded
   Hair Specular - Community Shaders | cat #22 "Visuals and Graphics" | T3 keyword [community shaders] | stay
   Community Shaders | cat none | T3 keyword [community shaders] | stay
   Skylighting | cat none | T4 no rule, category, or keyword matched | stay
+  Light Placer | cat #13 "Utilities" | T1 exact name rule | stay
   Spell Wheel VR | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
   FloraFixer - Mutagen Patcher and Data | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   Dynamic Cubemap Patcher - Mod Organizer 2 Plugin | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   Screenshot Helper - Updated - Fixed 1.5.97 - 1.6.1170 | cat none | T4 no rule, category, or keyword matched | stay
   Fam Faces 2.0 | cat none | T4 no rule, category, or keyword matched | stay
   vMYC_FamiliarFaces | cat none | T4 no rule, category, or keyword matched | stay
-  NoDelete - Wabbajack.Customizer(read documentation on how to set up) | cat none | T1 exact name rule | MOVE -> [Essentials]
-  Wabbajack customizer | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Essentials]
   Rogue Master Detector | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   Multiple Amulets and Rings... Automatically - MARA | cat none | T4 no rule, category, or keyword matched | stay
-  ParallaxR | cat none | T1 exact name rule | MOVE -> [Performance]
-  BENDr | cat none | T1 exact name rule | MOVE -> [Performance]
-  MisMatchR | cat none | T1 exact name rule | MOVE -> [Performance]
   Screenshot Location and Metadata | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   Modern Wait Menu | cat none | T4 no rule, category, or keyword matched | stay
   Gilded Spinning Main Menu Emblem - Chrome Version | cat none | T4 no rule, category, or keyword matched | stay
@@ -260,31 +248,13 @@ conflict index: 1561 related pair(s) loaded
   Broom - The Loose File Sweeper - Sample Rules | cat none | T4 no rule, category, or keyword matched | stay
   Broom - The Loose File Sweeper | cat none | T4 no rule, category, or keyword matched | stay
   Shadow Boost | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
-  Jaxonz Map Markers (SSE Port) | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Worldmap]
-  NVIDIA Reflex Support | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Performance]
-  Luma Utility | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Lux (Lighting)]
-  BodySlide and Outfit Studio | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Skin & Body]
   Animation Motion Revolution | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
-  Dynamic Wind Framework - SKSE Plugin | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Weather Systems]
   The Thieves Guild Ladder - Skyrim Special Edition | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
-  DynDOLOD DLL NG and Scripts | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Dyndolod]
-  DynDOLOD 3 Alpha | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Dyndolod]
-  Light Placer | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Community Shaders Mods {disable to use ENB}]
-  RaceMenu High Heels (Height Fixes) | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Character Creation]
-  L.v.x Magick's - Complete Bleak Falls Barrow Instantly | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Alternate Start]
-  Mfg Fix NG | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Essential Bug Fixes]
-  Autorun | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Essentials]
   AddItemMenu - NG | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   AddItemMenu - Ultimate Mod Explorer | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
-  Infinity UI | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Interface - HUD]
   ConsoleUtil Extended | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
   ConsoleUtilSSE NG | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
-  AddItemMenu search VR keyboard patch | cat #48 "VR" | family: follows master [VR Keyboard] | MOVE -> [Interface - VR Specific]
-  VR Keyboard | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Interface - VR Specific]
   Faster Decompression | cat #13 "Utilities" | T2 category==separator [Utilities] | stay
-  Save Unbaker VR | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Interface - VR Specific]
-  Save Unbaker | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Essential Bug Fixes]
-  Open Animation Replacer | cat #13 "Utilities" | T1 exact name rule | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
   Upgraded Fish for Distinct Interiors | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Upgraded Silverware for Distinct Interiors | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Upgraded Food Barrels for Distinct Interiors | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -301,11 +271,10 @@ conflict index: 1561 related pair(s) loaded
   Divine Dragonscale Decor - A Skyrim Furniture Overhaul | cat none | T4 no rule, category, or keyword matched | stay
   Skyrim Overhauled Furniture Assembly-SOFA-Clean | cat none | T4 no rule, category, or keyword matched | stay
   Blue Retching Netch | cat none | T4 no rule, category, or keyword matched | stay
+  Decorator Helper | cat #7 "Miscellaneous" | T1 exact name rule | stay
   Parallax Mesh Patch Collection | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   FYX 3D Stockades - Compatibility Tweaks | cat none | T4 no rule, category, or keyword matched | stay
-  Default Female at Character Creation | cat #7 "Miscellaneous" | T1 exact name rule | MOVE -> [Character Creation]
   Dramatic Main Menu | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
-  Decorator Helper | cat #7 "Miscellaneous" | T1 exact name rule | MOVE -> [Interior (Re)Designs]
   Buy Lumber In Larger Stacks | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
   Go On Ahead | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
   Insects Begone REDUX | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
@@ -314,7 +283,6 @@ conflict index: 1561 related pair(s) loaded
   Thrones Expanded | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
   Understone Keep Swept | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
   Apachii Divine Elegance Store | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
-  QuickLight - Real floating Candle replacer | cat #7 "Miscellaneous" | T1 exact name rule | MOVE -> [Lux (Lighting)]
   Terrain Helper | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
   Paraphernalia - Anti-Flicker | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
   Fuz Ro D-oh - Silent Voice | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
@@ -356,7 +324,6 @@ conflict index: 1561 related pair(s) loaded
   EEKs Whiterun Interiors SSE | cat #7 "Miscellaneous" | T3 keyword [eeks] | stay
   Meridia's Luxon Beacon Replacer | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   EEKs Whiterun Interiors - Lux and Embers XD Conflict Resolution | cat #7 "Miscellaneous" | T3 keyword [eeks] | stay
-  EEKs Dragonsreach - EEKs Dovahsreach SSE | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | MOVE -> [Architecture - Base & Large Overhauls - Buildings]
   Optional Lux Resource Pack (ENB light) | cat #31 "Overhauls" | T1 exact name rule | stay
   Cursed Crypts - MLO2 RELight Addon | cat #26 "Environmental" | T1 exact name rule | stay
   Emberveil Lighting - A Cinematic ReLight Preset | cat none | T1 exact name rule | stay
@@ -377,20 +344,22 @@ conflict index: 1561 related pair(s) loaded
   Lux Via - Repaired Whiterun Bridge Add-on | cat #31 "Overhauls" | T1 exact name rule | stay
   Lux - Via | cat #31 "Overhauls" | T1 exact name rule | stay
   Lux - Via (patch hub) | cat #31 "Overhauls" | T1 exact name rule | stay
+  Luma Utility | cat #13 "Utilities" | T1 exact name rule | stay
+  QuickLight - Real floating Candle replacer | cat #7 "Miscellaneous" | T1 exact name rule | stay
   Eld-beri II - NPC Support (Spid Distribution file) | cat none | T1 exact name rule | stay
   Quick Beri - Wearable particle light lanterns SPIDified (CS and ENB) | cat #21 "Clothing and Accessories" | T1 exact name rule | stay
   Dark Elf Lantern - ENB Light - Community Shader Light Limit Fix Light - Animated Glow | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
   Particle Patch for ENB | cat none | T4 no rule, category, or keyword matched | stay
   Spider Webs and Particles for ENB | cat #8 "Models and Textures" | T1 exact name rule | stay
-  Eld-beri II - Full Particle Light lantern mod (CS LLF or ENB Light) | cat #21 "Clothing and Accessories" | T1 exact name rule | stay
-  Particle Lights - Christmas in Skyrim - Whiterun (ENB and Community Shaders) | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | MOVE -> [Architecture - Base & Large Overhauls - Buildings]
   ECPLW -ENB Complex Particle Lights for Windows | cat #22 "Visuals and Graphics" | T3 keyword [particle light] | stay
-  ENB Particle Light for Wearable Lanterns | cat #30 "Immersion" | T1 exact name rule | stay
+  Eld-beri II - Full Particle Light lantern mod (CS LLF or ENB Light) | cat #21 "Clothing and Accessories" | T1 exact name rule | stay
   Dark Elf Lantern ENB Light - Particle Patch for ENB - Patch | cat #34 "Patches" | family: follows master [Particle Patch for ENB] | stay
+  ENB Particle Light for Wearable Lanterns | cat #30 "Immersion" | T1 exact name rule | stay
   Particle Patch -Glow Maps | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
   Ghost Pile Seam Fix (Skyrim Particle Patch) | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Particle Patch | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
   Eld-beri II - Lanterns Reworked | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
+  Holidays Lanterns ENB Light | cat #22 "Visuals and Graphics" | T1 exact name rule | stay
   Optional Quick Start - SE | cat none | T4 no rule, category, or keyword matched | stay
   Alternate Perspective - Realm of Lorkhan Patch (Updated for v4) | cat none | family: follows master [Alternate Perspective - Realm of Lorkhan Patch] | stay
   Alternate Perspective - Realm of Lorkhan Patch | cat none | T3 keyword [realm of lorkhan] | stay
@@ -404,6 +373,7 @@ conflict index: 1561 related pair(s) loaded
   Alternate Perspective 4.0.3 - Alternate Start | cat none | T3 keyword [alternate perspective] | stay
   Alternate Perspective - Alternate Start | cat none | T3 keyword [alternate perspective] | stay
   Realm of Lorkhan - Forgotten Shrines | cat #7 "Miscellaneous" | T3 keyword [realm of lorkhan] | stay
+  L.v.x Magick's - Complete Bleak Falls Barrow Instantly | cat #13 "Utilities" | T1 exact name rule | stay
   Ryn's Standing Stones | cat #30 "Immersion" | T2 category~separator fuzzy [Immersion] shared=immersion | stay
   Crowded Streets | cat #30 "Immersion" | T2 category~separator fuzzy [Immersion] shared=immersion | stay
   Jaxonz Positioner Converter Remastered | cat #30 "Immersion" | T2 category~separator fuzzy [Immersion] shared=immersion | stay
@@ -691,6 +661,7 @@ conflict index: 1561 related pair(s) loaded
   Sentinel - Required Resources | cat none | T4 no rule, category, or keyword matched | stay
   Refracting Stalhrim Armors and Weapons - ENB Refract Patch | cat #12 "Weapons and Armour" | family: follows master [Refracting Stalhrim Armors and Weapons] | stay
   Refracting Stalhrim Armors and Weapons | cat none | T4 no rule, category, or keyword matched | stay
+  NordwarUA Armours - ENB Dynamic Cubemaps - Sons of Skyrim etc | cat #8 "Models and Textures" | T1 exact name rule | stay
   JS Essence Extractor SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   JS Dwarven Oil SE - 2k Textures | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   JS Attunement Sphere and Lexicons SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -728,11 +699,7 @@ conflict index: 1561 related pair(s) loaded
   Pandorable's NPCs - Dawnguard | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Pandorable's NPCs | cat #9 "NPC" | T2 @category rule [NPC] | stay
   Skypatcher - Diverse NPC Heights | cat #9 "NPC" | T2 @category rule [NPC] | stay
-  Craftable Saddles from Witcher 3 | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Phantom Horse - New Phantom Mounts | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  The Four Horses of the Apocalypse SSE port | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   No more glitchy textures. Witcher Horse Expansion compatibility patches (ENG) | cat #34 "Patches" | T1 exact name rule | stay
-  Witcher Horse Expansion | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   Steeds of Ultima - VR Mounted combat | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
   Stamina of Steeds | cat #42 "Bug Fixes" | T1 exact name rule | stay
   GoT The Black Dread Skull Replacer | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -748,14 +715,9 @@ conflict index: 1561 related pair(s) loaded
   HotD and GoT Dragons Standalone | cat none | T4 no rule, category, or keyword matched | stay
   HotD Dragons-Textures | cat none | T4 no rule, category, or keyword matched | stay
   Kojaks Inquisitive Dragons | cat none | T4 no rule, category, or keyword matched | stay
-  Incubated Eggs SE (esl) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   Dragon Nests Of Skyrim | cat none | T4 no rule, category, or keyword matched | stay
   Dragon Nests and Eggs | cat none | T4 no rule, category, or keyword matched | stay
   Dragon War - Rescaled | cat none | T4 no rule, category, or keyword matched | stay
-  Dragon War - Rebalanced | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Dragon War - A Dragon Overhaul | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Nithhogg Dragon | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Majestic Dragons - Larger and immersive proportions | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   Paraphernalia - VR Dragon Riding | cat #48 "VR" | T1 exact name rule | stay
   SSS-CT - Slaughterfish Stay Submerged - Collision Tweak (Savage Skyrim Patch available) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
   (ESL) Rats for Skeevers Replacement SE | cat none | T4 no rule, category, or keyword matched | stay
@@ -783,9 +745,42 @@ conflict index: 1561 related pair(s) loaded
   Trolls SE | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
   Falmer Overhaul - New models and textures | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Bellyaches Animal and Creature Pack Revamp | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  SkyPatcher - Smaller Dogs | cat #33 "Creatures and Mounts" | T1 exact name rule | MOVE -> [Ya Filthy Animal - NSFW]
-  Pelagius's Wildlife AI - Skypatcher | cat #33 "Creatures and Mounts" | T1 exact name rule | MOVE -> [Ya Filthy Animal - NSFW]
-  The Killer Rabbit of Caerbannog- 2023 Easter Special (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
+  Craftable Saddles from Witcher 3 | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Phantom Horse - New Phantom Mounts | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  The Four Horses of the Apocalypse SSE port | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Witcher Horse Expansion | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Incubated Eggs SE (esl) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Dragon War - Rebalanced | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Dragon War - A Dragon Overhaul | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Nithhogg Dragon | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Majestic Dragons - Larger and immersive proportions | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  The Killer Rabbit of Caerbannog- 2023 Easter Special (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Mammoth babies for the Mournful Giant | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  New Dogs Replacers SE | cat #23 "Followers & Companions - Creatures" | T2 category~separator fuzzy [Followers & Companions - Creatures] shared=creatures | stay
+  Dog Followers are Huskies - No Barking - Silent Stealth | cat #23 "Followers & Companions - Creatures" | T2 category~separator fuzzy [Followers & Companions - Creatures] shared=creatures | stay
+  Piglet - The courageous piggy companion - CC | cat #23 "Followers & Companions - Creatures" | T2 category~separator fuzzy [Followers & Companions - Creatures] shared=creatures | stay
+  Arcs WispMother Redux 2k - 4k | cat #23 "Followers & Companions - Creatures" | T2 category~separator fuzzy [Followers & Companions - Creatures] shared=creatures | stay
+  High Fantasy Pack- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Skeletal Revenants- Mihail Monsters and Animals (SE-AE version) (''undead'') | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Sea Giants and Ice Titans- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Dragonlings- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Cliff Racers Fly So High- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Wolves of Cyrodiil - Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Baby Mammoths - Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Mammoth Expansion - Mihail Monsters and Animals (SE-AE version) (''megafauna'') | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Trolls of Cyrodiil - Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Pigeons- Mihail Monsters and Animals (SE-AE version) (''bird'') | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  More Cow Variants- Mihail Monsters and Animals (SE-AE) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Frogs- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Crows and Ravens- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Cow Replacer- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Chickens and Chicks- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Mihail's Rabbit Replacers - Optimized Textures | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Optimized Meshes - Rabbit Replacer- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Rabbit Replacer- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Roosters- Mihail Monsters and Animals (SE-AE version) (''chicken'') | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  Creatures Resized for VR - SE | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
+  (ESP-ESL) Dwarven Motorcycle and other Vehicles SE | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | stay
   Realistic Bears Project | cat none | T4 no rule, category, or keyword matched | stay
   Bears of the North Patches | cat none | T4 no rule, category, or keyword matched | stay
   Wall mounted dead animals fixes (Bears of the north patch available) | cat #8 "Models and Textures" | family: follows master [Bears of the North] | stay
@@ -794,7 +789,6 @@ conflict index: 1561 related pair(s) loaded
   Dynamic Animal Variants (1.2.2) | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Dream's Unique Dogs SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   High-Res Dartwing (Dragonfly) Texture | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Mammoth babies for the Mournful Giant | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   HD Reworked Mammoths 4K | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Simply Open Source Voice Pack | cat none | T4 no rule, category, or keyword matched | stay
   Baby Dragon - A Pet Follower | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | stay
@@ -806,12 +800,8 @@ conflict index: 1561 related pair(s) loaded
   Shang-Chi and Jason Statham with you in Skyrim | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | stay
   All in one pack Schwarzenegger | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | stay
   Duneborne Followers | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | stay
-  New Dogs Replacers SE | cat #23 "Followers & Companions - Creatures" | T2 category~separator fuzzy [Followers & Companions - Creatures] shared=creatures | MOVE -> [Animals - Creatures and Mounts]
-  Dog Followers are Huskies - No Barking - Silent Stealth | cat #23 "Followers & Companions - Creatures" | T2 category~separator fuzzy [Followers & Companions - Creatures] shared=creatures | MOVE -> [Animals - Creatures and Mounts]
   Aetherial girl CBBE 3BA bodyslide preset | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | stay
-  Piglet - The courageous piggy companion - CC | cat #23 "Followers & Companions - Creatures" | T2 category~separator fuzzy [Followers & Companions - Creatures] shared=creatures | MOVE -> [Animals - Creatures and Mounts]
   Fenrir the frost wolf sse | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | stay
-  Arcs WispMother Redux 2k - 4k | cat #23 "Followers & Companions - Creatures" | T2 category~separator fuzzy [Followers & Companions - Creatures] shared=creatures | MOVE -> [Animals - Creatures and Mounts]
   Twins of Windhelm - Nord Followers | cat #43 "Followers & Companions" | T2 category~separator fuzzy [Followers & Companions] shared=followers | stay
   Dead and Daedric Guardians | cat none | T1 exact name rule | stay
   Baka ABC Beast Cocks | cat none | T4 no rule, category, or keyword matched | stay
@@ -870,6 +860,8 @@ conflict index: 1561 related pair(s) loaded
   SexLab Framework SE | cat none | T3 keyword [sexlab] | stay
   Sex Grants Experience | cat #25 "Skills and Leveling" | T1 exact name rule | stay
   The Circle of Lust | cat #37 "Locations -  New" | T1 exact name rule | stay
+  SkyPatcher - Smaller Dogs | cat #33 "Creatures and Mounts" | T1 exact name rule | stay
+  Pelagius's Wildlife AI - Skypatcher | cat #33 "Creatures and Mounts" | T1 exact name rule | stay
   Mu Joint Fix | cat none | T4 no rule, category, or keyword matched | stay
   XP32 First Person Skeleton CTD Bugfix for VR | cat none | T4 no rule, category, or keyword matched | stay
   no me molestes - xpmse and planck pelvis forcefield fix (DJT VR) | cat #42 "Bug Fixes" | T1 exact name rule | stay
@@ -962,6 +954,7 @@ conflict index: 1561 related pair(s) loaded
   Vrayth's Racemenu Presets - Male and Female - EFM - High Poly Head | cat #5 "Body, Face, and Hair" | T2 @category rule [Body, Face, and Hair] | stay
   Dracula Racemenu Preset by AlenVex | cat #5 "Body, Face, and Hair" | T2 @category rule [Body, Face, and Hair] | stay
   Cathedral Armory - HIMBO BodySlide Compatibility Patch | cat #5 "Body, Face, and Hair" | T2 @category rule [Body, Face, and Hair] | stay
+  BodySlide and Outfit Studio | cat #13 "Utilities" | T1 exact name rule | stay
   Goofy Dragonborn Macho Walk | cat none | T4 no rule, category, or keyword matched | stay
   Pandora Behaviour Engine Plus | cat none | T3 keyword [pandora] | stay
   XP32 Maximum Skeleton Special Extended - Fixed Scripts | cat #17 "Animation" | T2 @category rule [Animation] | stay
@@ -1022,33 +1015,13 @@ conflict index: 1561 related pair(s) loaded
   Botox of Skyrim - Patch Hub | cat none | T3 keyword [botox] | stay
   Realistic RS Children Overhaul | cat none | T3 keyword [rs children] | stay
   RS Children Overhaul | cat #9 "NPC" | T1 exact name rule | stay
-  High Fantasy Pack- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Skeletal Revenants- Mihail Monsters and Animals (SE-AE version) (''undead'') | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Sea Giants and Ice Titans- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Dragonlings- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Cliff Racers Fly So High- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   Mihail Soul Cairn Drainlife Crystal - Retexture | cat #8 "Models and Textures" | T3 keyword [mihail] | stay
   Beef Unending - A Civil War Replacer | cat none | T4 no rule, category, or keyword matched | stay
-  Wolves of Cyrodiil - Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Baby Mammoths - Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Mammoth Expansion - Mihail Monsters and Animals (SE-AE version) (''megafauna'') | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Trolls of Cyrodiil - Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   Mihail's Animal VR resize | cat #48 "VR" | T3 keyword [mihail] | stay
   Sewer Rats - Mihail Monsters and Animals (SE-AE version) | cat none | T3 keyword [mihail] | stay
   Realistic Skin And Hair Shaders - Giants | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Pigeons- Mihail Monsters and Animals (SE-AE version) (''bird'') | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  More Cow Variants- Mihail Monsters and Animals (SE-AE) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   Giant.by.Kajuan | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Frogs- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Crows and Ravens- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Cow Replacer- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Chickens and Chicks- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Mihail's Rabbit Replacers - Optimized Textures | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Optimized Meshes - Rabbit Replacer- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Rabbit Replacer- Mihail Monsters and Animals (SE-AE version) | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
-  Roosters- Mihail Monsters and Animals (SE-AE version) (''chicken'') | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   Fancy Mihail's Roosters SPID or Replacer | cat #8 "Models and Textures" | T3 keyword [mihail] | stay
-  Creatures Resized for VR - SE | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   Chickens and Chicks - My optimized textures SE by Xtudo | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Festival Flags Upscaled | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   A Festive Christmas - SSE Conversion | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -1105,7 +1078,6 @@ conflict index: 1561 related pair(s) loaded
   Dwemer Pocket Dimension | cat #24 "Player homes" | T2 category==separator [Player homes] | stay
   Skyrim Teleportations | cat none | T4 no rule, category, or keyword matched | stay
   Paraglider Replacers 2k-4k | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  (ESP-ESL) Dwarven Motorcycle and other Vehicles SE | cat #33 "Creatures and Mounts" | T2 category~separator fuzzy [Creatures and Mounts] shared=creatures+mounts | MOVE -> [Animals - Creatures and Mounts]
   HFs - Wagon Wheel | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Carriages HD UHD Wood Texture Replacer | cat none | T4 no rule, category, or keyword matched | stay
   Carriages HD UHD | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -1138,7 +1110,6 @@ conflict index: 1561 related pair(s) loaded
   Rally's Solstheim - Parallax | cat #8 "Models and Textures" | T3 keyword [solstheim] | stay
   Raven Rock Architecture Retexture - 4K - Optimized | cat #8 "Models and Textures" | T3 keyword [raven rock] | stay
   Rally's Solstheim Landscapes Complex Terrain Parallax Edition 2k | cat #8 "Models and Textures" | T3 keyword [solstheim] | stay
-  Raven Rock Building Tweaks | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | MOVE -> [Architecture - Base & Large Overhauls - Buildings]
   Shaders of Solstheim - Ash and Moss | cat #22 "Visuals and Graphics" | T3 keyword [solstheim] | stay
   Spiders of Solstheim - Transparency Fix | cat #22 "Visuals and Graphics" | T3 keyword [solstheim] | stay
   Winterhold Bathhouse | cat none | T3 keyword [winterhold] | stay
@@ -1183,7 +1154,6 @@ conflict index: 1561 related pair(s) loaded
   Mrf's Solitude | cat #8 "Models and Textures" | T3 keyword [solitude] | stay
   Solitude farmhouses rework | cat #8 "Models and Textures" | T3 keyword [solitude] | stay
   Extravagant Interiors - Solitude | cat none | T3 keyword [solitude] | stay
-  Solitude Watchtower | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | MOVE -> [Architecture - Base & Large Overhauls - Buildings]
   Sconces of Solitude - Unique Solitude Braziers - Base Object Swapper | cat #8 "Models and Textures" | T3 keyword [solitude] | stay
   Riften Bathhouse and JK's Bee and Barb Patch - ESL Flagged | cat #37 "Locations -  New" | family: follows master [RIften Bathhouse] | stay
   RIften Bathhouse | cat none | T3 keyword [riften] | stay
@@ -1341,6 +1311,9 @@ conflict index: 1561 related pair(s) loaded
   FYX - Water Mesh Optimization | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Alternate Perspective - Skyrim Landscape and Water Fixes Patch | cat none | family: follows master [Skyrim Landscape and Water Fixes] | stay
   Skyrim Landscape and Water Fixes | cat none | T4 no rule, category, or keyword matched | stay
+  Cubemap Reflections | cat #48 "VR" | T1 exact name rule | stay
+  Artisto RWT texture tweaks for Water for ENB | cat none | T1 exact name rule | stay
+  Water for ENB | cat none | T1 exact name rule | stay
   Rally's Barsets | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   ladder 3d immersion vanilla style | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   ElSopa HD - Unique Hand Painted Road Signs SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -1468,6 +1441,10 @@ conflict index: 1561 related pair(s) loaded
   JK's Arnleif and Sons Trading Company | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | stay
   Sweet Roll Hut SE | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | stay
   Civil War Repairs | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | stay
+  EEKs Dragonsreach - EEKs Dovahsreach SSE | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | stay
+  Particle Lights - Christmas in Skyrim - Whiterun (ENB and Community Shaders) | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | stay
+  Raven Rock Building Tweaks | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | stay
+  Solitude Watchtower | cat #2 "Buildings" | T2 category~separator fuzzy [Buildings] shared=buildings | stay
   Fabled Forests - Ivy on Trees | cat none | T4 no rule, category, or keyword matched | stay
   Cover Woods SSE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   HD Remastered Tree Bark - Happy Little Trees - 16k 8k 4k 2k | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -1527,6 +1504,7 @@ conflict index: 1561 related pair(s) loaded
   Simple Snow Improvements - Snow Forts (BOS) | cat #22 "Visuals and Graphics" | T3 keyword [simple snow] | stay
   Simple Snow Improvements - Giant Obelisk Fixes (BOS) | cat #22 "Visuals and Graphics" | T3 keyword [simple snow] | stay
   Simple Snow Improvements - Skyrim Fixes (BOS) | cat #22 "Visuals and Graphics" | T3 keyword [simple snow] | stay
+  Bright Snow Fix for ENB | cat #8 "Models and Textures" | T1 exact name rule | stay
   Glacierslab SSE | cat #8 "Models and Textures" | T3 keyword [glacier] | stay
   Multilayer Glacier Replacer | cat #22 "Visuals and Graphics" | T3 keyword [glacier] | stay
   Enhanced Rocks and Mountains - Addon | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -1537,6 +1515,7 @@ conflict index: 1561 related pair(s) loaded
   Riton Mountain | cat none | T4 no rule, category, or keyword matched | stay
   ERM - Complex Materials | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Rapid Rocks | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
+  Rock Grass for ENB Complex Grass SE (with Guide) | cat #22 "Visuals and Graphics" | T1 exact name rule | stay
   Skyrim 3D roads | cat none | T4 no rule, category, or keyword matched | stay
   Medieval Blended Roads | cat #8 "Models and Textures" | T3 keyword [blended roads] | stay
   Blended Roads Retexture | cat none | T3 keyword [blended roads] | stay
@@ -1605,7 +1584,6 @@ conflict index: 1561 related pair(s) loaded
   ERM - Enhanced Rocks and Mountains | cat #26 "Environmental" | T2 @category rule [Environmental] | stay
   Shooting Stars SE | cat #26 "Environmental" | T2 @category rule [Environmental] | stay
   Storm Lightning for SSE and VR (Minty Lightning 2019) | cat #26 "Environmental" | T2 @category rule [Environmental] | stay
-  Mists of Tamriel NAT III patch | cat #34 "Patches" | family: follows master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] | MOVE -> [Weather Systems]
   Mists of Tamriel - Blue Haze | cat #26 "Environmental" | T2 @category rule [Environmental] | stay
   Mists of Tamriel | cat #26 "Environmental" | T2 @category rule [Environmental] | stay
   Aspens Ablaze Add-On - DynDOLOD 3 -Performance | cat #26 "Environmental" | T2 @category rule [Environmental] | stay
@@ -1656,6 +1634,11 @@ conflict index: 1561 related pair(s) loaded
   Dynamic Candles - Blow Them Out and Light Again | cat none | T4 no rule, category, or keyword matched | stay
   NAT.CS - From Dusk Till Dawn | cat none | T4 no rule, category, or keyword matched | stay
   Pretty Lantern Replacer SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
+  NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed | cat #44 "Presets - ENB and ReShade" | T1 exact name rule | stay
+  Rudy ENB NAT ADDONS and REQUiRED Files | cat none | family: follows master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] | stay
+  NAT-ENB SUMMER PATCH | cat #44 "Presets - ENB and ReShade" | family: follows master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] | stay
+  Dynamic Wind Framework - SKSE Plugin | cat #13 "Utilities" | T1 exact name rule | stay
+  Mists of Tamriel NAT III patch | cat #34 "Patches" | family: follows master [NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed] | stay
   Conquest of Skyrim (Don't enable before finishing the civil war) | cat #4 "Guilds/Factions" | T4 no rule, category, or keyword matched | stay
   HD LODs Textures SE | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   After the Civil War - Siege Damage Repairs | cat none | T4 no rule, category, or keyword matched | stay
@@ -1692,6 +1675,8 @@ conflict index: 1561 related pair(s) loaded
   DynDolod - Darken texture for generation - The good one last one | cat none | T4 no rule, category, or keyword matched | stay
   DynDOLOD TexGen Fixes | cat none | T4 no rule, category, or keyword matched | stay
   LOD Mesh Fixes for DynDOLOD | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
+  DynDOLOD DLL NG and Scripts | cat #13 "Utilities" | T1 exact name rule | stay
+  DynDOLOD 3 Alpha | cat #13 "Utilities" | T1 exact name rule | stay
   Dynamic Gamma SKSE | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
   NAT Effect 11 | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
   Native Mesh Light Flicker Fix | cat none | T4 no rule, category, or keyword matched | stay
@@ -1770,6 +1755,8 @@ conflict index: 1561 related pair(s) loaded
   HIMBO V3 Bodyhair Overlays for Racemenu | cat #8 "Models and Textures" | T3 keyword [racemenu] | stay
   Young Wolverine- A RaceMenu Preset | cat none | T3 keyword [racemenu] | stay
   The Wolverine - A RaceMenu Preset | cat none | T3 keyword [racemenu] | stay
+  RaceMenu High Heels (Height Fixes) | cat #13 "Utilities" | T1 exact name rule | stay
+  Default Female at Character Creation | cat #7 "Miscellaneous" | T1 exact name rule | stay
   A Matter of Time - Edge UI Patch | cat #15 "User Interface" | T2 category~separator fuzzy [User Interface] shared=interface | stay
   A Matter of Time - A HUD clock widget | cat #15 "User Interface" | T2 category~separator fuzzy [User Interface] shared=interface | stay
   Dragon's Eye Minimap | cat #15 "User Interface" | T2 category~separator fuzzy [User Interface] shared=interface | stay
@@ -1838,6 +1825,7 @@ conflict index: 1561 related pair(s) loaded
   Fix Note icon for SkyUI (SKSE64 plugin) | cat none | T3 keyword [skyui] | stay
   SkyUI | cat none | T3 keyword [skyui] | stay
   MCM Helper | cat none | T3 keyword [mcm] | stay
+  Infinity UI | cat #13 "Utilities" | T1 exact name rule | stay
   AddItemMenuSE AE Fixed | cat none | T4 no rule, category, or keyword matched | stay
   AddItemMenuSE Fixed | cat none | T4 no rule, category, or keyword matched | stay
   AddItemMenu AE | cat none | T4 no rule, category, or keyword matched | stay
@@ -1878,6 +1866,9 @@ conflict index: 1561 related pair(s) loaded
   Arctal's VRIK Tweaks | cat #48 "VR" | T3 keyword [vrik] | stay
   VRIK Player Avatar | cat #48 "VR" | T3 keyword [vrik] | stay
   MCM Helper VR | cat #13 "Utilities" | T1 exact name rule | stay
+  AddItemMenu search VR keyboard patch | cat #48 "VR" | T4 no rule, category, or keyword matched | stay
+  VR Keyboard | cat #13 "Utilities" | T1 exact name rule | stay
+  Save Unbaker VR | cat #13 "Utilities" | T1 exact name rule | stay
   SMIM Fix | cat none | T4 no rule, category, or keyword matched | stay
   OSHA-Compliant Sovengarde Mesh Fixes - Parallax | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   OSHA-Compliant Sovengarde Mesh Fixes | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -2009,6 +2000,8 @@ conflict index: 1561 related pair(s) loaded
   .1130 _ResourcePack fixes | cat #42 "Bug Fixes" | T2 @category rule [Bug Fixes] | stay
   CK64Fixes Release 3.2 | cat #42 "Bug Fixes" | T2 @category rule [Bug Fixes] | stay
   Creation Kit Platform Extended for Skyrim | cat #42 "Bug Fixes" | T2 @category rule [Bug Fixes] | stay
+  Mfg Fix NG | cat #13 "Utilities" | T1 exact name rule | stay
+  Save Unbaker | cat #13 "Utilities" | T1 exact name rule | stay
   Unofficial Skyrim Creation Club Content Patches | cat none | T4 no rule, category, or keyword matched | stay
   Skyrim VR USSEP Dwarven Ballista missing texture fix | cat #48 "VR" | T3 keyword [ussep] | stay
   Unofficial Skyrim Modder's Patch - USMP SE (Only for AE Import) | cat none | T1 exact name rule | stay
@@ -2025,6 +2018,23 @@ conflict index: 1561 related pair(s) loaded
   A-Pose Bug Fix - Universal Behavior Runtime | cat #42 "Bug Fixes" | T1 exact name rule | stay
   Animation Queue Fix | cat #42 "Bug Fixes" | T1 exact name rule | stay
   Animation Motion Fix | cat #42 "Bug Fixes" | T1 exact name rule | stay
+  Open Animation Replacer | cat #13 "Utilities" | T1 exact name rule | stay
+  Optimised Scripts for Enhanced Blood Textures - SPID version | cat #22 "Visuals and Graphics" | T3 keyword [spid] | stay
+  PapyrusUtil ESL Patch | cat #48 "VR" | T3 keyword [papyrusutil] | stay
+  JContainers-master | cat none | T3 keyword [jcontainers] | stay
+  PapyrusUtil VR - Scripting Utility Functions | cat none | T3 keyword [papyrusutil] | stay
+  Papyrus Extender VR | cat none | T3 keyword [papyrus extender] | stay
+  Diverse Dog Textures - SPID | cat #8 "Models and Textures" | T3 keyword [spid] | stay
+  Better Dressed Kids - Willybach Textures SPID | cat none | T3 keyword [spid] | stay
+  Schlongs of Skyrim - PapyrusUtil SexLab Tweaks | cat none | T3 keyword [papyrusutil] | stay
+  Orcish Lanterns for Orc Strongholds by Jjerem - Base Object Swapper | cat #8 "Models and Textures" | T3 keyword [base object swapper] | stay
+  Dynamic Things Alternative - Base Object Swapper | cat none | T3 keyword [base object swapper] | stay
+  Blacksmith Forge and Anvil Variants - Base Object Swapper | cat #8 "Models and Textures" | T3 keyword [base object swapper] | stay
+  Diverse Archery Targets - Base Object Swapper | cat none | T3 keyword [base object swapper] | stay
+  Smaller Goblets Cups and Jugs - Base Object Swapper | cat #8 "Models and Textures" | T3 keyword [base object swapper] | stay
+  Dovahnique's Diverse Vendor Carts - Base Object Swapper | cat #8 "Models and Textures" | T3 keyword [base object swapper] | stay
+  Reimagined Mountain Flowers - Base Object Swapper - Seasons of Skyrim | cat #8 "Models and Textures" | T3 keyword [base object swapper] | stay
+  Soul Gem Universal Sorting - SkyPatcher | cat #7 "Miscellaneous" | T3 keyword [skypatcher] | stay
   SKSE - Real Time Script Profiler | cat none | T4 no rule, category, or keyword matched | stay
   Enchantment Art Extender | cat none | T4 no rule, category, or keyword matched | stay
   Don't send me there again (dosemetha) | cat none | T4 no rule, category, or keyword matched | stay
@@ -2056,22 +2066,6 @@ conflict index: 1561 related pair(s) loaded
   Skyrim Priority SE AE - CPU Performance FPS Optimizer (SET AFFINITY WITH PLUGIN) | cat #13 "Utilities" | T1 exact name rule | stay
   Faster File Copy | cat #13 "Utilities" | T1 exact name rule | stay
   Keyword Item Distributor | cat #13 "Utilities" | T1 exact name rule | stay
-  Optimised Scripts for Enhanced Blood Textures - SPID version | cat #22 "Visuals and Graphics" | T3 keyword [spid] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  PapyrusUtil ESL Patch | cat #48 "VR" | T3 keyword [papyrusutil] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  JContainers-master | cat none | T3 keyword [jcontainers] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  PapyrusUtil VR - Scripting Utility Functions | cat none | T3 keyword [papyrusutil] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Papyrus Extender VR | cat none | T3 keyword [papyrus extender] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Diverse Dog Textures - SPID | cat #8 "Models and Textures" | T3 keyword [spid] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Better Dressed Kids - Willybach Textures SPID | cat none | T3 keyword [spid] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Schlongs of Skyrim - PapyrusUtil SexLab Tweaks | cat none | T3 keyword [papyrusutil] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Orcish Lanterns for Orc Strongholds by Jjerem - Base Object Swapper | cat #8 "Models and Textures" | T3 keyword [base object swapper] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Dynamic Things Alternative - Base Object Swapper | cat none | T3 keyword [base object swapper] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Blacksmith Forge and Anvil Variants - Base Object Swapper | cat #8 "Models and Textures" | T3 keyword [base object swapper] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Diverse Archery Targets - Base Object Swapper | cat none | T3 keyword [base object swapper] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Smaller Goblets Cups and Jugs - Base Object Swapper | cat #8 "Models and Textures" | T3 keyword [base object swapper] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Dovahnique's Diverse Vendor Carts - Base Object Swapper | cat #8 "Models and Textures" | T3 keyword [base object swapper] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Reimagined Mountain Flowers - Base Object Swapper - Seasons of Skyrim | cat #8 "Models and Textures" | T3 keyword [base object swapper] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
-  Soul Gem Universal Sorting - SkyPatcher | cat #7 "Miscellaneous" | T3 keyword [skypatcher] | MOVE -> [Extension Frameworks - Animation & Behavior Engine]
   Skyrim HD SE | cat none | T4 no rule, category, or keyword matched | stay
   Engine Fixes VR part 1 | cat #48 "VR" | T3 keyword [engine fixes vr] | stay
   SSE Fixes For VR | cat none | T4 no rule, category, or keyword matched | stay
@@ -2088,6 +2082,9 @@ conflict index: 1561 related pair(s) loaded
   Skyrim VR Tools | cat #48 "VR" | T3 keyword [skyrim vr tools] | stay
   VR Address Library for SKSEVR | cat none | T3 keyword [sksevr] | stay
   Unlimited Sprinting | cat #14 "Cheats and God items" | T1 exact name rule | stay
+  NoDelete - Wabbajack.Customizer(read documentation on how to set up) | cat none | T1 exact name rule | stay
+  Wabbajack customizer | cat #13 "Utilities" | T1 exact name rule | stay
+  Autorun | cat #13 "Utilities" | T1 exact name rule | stay
   Creation Club-Zombies- Draugr DLC Base Mod | cat none | T4 no rule, category, or keyword matched | stay
   Creation Club - Alternative Armors - Dwarven Plate | cat none | T4 no rule, category, or keyword matched | stay
   Upscaled and Cleaned Creation Club + Anniversary | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -2178,10 +2175,10 @@ conflict index: 1561 related pair(s) loaded
   DLC: HearthFires | cat none | T4 no rule, category, or keyword matched | stay
 
 --- pass 2: reorder [Particle Lights] ---
-  Spider Webs and Particles for ENB | parent <none> | depth 0 | file index 4 -> 3 (file-earlier = wins)
-  ECPLW -ENB Complex Particle Lights for Windows | parent <none> | depth 0 | file index 6 -> 4 (file-earlier = wins)
-  Dark Elf Lantern ENB Light - Particle Patch for ENB - Patch | parent Particle Patch for ENB | depth 2 | file index 8 -> 6 (file-earlier = wins)
-  Particle Patch for ENB | parent Particle Patch | depth 1 | file index 3 -> 8 (file-earlier = wins)
+  ECPLW -ENB Complex Particle Lights for Windows | parent <none> | depth 0 | file index 5 -> 3 (file-earlier = wins)
+  Eld-beri II - Full Particle Light lantern mod (CS LLF or ENB Light) | parent <none> | depth 0 | file index 6 -> 5 (file-earlier = wins)
+  Dark Elf Lantern ENB Light - Particle Patch for ENB - Patch | parent Particle Patch for ENB | depth 2 | file index 7 -> 6 (file-earlier = wins)
+  Particle Patch for ENB | parent Particle Patch | depth 1 | file index 3 -> 7 (file-earlier = wins)
 
 --- pass 2: reorder [Dragons] ---
   GoT Dragons 16K-8K - Cleaned and Upscaled Textures (Game of Thrones) | parent <none> | depth 0 | file index 4 -> 3 (file-earlier = wins)
@@ -2218,8 +2215,8 @@ conflict index: 1561 related pair(s) loaded
   [Gameplay] YASTM - Yet Another Soul Trap Manager VR@9 vs YASTM - Yet Another Soul Trap Manager@10 (file-earlier wins): already correct
 
 --- pass 3b: sink rules ---
-  [Glaciers, Ice, Snow and Ash] Glacierslab SSE@17 of 19: SINK to section top (ui)
-  [Glaciers, Ice, Snow and Ash] Multilayer Glacier Replacer@17 of 19: SINK to section top (ui)
+  [Glaciers, Ice, Snow and Ash] Glacierslab SSE@18 of 19: SINK to section top (ui)
+  [Glaciers, Ice, Snow and Ash] Multilayer Glacier Replacer@18 of 19: SINK to section top (ui)
 
 --- plugin census (1125 plugin(s) parsed) ---
   fnis.esp (Output - Pandora) | masters: - | 
