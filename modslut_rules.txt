@@ -1,0 +1,386 @@
+# ===================================================================
+# modslut_rules.txt - Mayhem's Madness VR user rules
+# drop this next to your modlist.txt (same profile folder).
+# these load ON TOP of the built-in rules - first hit wins, so these
+# override anything built-in. generated from your list 2026-08-29.
+# ===================================================================
+
+# --- framework masters ---
+# these carry the "Utilities" mo2 category, which would beat keyword
+# rules - so they get exact pins, which outrank everything.
+!Keyword Item Distributor = Extension Frameworks - Engines Patches
+!SSE Display Tweaks = Extension Frameworks - Engines Patches
+!Skyrim Priority SE AE - CPU Performance FPS Optimizer (SET AFFINITY WITH PLUGIN) = Extension Frameworks - Engines Patches
+!Faster File Copy = Extension Frameworks - Engines Patches
+!Spell Perk Item Distributor = Extension Frameworks - Extended Functionality
+!Spell Perk Item Distributor (SPID) VR = Extension Frameworks - Extended Functionality
+!Base Object Swapper = Extension Frameworks - Extended Functionality
+!Base Object Swapper VR = Extension Frameworks - Extended Functionality
+!Container Item Distributor = Extension Frameworks - Extended Functionality
+!FormList Manipulator - FLM = Extension Frameworks - Extended Functionality
+!Skyrim Platform - A TypeScript SDK for Skyrim = Extension Frameworks - Extended Functionality
+!Behavior Data Injector = Extension Frameworks - Extended Functionality
+!Behavior Data Injector Universal Support = Extension Frameworks - Extended Functionality
+!Game Settings Override = Extension Frameworks - Extended Functionality
+!Object Categorization Framework = Extension Frameworks - Extended Functionality
+!AnimObject Swapper = Extension Frameworks - Extended Functionality
+!AnimObject Swapper VR = Extension Frameworks - Extended Functionality
+!SkyPatcher - AE = Extension Frameworks - Extended Functionality
+!SkyPatcher - VR = Extension Frameworks - Extended Functionality
+!SkyPatcher Keyword Framework = Extension Frameworks - Extended Functionality
+
+# --- unofficial patches family ---
+!Unofficial Skyrim Special Edition Patch = Fixes & Resources - Unofficial Patches
+!Unofficial Skyrim Special Edition Patch - USSEP (4.2.5b) = Fixes & Resources - Unofficial Patches
+!Unofficial Skyrim Special Edition Patch (FOR IMPORTED AE CONTENT) = Fixes & Resources - Unofficial Patches
+!Unofficial Skyrim Modder's Patch - USMP SE = Fixes & Resources - Unofficial Patches
+!Unofficial Skyrim Modder's Patch - USMP SE (Only for AE Import) = Fixes & Resources - Unofficial Patches
+!Unofficial Skyrim Modder's Patch - For VR Users (4.2.5b USSEP) = Fixes & Resources - Unofficial Patches
+!USSEP Nemesis Patch = Fixes & Resources - Unofficial Patches
+
+# --- animation-engine fixes (nexus cat "Bug Fixes" steamrolls them at T2) ---
+!A-Pose Bug Fix - Universal Behavior Runtime = Extension Frameworks - Animation & Behavior Engine
+!Animation Queue Fix = Extension Frameworks - Animation & Behavior Engine
+!Animation Motion Fix = Extension Frameworks - Animation & Behavior Engine
+!no me molestes - xpmse and planck pelvis forcefield fix (DJT VR) = Skele Stuff
+
+# --- audio (your two-sep split: this is the overhauls/masters side) ---
+!Audio Overhaul - Immersive Sounds Integration (AOS - ISC Compatibility Patch) = Audio Fixes & Overhauls
+!Reverb Interior Sounds Expansion = Audio Fixes & Overhauls
+!Immersive Sounds Compendium - SkyPatched = Audio Fixes & Overhauls
+!Immersive Sounds - Compendium = Audio Fixes & Overhauls
+!Audio Overhaul for Skyrim (4.1.2) = Audio Fixes & Overhauls
+!Acoustic Space Improvement Fixes = Audio Fixes & Overhauls
+!Acoustic Space Improvement Fixes - SkyPatcher = Audio Fixes & Overhauls
+!Auto Audio Switch = Audio Fixes & Overhauls
+
+# --- grass strays found in clutter & misc ---
+!QW's Grass Patch 2 - Origins of Forest - Cathedral - Folkvangr = Grass
+!No Grassias - A Universal Grass Fix For Grass Mods = Grass
+!No Grass In Objects = Grass
+!Origins Of Forest - 3D Forest Grass = Grass
+!Cathedral - 3D Pine Grass = Cathedral 3D Flowers Cluster
+
+# --- lux family: nexus scatters it across Overhauls/Visuals/Bug Fixes/
+# Patches, but it's all one lighting ecosystem. everything lux lands in
+# its own section.
+!Lux = Lux (Lighting)
+!Lux Orbis = Lux (Lighting)
+!Lux - Via = Lux (Lighting)
+!Lux Via - Repaired Whiterun Bridge Add-on = Lux (Lighting)
+!Optional Lux Resource Pack (ENB light) = Lux (Lighting)
+!Lux (patch hub) = Lux (Lighting)
+!Lux Orbis (patch hub) = Lux (Lighting)
+!Lux - Via (patch hub) = Lux (Lighting)
+!Lux - RedBag's Falkreath Lanterns = Lux (Lighting)
+!Mara Valentine lighting patch for Lux = Lux (Lighting)
+!Realm of Lorkhan Lighting Patch for Lux = Lux (Lighting)
+!Mesh patches for Lux and Lux Orbis = Lux (Lighting)
+!Blackreach Overhaul Lux Patch = Lux (Lighting)
+!BLACKREACH OVERHAUL LUX PATCH Timelost Dwemer = Lux (Lighting)
+
+# eeks whiterun overhauls carry their own lighting - they load AFTER
+# the lighting section, never inside the city block. zero collateral.
+eeks = Special Load After Lighting Mods
+relight = Special Load After Lighting Mods
+particle light = Particle Lights
+
+# --- snow-section pulls - each phrase verified against the full list
+# to have zero collateral (bare "snow"/"ice"/"ash" would hit Snow Globe
+# House, Voice/Service, Splashes/Crash/Bash...)
+icy = Glaciers, Ice, Snow and Ash
+snowflake = Glaciers, Ice, Snow and Ash
+dynamic snow = Glaciers, Ice, Snow and Ash
+simple snow = Glaciers, Ice, Snow and Ash
+stretched snow = Glaciers, Ice, Snow and Ash
+snow colour = Glaciers, Ice, Snow and Ash
+r.a.s.s = Glaciers, Ice, Snow and Ash
+floating ash pile = Glaciers, Ice, Snow and Ash
+projecteddiffuse = Glaciers, Ice, Snow and Ash
+glacier = Glaciers, Ice, Snow and Ash
+!Simplicity of Snow - Blended Roads Patch = Glaciers, Ice, Snow and Ash
+
+# sink rules (<): pin base replacers to the TOP of their section -
+# lowest priority there, so every other ice/snow mod overwrites them.
+# listed order matters: last one listed ends up on top.
+<Glacierslab SSE = Glaciers, Ice, Snow and Ash
+<Multilayer Glacier Replacer = Glaciers, Ice, Snow and Ash
+
+# --- adult content - phrases verified against the full list to hit
+# ONLY sexlab-flavored mods ("cum" alone would catch "docUMEntation",
+# "sex" alone would catch "Sussex"-style names, so those stay exact)
+slsb = Ya Filthy Animal
+billyy = Ya Filthy Animal
+nasty critters = Ya Filthy Animal
+horny creatures = Ya Filthy Animal
+dirty talk = Ya Filthy Animal
+buttplug = Ya Filthy Animal
+spanking = Ya Filthy Animal
+toys = Ya Filthy Animal
+cum texture = Ya Filthy Animal
+!Sex Grants Experience = Ya Filthy Animal
+!Follow me for Sex = Ya Filthy Animal
+!The Circle of Lust = Ya Filthy Animal
+!KomAnim AIO SSE = Ya Filthy Animal
+!FunnyBizness = Ya Filthy Animal
+![Predator] MME Milk Harness = Ya Filthy Animal
+
+# --- clothing/hair strays that keyword rules filed under obody ---
+vtaw = Clothing and Jewelry
+converse shoes = Clothing and Jewelry
+ankle boots = Clothing and Jewelry
+ks hairdos = Hair
+
+# --- female body mods sitting in Male Body Additions ---
+!Caliente's Beautiful Bodies Enhancer -CBBE- = Skin & Body
+!CBBE 3BA = Skin & Body
+!Female Hands Redone = Skin & Body
+!BnP female skin (Replacer+Player version) = Skin & Body
+
+# --- horses ---
+!Stamina of Steeds = Horses
+
+# --- cities ---
+whiterun = Whiterun
+solitude = Solitude
+windhelm = Windhelm
+riften = Riften
+morthal = Morthal
+markarth = Markarth
+falkreath = Falkreath
+winterhold = Winterhold
+raven rock = Solstheim City Overhauls
+solstheim = Solstheim City Overhauls
+ivarstead = Minor Town and City Overhauls
+riverwood = Minor Town and City Overhauls
+rorikstead = Minor Town and City Overhauls
+dawnstar = Minor Town and City Overhauls
+shor's stone = Minor Town and City Overhauls
+dragon bridge = Minor Town and City Overhauls
+
+# --- world ---
+waterfall = Water
+dwemer = Dwemer Tech
+helgen reborn = New Lands and Quests
+realm of lorkhan = Alternate Start
+alternate perspective = Alternate Start
+blended roads = Roads & Bridges
+
+# --- npc / monsters ---
+mihail = New Monsters
+rs children = NPC Retextures
+pandorable = NPC Retextures
+bijin = NPC Retextures
+botox = NPC Retextures
+
+# --- landscape ---
+septentrional = Landscape and Environment
+forgotten retex = Landscape and Environment
+landscape !water = Landscape and Environment
+
+# --- clutter & misc retextures (junk-drawer bailouts) ---
+# deliberately specific phrases. broad keywords like "snow", "rock",
+# "potion", "furniture" would yank legit mods - checked against this
+# list. anything ambiguous gets an exact !rule instead.
+pottery = Clutter & Miscellaneous
+banners = Clutter & Miscellaneous
+handcarts = Clutter & Miscellaneous
+market stalls = Clutter & Miscellaneous
+training dummies = Clutter & Miscellaneous
+mage tables = Clutter & Miscellaneous
+horn candles = Clutter & Miscellaneous
+purses = Clutter & Miscellaneous
+hearthfire doll = Clutter & Miscellaneous
+paragon gems = Clutter & Miscellaneous
+bloodstone chalice = Clutter & Miscellaneous
+elderscroll = Clutter & Miscellaneous
+rugnarok = Clutter & Miscellaneous
+silver objects = Clutter & Miscellaneous
+beating hearts = Clutter & Miscellaneous
+peltapalooza = Clutter & Miscellaneous
+metallurgy = Clutter & Miscellaneous
+ore vein = Clutter & Miscellaneous
+wall mounted = Clutter & Miscellaneous
+cast iron = Clutter & Miscellaneous
+battle maps = Clutter & Miscellaneous
+tenets = Clutter & Miscellaneous
+!Quality CubeMaps - HD Cube Maps Optimized = Clutter & Miscellaneous
+!Golden Claw - Dynamic Cubemapped = Clutter & Miscellaneous
+!Cultured Orc Furniture = Clutter & Miscellaneous
+!Awesome Potions Simplified by Revoith = Clutter & Miscellaneous
+!JS Instruments of Skyrim SE = Clutter & Miscellaneous
+!JS Dragon Claws AE - Animated Gem Claws = Clutter & Miscellaneous
+!JS Dragon Claws AE Anniversary Edition = Clutter & Miscellaneous
+!Praedy's Azura's Star and Realm - SE = Clutter & Miscellaneous
+!Rudy HQ - Miscellaneous SE = Clutter & Miscellaneous
+
+# --- mo2 category rules (@) - matched against the primary category
+# from meta.ini/categories.dat. kept conservative on purpose; the lazy
+# ones that conflated nexus cats (@Overhauls = Gameplay, @Buildings,
+# @Visuals and Graphics) are DELETED - they were the miscat source.
+@Environmental = Landscape and Environment
+@Animation = Animations
+@Bug Fixes = Essential Bug Fixes
+@Presets - ENB and ReShade = ENB
+@Cities, Towns, Villages, and Hamlets = Expanded Cities, Towns, and Villages
+@Audio = Audio Fixes & Overhauls
+@NPC = NPCs and Behaviour
+@Body, Face, and Hair = Skin & Body
+!FinalLookTuner - Author Presets = Visual Control
+!FinalLookTuner-1.4.1-CSHDR-WBAS-Improvement = Visual Control
+!Final Look Tuner FLT - Live Color Adjust = Visual Control
+!VRIK Rift-Index-WMR Controller Bindings = VR Controller Bindings - (Optional) - Select One or None
+!Skyrim VR OpenComposite Fixes Custom Build (physical keyboard) = Open Composite - (Optional)
+!Open Composite skyrim vr fixes = Open Composite - (Optional)
+!Miscellaneous Embers XD Patches = Consistency Patches
+!Deadly Spell Impact - Patches = Consistency Patches
+!The Distinct JK's Ragged Flagon - Lux patch = Consistency Patches
+!Deadly Spell Impact - Patches = Consistency Patches
+!Miscellaneous Embers XD Patches = Consistency Patches
+!Open Composite SkyUIVR Fix ReverbG2 = Open Composite - (Optional)
+!Miscellaneous Embers XD Patches = Consistency Patches
+!Miscellaneous Embers XD Patches = Consistency Patches
+!Miscellaneous Embers XD Patches = Consistency Patches
+!The Distinct JK's Ragged Flagon - Lux patch = Consistency Patches
+!Realm of Lorkhan Lighting Patch for Lux = Consistency Patches
+!RedBag's Morthal Patches- FOMOD = Consistency Patches
+!Realm of Lorkhan Lighting Patch for Lux = Consistency Patches
+!Lux - RedBag's Falkreath Lanterns = Consistency Patches
+!Lux - RedBag's Falkreath Lanterns = Consistency Patches
+!Lux - RedBag's Falkreath Lanterns = Consistency Patches
+!Realm of Lorkhan - Unbound Quest Fix = Alternate Start
+!RS Children Patch Compendium = Consistency Patches
+!JK's and Redbag's Dragonsreach Patch = Consistency Patches
+!COTN Dawnstar Patch Collection = Consistency Patches
+!Combat Music Fix NG Updated = Consistency Patches
+!JKs Ragged Flagon Water Fix = Conflict Resolution
+!NAT III ENB - A Clear Map of Skyrim Patch = Worldmap
+!Dynamic snow For Map = Worldmap
+!ENB Frame Generation = ENB
+!Azura Statue Improved + ENB Particle Light = Shrines & Statues
+!Community Shaders - Particle Lights (Unofficial Fork) = Community Shaders Mods {disable to use ENB}
+!MCM Helper VR = Interface - VR Specific
+!Half Moon Mill Patches FOMOD = Conflict Resolution
+!EmbersXD - Campfire Patch = Basic Needs and Survival (Optional)
+!JKs Guild HQ Interiors Patch Collection = Exterior and Interior Patch Collection
+!Blackreach Overhaul Lux Patch = Exterior and Interior Patch Collection
+!BLACKREACH OVERHAUL LUX PATCH Timelost Dwemer = Exterior and Interior Patch Collection
+!kryptopyr's Automated Patches = Kryptopyr’s Patch Hub Collection
+!Fixed Texture Paths for Small Things in EEK's Whiterun Interiors = Special Load After Lighting Mods
+!Cursed Crypts - MLO2 RELight Addon = Lux (Lighting)
+!Emberveil Lighting - A Cinematic ReLight Preset = Lux (Lighting)
+!RELight - Official Light Addon = Lux (Lighting)
+!ReLight = Lux (Lighting)
+!Eld-beri II - NPC Support (Spid Distribution file) = Particle Lights
+!Quick Beri - Wearable particle light lanterns SPIDified (CS and ENB) = Particle Lights
+!Eld-beri II - Full Particle Light lantern mod (CS LLF or ENB Light) = Particle Lights
+!Spider Webs and Particles for ENB = Particle Lights
+!ENB Particle Light for Wearable Lanterns = Particle Lights
+!Realm of Lorkhan - Freeform Alternate Start 4 = Alternate Start
+!Realm of Lorkhan - Shard cost reversed = Alternate Start
+!AI Overhaul SSE - Official Patch Hub = Consistency Patches
+!Wolverine Claws Impact SFX - Sound for Wolverine's Claws = Sound Improvements, FX, & Voice Overrides
+!Colossus -Giants SFX Voice Rework = Sound Improvements, FX, & Voice Overrides
+!Flame VFX Edit = Sound Improvements, FX, & Voice Overrides
+!Healing VFX Edit = Special Effects
+!Dragon Breath VFX Edit = Special Effects
+!FleshFX = Special Effects
+!Subtle Wind FX = Special Effects
+!Candle Flame VFX Edit = Special Effects
+!Lightning VFX Edit = Special Effects
+!JS Dragon Claws - Patches = Clutter & Miscellaneous
+!Soulgem Stand Redone = Soul Trap Management Overhauls
+!Crystalline Soul Gems = Soul Trap Management Overhauls
+!Paraphernalia - VR Dragon Riding = Dragons
+![Melodic] Lacey dress SE = New Armors and Clothing
+!Paraphernalia - VR Dragon Riding = Travel
+![Melodic] Goldbikini SE = Items
+![Melodic] Goldbikini SE = New Armors and Clothing
+![Melodic] Goldbikini SE = New Armors and Clothing
+![Melodic] Goldbikini SE = New Armors and Clothing
+!MultiLayer Parallax Soul Gems SSE = Soul Trap Management Overhauls
+![Melodic] Goldbikini SE = New Armors and Clothing
+!Soulgems Azura's star realm and holders HD SE = Soul Trap Management Overhauls
+!Tera Armors Collection Skyim Special Edition = New Armors and Clothing
+!Invisible Armors Enhanced = New Armors and Clothing
+!JS Dragon Claws SE = Clutter & Miscellaneous
+!Dragon Claws Auto-Unlock = Security
+!Unlimited Sprinting = Essentials
+!Divine Daedric Cloaks - Skypatched = New Armors and Clothing
+!Artesian Cloaks of Skyrim = New Armors and Clothing
+!Busy Follower Framework = Follower Management (Pick only ONE)
+!Nether's Follower Framework = Follower Management (Pick only ONE)
+!Horde - A Light-Weight SKSE Follower Management System = Follower Management (Pick only ONE)
+!Dead and Daedric Guardians = New Followers and NPCs
+!Better Males Remesh for Skyrim SE = Male Body Additions
+!Heartbreaker - Male CS Advanced Skin = Male Body Additions
+!REALORE MEN'S Skin Texture = Male Body Additions
+!BnP male skin (Replacer+Player version) = Male Body Additions
+!To Your Face SE - AE - VR = Essential Bug Fixes
+!slightly Better Dust aka Dust not Clouds = Special Effects
+!Realistic Dust (formerly Less Noticeable Dust SE) = Special Effects
+!RUSTIC SPRIGGAN EFFECTS = Special Effects
+!Arctic - Frost Effects Redux = Special Effects
+!Masculine Housecarls = For the Ladies
+!Eternal Flames = Special Effects
+!Relationship Dialogue Overhaul (RDO) NPCs - a replacer = Dialogue and NPC Interaction
+!RS Children Overhaul Patch Database = Conflict Resolution
+!RS Children Overhaul = NPC Retextures
+!No more glitchy textures. Witcher Horse Expansion compatibility patches (ENG) = Horses
+!RedBag's Dragonsreach - GoT The Black Dread Skull Replacer Patch = Worldspace Late Load (& Optionals)
+!SkyPatcher - Smaller Dogs = Animals
+!Pelagius's Wildlife AI - Skypatcher = Animals
+!Artisto RWT texture tweaks for Water for ENB = Water
+!ENB Anti-Aliasing - AMD FSR 3.1 - NVIDIA DLAA = Performance
+!Cubemap Reflections = Water
+!NAT.ENB - ESP WEATHER PLUGIN v3.1.1C - Fixed = Weather Systems
+!NordwarUA Armours - ENB Dynamic Cubemaps - Sons of Skyrim etc = Armor and Weapons Retextures and Tweaks
+!Bright Snow Fix for ENB = Glaciers, Ice, Snow and Ash
+!Rock Grass for ENB Complex Grass SE (with Guide) = Rocks & Mountains
+!Holidays Lanterns ENB Light = Particle Lights
+!Water for ENB = Water
+!VRAMr = Performance
+!DVLASS = Performance
+!NoDelete - Wabbajack.Customizer(read documentation on how to set up) = Essentials
+!Wabbajack customizer = Essentials
+!ParallaxR = Performance
+!BENDr = Performance
+!MisMatchR = Performance
+!Jaxonz Map Markers (SSE Port) = Worldmap
+!NVIDIA Reflex Support = Performance
+!Luma Utility = Lux (Lighting)
+!Light Placer = Community Shaders Mods {disable to use ENB}
+!Dynamic Wind Framework - SKSE Plugin = Weather Systems
+!DynDOLOD DLL NG and Scripts = Dyndolod
+!DynDOLOD 3 Alpha = Dyndolod
+!BodySlide and Outfit Studio = Skin & Body
+!RaceMenu High Heels (Height Fixes) = Character Creation
+!L.v.x Magick's - Complete Bleak Falls Barrow Instantly = Alternate Start
+!Mfg Fix NG = Essential Bug Fixes
+!Autorun = Essentials
+!Infinity UI = Interface - HUD
+!VR Keyboard = Interface - VR Specific
+!Save Unbaker VR = Interface - VR Specific
+!Save Unbaker = Essential Bug Fixes
+!Open Animation Replacer = Extension Frameworks - Animation & Behavior Engine
+!Default Female at Character Creation = Character Creation
+!Decorator Helper = Interior (Re)Designs
+!QuickLight - Real floating Candle replacer = Lux (Lighting)
+!Stable Hands - VR Mouse Stabilization mod = Interface - VR Specific
+!BHKS - TNG - Official Patch Collection = Conflict Resolution
+!Keyword Patch Collection = Extension Frameworks - Extended Functionality - Utilities
+!Realm of Lorkhan Nicer Trees = Alternate Start
+!Realm of Lorkhan Better Bridges = Alternate Start
+!Realm of Lorkhan - Bleak Falls Barrow Dragonstone Skip = Alternate Start
+!RedBag's Morthal - FOMOD = Morthal
+!Redbag's Morthal - Texture Fixes = Morthal
+!Redbag's Morthal Fixes = Morthal
+!Distinct Thuldor's Ivarstead = Minor Town and City Overhauls
+!Distinct Thuldor's Ivarstead = Conflict Resolution
+!Skyrim Upscaler VR - Enable DLAA- Nvidia Only = Open Composite - (Optional)
+!Skyrim Upscaler VR - Enable DLAA- Nvidia Only = Open Composite - (Optional)
+!Miscellaneous Embers XD Patches = Consistency Patches
+!Jk's Rb and Eek Dragonsreach patch = Conflict Resolution
+!Deadly Spell Impact - Patches = Conflict Resolution
+!Keyword Patch Collection = Extension Frameworks - Extended Functionality
+!Deadly Spell Impact - Patches = Consistency Patches
