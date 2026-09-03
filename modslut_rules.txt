@@ -1,0 +1,104 @@
+# modslut user rules - checked BEFORE the built-in rules, so anything you
+# put here wins. save the file, then hit "reload" in modslut.
+#
+# syntax:
+#   !Exact Mod Name = Section Label     force one mod into a section
+#   @MO2 Category = Section Label       route a whole mo2 category
+#                                       (see the "categories" view for names)
+#   keyword !exclusion = Section Label  lowercase substring match, first hit wins
+#   >Winner Name = Loser Name           winner sorts above loser (wins conflicts)
+#   <Mod Name = Section Label           sink: pin to the TOP of that section in mo2
+#                                       (loses everything in-section - base replacers)
+#   ^Mod Name = Section Label           float: pin to the BOTTOM of that section
+#                                       (wins everything in-section)
+#
+# section labels must match your separator names exactly. examples:
+#   !Some Sexlab Mod - Argonian Addon = Skin and Body - Argonians and Khajiits
+#   @Clothing = Clothing and Jewelry
+#   <Glacierslab SSE = Glaciers, Ice, Snow and Ash
+#
+# lines below are appended by the right-click menu in the gui:
+!VRIK Rift-Index-WMR Controller Bindings = VR Controller Bindings - (Optional) - Select One or None
+!ENB Anti-Aliasing - AMD FSR 3.1 - NVIDIA DLAA = Performance
+!NVIDIA Reflex Support = Performance
+!Thuldor's Ivarstead - Farmhouse Roofs = Minor Town and City Overhauls
+!Folkvangr rocks, twigs and leaves remover = Trees and Flora
+!Kanjs - Soup and Stew AIO Animated (SkyPatched) = Cooking, Food, and Beverages
+!Fabled Aspens Ablaze = Trees and Flora
+!Weapons Armor Clothing and Clutter Fixes - SkyPatcher = Weapons, Armour, Clothing, and Clutter Fixes
+!Skyrim Vr USSEP patch for USSEP 4.2.5b = Fixes & Resources - Unofficial Patches
+!Winterhold Restored - Parallax Meshes = Winterhold
+!Divine Daedric Cloaks - Skypatched = New Armors and Clothing
+!Artesian Cloaks of Skyrim = New Armors and Clothing
+!Grass Precache for Folkvangr Grass = LOD-Grass Generation
+!ACMOS Road Generator = Roads & Bridges
+!Grass Density INI - Quality = LOD-Grass Generation
+!Grass Density INI - Performance = LOD-Grass Generation
+!Optimized meshes for ENB lights Rustic Rudy Misc Silverware = Cooking, Food, and Beverages
+!A Clear Map Of Skyrim - Water for ENB Patch = Worldmap
+!Azura Statue Improved + ENB Particle Light = Shrines & Statues
+!Dovahnique's Diverse Deadly Nightshade - (BOS - ENB Lights) = Trees and Flora
+!Dovahnique's Diverse Dark Elf Lanterns (BOS - ENB Lights - High Poly) = Trees and Flora
+!Spider Webs and Particles for ENB = Particle Lights
+!Winterhold Statue - Animated with ENB Lights = Shrines & Statues
+!Water for ENB = Water
+!Artisto RWT texture tweaks for Water for ENB = Water
+>Gilded Spinning Main Menu Emblem - Chrome Version = main menu spinning skyrim emblem
+!Animation Motion Revolution = Extension Frameworks - Animation & Behavior Engine
+!The Thieves Guild Ladder - Skyrim Special Edition = Worldspace Late Load (& Optionals)
+!ConsoleUtil Extended = Interface - Console
+!ConsoleUtilSSE NG = Interface - Console
+!BodySlide and Outfit Studio = Skin & Body
+!ENB Frame Generation = ENB
+!Luma Utility = Lux (Lighting)
+!Light Placer = Community Shaders Mods {disable to use ENB}
+!DynDOLOD DLL NG and Scripts = Dyndolod
+!DynDOLOD 3 Alpha = Dyndolod
+!RaceMenu High Heels (Height Fixes) = Character Creation
+!Infinity UI = Interface - Menus
+!VR Keyboard = VR Controller Bindings - (Optional) - Select One or None
+!Mfg Fix NG = Extension Frameworks - Extended Functionality
+!Amazing Lockpicks - Enhancements = Security
+!General Stores Sorting and Cloud Storage in Blackthorn Manor = Player Homes
+!AI Overhaul SSE SkyPatcher Patch = AI & Immersion
+!Racemenu - Improved Character Light = Character Creation
+!kryptopyr's Automated Patches = Kryptopyr’s Patch Hub Collection
+!Keyword Patch Collection = Extension Frameworks - Extended Functionality
+!Better Main Menu for VR = Interface - VR Specific
+!Lux (patch hub) = Lux (Lighting)
+!RedBag's Morthal - FOMOD = Morthal
+!Redbag's Morthal - Texture Fixes = Morthal
+!Redbag's Morthal Fixes = Morthal
+!Realm of Lorkhan Lighting Patch for Lux = Alternate Start
+!Lux - RedBag's Falkreath Lanterns = Falkreath
+!Realm of Lorkhan - Unbound Quest Fix = Alternate Start
+!Mesh patches for Lux and Lux Orbis = Lux (Lighting)
+!Realm of Lorkhan Nicer Trees = Alternate Start
+!Realm of Lorkhan Better Bridges = Alternate Start
+!Realm of Lorkhan - Bleak Falls Barrow Dragonstone Skip = Alternate Start
+!WENB Shades USSEP Patch = Water
+!In-Game Patcher - SKSE plugin = Extension Frameworks - Extended Functionality
+!Blubbos Apple Tree Replacer for JK Mods = Worldspace Late Load (& Optionals)
+!Relationship Dialogue Overhaul - Update and MCM = Dialogue and NPC Interaction
+!Distinct JK's Ragged Flagon = Interior (Re)Designs
+<Open Composite = Open Composite - (Optional)
+!JK's and Redbag's Dragonsreach Patch = Exterior and Interior Patch Collection
+!Combat Music Fix NG Updated = Sound Improvements, FX, & Voice Overrides
+!Combat Music Fix NG = Sound Improvements, FX, & Voice Overrides
+!Lively's Deep Elf Race Patches = Races
+!Jk's Rb and Eek Dragonsreach patch = Exterior and Interior Patch Collection
+!Likeness = Utilities
+!Dynamic Body Distribution - DBD = OBody and Bodyslide Presets
+!Glowmapped 3D Lava = Landscape and Environment
+!NordwarUA Armours - ENB Dynamic Cubemaps - Sons of Skyrim etc = Armor and Weapons Retextures and Tweaks
+!Skyrim Landscape and Water Fixes = Water
+!Optimized meshes for ENB lights = Particle Lights
+!ENB Lights For Effect Shaders VR = Particle Lights
+!ECPLW -ENB Complex Particle Lights for Windows = Particle Lights
+!Holidays Lanterns ENB Light = Particle Lights
+!Rock Grass for ENB Complex Grass SE (with Guide) = Trees and Flora
+!Community Shaders - Particle Lights (Unofficial Fork) = Community Shaders Mods {disable to use ENB}
+!Rogue Master Detector = Essential Bug Fixes
+!Faster Decompression = Essentials
+!Jaxonz Map Markers (SSE Port) = Worldmap
+!L.v.x Magick's - Complete Bleak Falls Barrow Instantly = Interface - Console
