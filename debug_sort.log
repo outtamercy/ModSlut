@@ -1,6 +1,6 @@
 keywords.ini: 46 aliases, 11 family members, 12 never-rules
-=== modslut v0.14.4 debug trace ===
-built: 0.14.4 local
+=== modslut v0.14.6 debug trace ===
+built: 0.14.6 local
 categories.dat: found
 conflict index: 1635 related pair(s) loaded
 
@@ -13,22 +13,22 @@ proven-only mode: ON - only explicit rules, LOOT, conflict, and census-proven co
 proven-only: 877 guess-tier move(s) suppressed (category/keyword tiers held)
 game: Skyrim SE/AE/VR (base masters: 6)
 loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yaml (341 after-rule(s) apply to 6 mod(s))
-  JK's Solitude Outskirts Patch Collection | plugin family: master [AI Overhaul SSE SkyPatcher Patch] loads later | dest -> [AI & Immersion]
-  Fabled Forests Patch Compendium | plugin family: master [Redbag's Morthal Fixes] loads later | dest -> [Morthal]
-  Even Better Quest Objectives - Quests Are In Skyrim Patch | plugin family: master [Quests Are In Skyrim] loads later | dest -> [Stargazing & Sky]
-  Charmers of the Reach SV Beards SE for COtR - HQ Characters creation addon | plugin family: master [COtR - HQ Characters creation addon for RM] loads later | dest -> [Skin & Body]
-  Terrain Parallax Blending Fix | plugin family: master [Embers XD] loads later | dest -> [Fire and Forges]
-  CC Fishing Campfire patch | plugin family: master [Campfire - Complete Camping System (Supports Skyrim VR)] loads later | dest -> [Unofficial Skyrim Modders Patch Emporium]
-  High Poly Project - My fixes SE-AE by Xtudo | plugin family: master [Winterhold Restored] loads later | dest -> [Winterhold]
-  Thuldor's Ivarstead Patch Hub | plugin family: master [eFPS - Exterior FPS boost] loads later | dest -> [Performance]
-  AI Overhaul SSE - Official Patch Hub | plugin family: master [Distinct Interiors - Fixes] loads later | dest -> [Interior (Re)Designs]
-  Miscellaneous Embers XD Patches | plugin family: master [Campfire - Complete Camping System (Supports Skyrim VR)] loads later | dest -> [Unofficial Skyrim Modders Patch Emporium]
-  Thuldor's Ivarstead - Tweaks and Addons | plugin family: master [Thuldor's Ivarstead Patch Hub] loads later | dest -> [Performance]
-  RedBag's Morthal Patches- FOMOD | plugin family: master [eFPS - Exterior FPS boost] loads later | dest -> [Performance]
-  NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | plugin family: master [Solar Lens Flare Redux (SLFR)] loads later | dest -> [Stargazing & Sky]
-  Rodryk's Dragon Bridge - Patch Collection | plugin family: master [Embers XD] loads later | dest -> [Fire and Forges]
-  Snazzy Wall Mounted Trophies - DTA Patch | plugin family: master [Dynamic Things Alternative - Base Object Swapper] loads later | dest -> [Exterior and Interior Patch Collection]
-  plugin family: 15 mod(s) moved to load after their plugin masters
+  Miscellaneous Embers XD Patches | WARN: plugin master [Campfire - Complete Camping System (Supports Skyrim VR)] lives in [Unofficial Skyrim Modders Patch Emporium] which loads later than [Basic Needs and Survival (Optional)] - left in place (pin it or check plugins.txt)
+  JK's Solitude Outskirts Patch Collection | WARN: plugin master [AI Overhaul SSE SkyPatcher Patch] lives in [AI & Immersion] which loads later than [Worldmap] - left in place (pin it or check plugins.txt)
+  CC Fishing Campfire patch | WARN: plugin master [Campfire - Complete Camping System (Supports Skyrim VR)] lives in [Unofficial Skyrim Modders Patch Emporium] which loads later than [Basic Needs and Survival (Optional)] - left in place (pin it or check plugins.txt)
+  Charmers of the Reach SV Beards SE for COtR - HQ Characters creation addon | WARN: plugin master [COtR - HQ Characters creation addon for RM] lives in [Skin & Body] which loads later than [Beards & Brows] - left in place (pin it or check plugins.txt)
+  Terrain Parallax Blending Fix | WARN: plugin master [Embers XD] lives in [Fire and Forges] which loads later than [Landscape and Environment] - left in place (pin it or check plugins.txt)
+  Snazzy Wall Mounted Trophies - DTA Patch | WARN: plugin master [Dynamic Things Alternative - Base Object Swapper] lives in [Exterior and Interior Patch Collection] which loads later than [AI & Immersion] - left in place (pin it or check plugins.txt)
+  AI Overhaul SSE - Official Patch Hub | WARN: plugin master [Distinct Interiors - Fixes] lives in [Interior (Re)Designs] which loads later than [Conflict Resolution] - left in place (pin it or check plugins.txt)
+  Thuldor's Ivarstead Patch Hub | WARN: plugin master [eFPS - Exterior FPS boost] lives in [Performance] which loads later than [Minor Town and City Overhauls] - left in place (pin it or check plugins.txt)
+  High Poly Project - My fixes SE-AE by Xtudo | WARN: plugin master [Winterhold Restored] lives in [Winterhold] which loads later than [General World Improvement] - left in place (pin it or check plugins.txt)
+  RedBag's Morthal Patches- FOMOD | WARN: plugin master [eFPS - Exterior FPS boost] lives in [Performance] which loads later than [Morthal] - left in place (pin it or check plugins.txt)
+  Fabled Forests Patch Compendium | WARN: plugin master [Redbag's Morthal Fixes] lives in [Morthal] which loads later than [Conflict Resolution] - left in place (pin it or check plugins.txt)
+  NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | WARN: plugin master [Solar Lens Flare Redux (SLFR)] lives in [Stargazing & Sky] which loads later than [Stargazing & Sky] - left in place (pin it or check plugins.txt)
+  Rodryk's Dragon Bridge - Patch Collection | WARN: plugin master [Embers XD] lives in [Fire and Forges] which loads later than [Conflict Resolution] - left in place (pin it or check plugins.txt)
+  Thuldor's Ivarstead - Tweaks and Addons | WARN: plugin master [Thuldor's Ivarstead Patch Hub] lives in [Performance] which loads later than [Minor Town and City Overhauls] - left in place (pin it or check plugins.txt)
+  Even Better Quest Objectives - Quests Are In Skyrim Patch | WARN: plugin master [Quests Are In Skyrim] lives in [Stargazing & Sky] which loads later than [Vanilla Quest Fixes & Tweaks] - left in place (pin it or check plugins.txt)
+  plugin family: 0 mod(s) moved to load after their plugin masters
   Yggdrasil - World Tree Redux | cat #26 "Environmental" | T4 no rule, category, or keyword matched | stay
   Yes Im Sure NG | cat #15 "User Interface" | T4 no rule, category, or keyword matched | stay
   YASTM - Yet Another Soul Trap Manager | cat #3 "Gameplay" | T4 no rule, category, or keyword matched | stay
@@ -305,21 +305,21 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Constructible Objects Custom Keyword Framework - Settlement Builder Patch | cat none | T4 no rule, category, or keyword matched | stay
   JS Attunement Sphere and Lexicons SE - Glowmapped - Improved Dwemer Glass Patch | cat #22 "Visuals and Graphics" | family: follows master [JS Attunement Sphere and Lexicons SE] | MOVE -> [Dungeons and Ruins]
   Kalilies NPCs De-Standalone | cat none | T4 no rule, category, or keyword matched | stay
-  AI Overhaul SSE - Official Patch Hub | cat none | family: follows master [Distinct Interiors - Fixes] | MOVE -> [Interior (Re)Designs]
+  AI Overhaul SSE - Official Patch Hub | cat none | family: follows master [AI Overhaul SSE] | MOVE -> [AI & Immersion]
   Blackreach Overhaul Lux Patch | cat #42 "Bug Fixes" | family: follows master [Blackreach Overhaul] | MOVE -> [General World Improvement]
   Phantom Horse - Horse Replacer Patches | cat #33 "Creatures and Mounts" | family: follows master [Phantom Horse] | MOVE -> [Horses]
   PapyrusUtil SE - Modders Scripting Utility Functions | cat #32 "Modders Resources" | T4 no rule, category, or keyword matched | stay
   EEKs Whiterun Interiors - Lux and Embers XD Conflict Resolution | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
-  Fabled Forests Patch Compendium | cat none | family: follows master [Redbag's Morthal Fixes] | MOVE -> [Morthal]
+  Fabled Forests Patch Compendium | cat none | family: follows master [Fabled Forests] | MOVE -> [Glaciers, Ice, Snow and Ash]
   Half Moon Mill Patches FOMOD | cat none | T4 no rule, category, or keyword matched | stay
-  Rodryk's Dragon Bridge - Patch Collection | cat #34 "Patches" | family: follows master [Embers XD] | MOVE -> [Fire and Forges]
+  Rodryk's Dragon Bridge - Patch Collection | cat #34 "Patches" | family: follows master [Rodryk's Dragon Bridge] | MOVE -> [Minor Town and City Overhauls]
   Remove Map Camera Limits - Skyrim and Solstheim | cat #15 "User Interface" | T4 no rule, category, or keyword matched | stay
   Jaxonz Map Markers (SSE Port) | cat #13 "Utilities" | T4 no rule, category, or keyword matched | stay
   CoMAP | cat none | T4 no rule, category, or keyword matched | stay
   Colorful Map Markers | cat #15 "User Interface" | T4 no rule, category, or keyword matched | stay
   Dynamic snow For Map | cat #3 "Gameplay" | T4 no rule, category, or keyword matched | stay
   Navigator Patch Collection | cat #42 "Bug Fixes" | T4 no rule, category, or keyword matched | stay
-  JK's Solitude Outskirts Patch Collection | cat none | family: follows master [AI Overhaul SSE SkyPatcher Patch] | MOVE -> [AI & Immersion]
+  JK's Solitude Outskirts Patch Collection | cat none | family: follows master [JK's Solitude Outskirts] | MOVE -> [Riften]
   Spell Hotbar | cat #40 "Magic - Gameplay" | T4 no rule, category, or keyword matched | stay
   vMYC_FamiliarFaces | cat none | T4 no rule, category, or keyword matched | stay
   Fam Faces 2.0 | cat none | T4 no rule, category, or keyword matched | stay
@@ -462,7 +462,7 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Alternate Perspective 4.0.3- Alternate Start | cat #3 "Gameplay" | T4 no rule, category, or keyword matched | stay
   Alternate Perspective - Alternate Start | cat none | T4 no rule, category, or keyword matched | stay
   Conquest of Skyrim (Don't enable before finishing the civil war) | cat #4 "Guilds/Factions" | T4 no rule, category, or keyword matched | stay
-  Snazzy Wall Mounted Trophies - DTA Patch | cat #8 "Models and Textures" | family: follows master [Dynamic Things Alternative - Base Object Swapper] | MOVE -> [Exterior and Interior Patch Collection]
+  Snazzy Wall Mounted Trophies - DTA Patch | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Snazzy Wall Mounted Trophies - Base Object Swapper | cat none | T4 no rule, category, or keyword matched | stay
   Acoustic Space Improvement Fixes | cat #49 "Audio" | T4 no rule, category, or keyword matched | stay
   AI Overhaul SSE SkyPatcher Patch | cat #34 "Patches" | T4 no rule, category, or keyword matched | stay
@@ -522,8 +522,8 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Bathtubs Basins and Beyond | cat none | T4 no rule, category, or keyword matched | stay
   Bathing in Skyrim - Renewed | cat none | T4 no rule, category, or keyword matched | stay
   Bathing in Skyrim | cat #30 "Immersion" | T4 no rule, category, or keyword matched | stay
-  Miscellaneous Embers XD Patches | cat none | family: follows master [Campfire - Complete Camping System (Supports Skyrim VR)] | MOVE -> [Unofficial Skyrim Modders Patch Emporium]
-  CC Fishing Campfire patch | cat #34 "Patches" | family: follows master [Campfire - Complete Camping System (Supports Skyrim VR)] | MOVE -> [Unofficial Skyrim Modders Patch Emporium]
+  Miscellaneous Embers XD Patches | cat none | T4 no rule, category, or keyword matched | stay
+  CC Fishing Campfire patch | cat #34 "Patches" | T4 no rule, category, or keyword matched | stay
   Relationship Dialogue Overhaul - RDO SE | cat #30 "Immersion" | T4 no rule, category, or keyword matched | stay
   Heels - Sound Record Distributor (SRD) - Patch Hub | cat none | family: follows master [Sound Record Distributor] | MOVE -> [Audio Fixes & Overhauls]
   All Female High Heels Sound | cat #49 "Audio" | T4 no rule, category, or keyword matched | stay
@@ -896,7 +896,7 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   SUEMR SSE-Eye Mesh Fixes | cat #5 "Body, Face, and Hair" | T4 no rule, category, or keyword matched | stay
   The Eyes of Beauty - Revamped 2k | cat #5 "Body, Face, and Hair" | T4 no rule, category, or keyword matched | stay
   H.U.E - Handmade Unique Eyes SE 2.0 - Standalone | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  Charmers of the Reach SV Beards SE for COtR - HQ Characters creation addon | cat #5 "Body, Face, and Hair" | family: follows master [COtR - HQ Characters creation addon for RM] | MOVE -> [Skin & Body]
+  Charmers of the Reach SV Beards SE for COtR - HQ Characters creation addon | cat #5 "Body, Face, and Hair" | T4 no rule, category, or keyword matched | stay
   Natural Pubic Hairstyles | cat #5 "Body, Face, and Hair" | T4 no rule, category, or keyword matched | stay
   TRE Brows 2 - New Brow Textures | cat #5 "Body, Face, and Hair" | T4 no rule, category, or keyword matched | stay
   OPubes NG - NPC Pubes Distributor | cat #5 "Body, Face, and Hair" | T4 no rule, category, or keyword matched | stay
@@ -1168,7 +1168,7 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Riften of Reverie SE - 8K - Parallax | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Redbag's Morthal Fixes | cat #34 "Patches" | T4 no rule, category, or keyword matched | stay
   Redbag's Morthal - Texture Fixes | cat #34 "Patches" | T4 no rule, category, or keyword matched | stay
-  RedBag's Morthal Patches- FOMOD | cat #34 "Patches" | family: follows master [eFPS - Exterior FPS boost] | MOVE -> [Performance]
+  RedBag's Morthal Patches- FOMOD | cat #34 "Patches" | T4 no rule, category, or keyword matched | stay
   RedBag's Morthal - SE | cat #18 "Cities, Towns, Villages, and Hamlets" | T4 no rule, category, or keyword matched | stay
   TB's Photorealistic Markarth Roads | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Understone Keep Swept | cat #7 "Miscellaneous" | T4 no rule, category, or keyword matched | stay
@@ -1213,9 +1213,9 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Falls of Ivarstead | cat #26 "Environmental" | T4 no rule, category, or keyword matched | stay
   Thuldor's Ivarstead - Riften Stone Alternate Texture | cat #18 "Cities, Towns, Villages, and Hamlets" | T4 no rule, category, or keyword matched | stay
   Thuldor's Ivarstead - Farmhouse Roofs | cat #34 "Patches" | T4 no rule, category, or keyword matched | stay
-  Thuldor's Ivarstead Patch Hub | cat none | family: follows master [eFPS - Exterior FPS boost] | MOVE -> [Performance]
+  Thuldor's Ivarstead Patch Hub | cat none | T4 no rule, category, or keyword matched | stay
   Distinct Thuldor's Ivarstead | cat #34 "Patches" | T4 no rule, category, or keyword matched | stay
-  Thuldor's Ivarstead - Tweaks and Addons | cat #18 "Cities, Towns, Villages, and Hamlets" | family: follows master [Thuldor's Ivarstead Patch Hub] | MOVE -> [Performance]
+  Thuldor's Ivarstead - Tweaks and Addons | cat #18 "Cities, Towns, Villages, and Hamlets" | T4 no rule, category, or keyword matched | stay
   Thuldor's Ivarstead | cat #18 "Cities, Towns, Villages, and Hamlets" | T4 no rule, category, or keyword matched | stay
   Rodryk's Dragon Bridge Retexture 2K | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Rodryk's Dragon Bridge | cat #18 "Cities, Towns, Villages, and Hamlets" | T4 no rule, category, or keyword matched | stay
@@ -1556,7 +1556,7 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Misc. Blended Road Fixes | cat #42 "Bug Fixes" | T4 no rule, category, or keyword matched | stay
   Blended Roads | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Landscape Fixes For Grass Mods | cat #26 "Environmental" | T4 no rule, category, or keyword matched | stay
-  Terrain Parallax Blending Fix | cat #42 "Bug Fixes" | family: follows master [Embers XD] | MOVE -> [Fire and Forges]
+  Terrain Parallax Blending Fix | cat #42 "Bug Fixes" | T4 no rule, category, or keyword matched | stay
   No Grassias - A Universal Grass Fix For Grass Mods | cat #26 "Environmental" | T4 no rule, category, or keyword matched | stay
   Rock Grass for ENB Complex Grass SE (with Guide) | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
   No Grass In Objects | cat none | T4 no rule, category, or keyword matched | stay
@@ -1584,7 +1584,7 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Praedy's Blackreach deposits glowing rocks and falmer cave ceiling glow | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Blackreach Overhaul | cat #31 "Overhauls" | T4 no rule, category, or keyword matched | stay
   SMIM Up Furniture Smooth Dark 2K | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
-  High Poly Project - My fixes SE-AE by Xtudo | cat #8 "Models and Textures" | family: follows master [Winterhold Restored] | MOVE -> [Winterhold]
+  High Poly Project - My fixes SE-AE by Xtudo | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   High Poly Project | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Ruins Clutter Improved SE | cat none | T4 no rule, category, or keyword matched | stay
   Ruins Clutter Improved - Fixes | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -1622,7 +1622,7 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Community Shaders Expanded (CSX) | cat none | T4 no rule, category, or keyword matched | stay
   Community Shaders | cat none | T4 no rule, category, or keyword matched | stay
   Open Shaders | cat #22 "Visuals and Graphics" | T4 no rule, category, or keyword matched | stay
-  NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | cat none | family: follows master [Solar Lens Flare Redux (SLFR)] | stay
+  NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | cat none | family: follows master [From Dusk Till Dawn] | MOVE -> [Weather Systems]
   ETHEREAL CLOUDS - Special Edition | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   Rally's Celestial Canvas | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
   DALC Fix Preset | cat #42 "Bug Fixes" | T4 no rule, category, or keyword matched | stay
@@ -1684,7 +1684,7 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Even Better Quest Objectives SE | cat #30 "Immersion" | T4 no rule, category, or keyword matched | stay
   Helgen Reborn | cat none | T4 no rule, category, or keyword matched | stay
   Don't Rush Me - Riften (No Brynjolf and Maul Forcegreets) | cat #3 "Gameplay" | T4 no rule, category, or keyword matched | stay
-  Even Better Quest Objectives - Quests Are In Skyrim Patch | cat #34 "Patches" | family: follows master [Quests Are In Skyrim] | MOVE -> [Stargazing & Sky]
+  Even Better Quest Objectives - Quests Are In Skyrim Patch | cat #34 "Patches" | T4 no rule, category, or keyword matched | stay
   Local Map Upgrade | cat #15 "User Interface" | T4 no rule, category, or keyword matched | stay
   Fort Knox | cat #37 "Locations -  New" | T4 no rule, category, or keyword matched | stay
   Alternate Banners and Uniforms for Phenderix Magic World - Manantis | cat #8 "Models and Textures" | T4 no rule, category, or keyword matched | stay
@@ -2231,66 +2231,41 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Open Composite - Main (No VR Keyboard) | parent Open Composite - Main | depth 1 | load index 0 -> 1 (loads later = wins)
   Open Composite - Main | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
 
---- constraint placement [Performance] ---
-  Thuldor's Ivarstead - Tweaks and Addons | parent Thuldor's Ivarstead Patch Hub | depth 2 | load index 0 -> 9 (loads later = wins)
-  Thuldor's Ivarstead Patch Hub | parent eFPS - Exterior FPS boost | depth 1 | load index 1 -> 8 (loads later = wins)
-  RedBag's Morthal Patches- FOMOD | parent eFPS - Exterior FPS boost | depth 1 | load index 2 -> 7 (loads later = wins)
-  eFPS - Exterior FPS boost | parent <none> | depth 0 | load index 9 -> 6 (loads later = wins)
-  Grass Sampler Fix | parent <none> | depth 0 | load index 8 -> 5 (loads later = wins)
-  NVIDIA Reflex Support | parent <none> | depth 0 | load index 7 -> 4 (loads later = wins)
-  ENB Anti-Aliasing - AMD FSR 3.1 - NVIDIA DLAA | parent <none> | depth 0 | load index 6 -> 3 (loads later = wins)
-  Skyrim Upscaler VR - DLSS FSR2 XeSS | parent <none> | depth 0 | load index 5 -> 2 (loads later = wins)
-  DVLASS | parent <none> | depth 0 | load index 4 -> 1 (loads later = wins)
-  TAA Sharpen | parent <none> | depth 0 | load index 3 -> 0 (loads later = wins)
-
 --- constraint placement [Utilities] ---
   Fam Faces 2.0 | parent <none> | depth 0 | load index 21 -> 22 (loads later = wins)
   vMYC_FamiliarFaces | parent Familiar Faces | depth 1 | load index 22 -> 21 (loads later = wins)
 
 --- constraint placement [Interior (Re)Designs] ---
-  Distinct Interiors Patch Collection | parent Distinct Interiors - Fixes | depth 2 | load index 0 -> 27 (loads later = wins)
-  AI Overhaul SSE - Official Patch Hub | parent Distinct Interiors - Fixes | depth 2 | load index 1 -> 26 (loads later = wins)
-  Distinct Interiors - Fixes | parent Distinct Interiors | depth 1 | load index 24 -> 25 (loads later = wins)
-  Upgraded Food Barrels for Distinct Interiors | parent Distinct Interiors | depth 1 | load index 25 -> 24 (loads later = wins)
-  Upgraded Silverware for Distinct Interiors | parent Distinct Interiors | depth 1 | load index 26 -> 23 (loads later = wins)
-  Upgraded Fish for Distinct Interiors | parent Distinct Interiors | depth 1 | load index 27 -> 22 (loads later = wins)
-  Distinct Interiors | parent <none> | depth 0 | load index 23 -> 21 (loads later = wins)
-  Unofficial Skyrim Modders Patch - USMP - Patch Emporium | parent <none> | depth 0 | load index 22 -> 20 (loads later = wins)
-  Mrf's White Gold Winterhold - ParallaxR'd | parent Mrf's white-gold winterhold | depth 1 | load index 21 -> 19 (loads later = wins)
-  Mrf's white-gold winterhold | parent <none> | depth 0 | load index 20 -> 18 (loads later = wins)
-  Snazzy Interiors - The Retching Netch | parent <none> | depth 0 | load index 19 -> 17 (loads later = wins)
-  Decorator Helper | parent <none> | depth 0 | load index 18 -> 16 (loads later = wins)
-  Cozy Cots - A Cot Replacer | parent <none> | depth 0 | load index 17 -> 15 (loads later = wins)
-  Divide and Conquer - A Noble Divider Replacer | parent <none> | depth 0 | load index 16 -> 14 (loads later = wins)
-  Comfy Coffins | parent <none> | depth 0 | load index 15 -> 13 (loads later = wins)
-  Malacath's Chosen - An Orc Furniture Replacer | parent <none> | depth 0 | load index 14 -> 12 (loads later = wins)
-  Bedroll Alternative - Use Those Variant Blankets | parent <none> | depth 0 | load index 12 -> 11 (loads later = wins)
-  Reclusive Respite - A High Hrothgar Bed Chair and Bench Replacer | parent <none> | depth 0 | load index 11 -> 10 (loads later = wins)
-  Bedroll Alternative - BOS Color Variance | parent <none> | depth 0 | load index 10 -> 9 (loads later = wins)
-  Reclusive Respite - BOS Color Variance Use Those Blankets patch | parent Use Those Blankets | depth 1 | load index 13 -> 8 (loads later = wins)
-  Use Those Blankets | parent <none> | depth 0 | load index 9 -> 7 (loads later = wins)
-  Deep Slumber - A Dwemer Bed Replacer | parent <none> | depth 0 | load index 8 -> 6 (loads later = wins)
-  Dunmer Dreams - A Dark Elf Bed Replacer | parent <none> | depth 0 | load index 7 -> 5 (loads later = wins)
-  Peasant Dreams - A Common Bed Replacer | parent <none> | depth 0 | load index 6 -> 4 (loads later = wins)
-  Ignoble Beds - A Noble and Upper Class Bed Replacer | parent <none> | depth 0 | load index 5 -> 3 (loads later = wins)
-  Whiterun Tablecloth Replacer | parent <none> | depth 0 | load index 4 -> 2 (loads later = wins)
-  Divine Dragonscale Decor - A Skyrim Furniture Overhaul | parent <none> | depth 0 | load index 3 -> 1 (loads later = wins)
-  Skyrim Overhauled Furniture Assembly-SOFA-Clean | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
+  Distinct Interiors Patch Collection | parent Distinct Interiors - Fixes | depth 2 | load index 0 -> 26 (loads later = wins)
+  Distinct Interiors - Fixes | parent Distinct Interiors | depth 1 | load index 23 -> 25 (loads later = wins)
+  Upgraded Silverware for Distinct Interiors | parent Distinct Interiors | depth 1 | load index 25 -> 23 (loads later = wins)
+  Upgraded Fish for Distinct Interiors | parent Distinct Interiors | depth 1 | load index 26 -> 22 (loads later = wins)
+  Distinct Interiors | parent <none> | depth 0 | load index 22 -> 21 (loads later = wins)
+  Unofficial Skyrim Modders Patch - USMP - Patch Emporium | parent <none> | depth 0 | load index 21 -> 20 (loads later = wins)
+  Mrf's White Gold Winterhold - ParallaxR'd | parent Mrf's white-gold winterhold | depth 1 | load index 20 -> 19 (loads later = wins)
+  Mrf's white-gold winterhold | parent <none> | depth 0 | load index 19 -> 18 (loads later = wins)
+  Snazzy Interiors - The Retching Netch | parent <none> | depth 0 | load index 18 -> 17 (loads later = wins)
+  Decorator Helper | parent <none> | depth 0 | load index 17 -> 16 (loads later = wins)
+  Cozy Cots - A Cot Replacer | parent <none> | depth 0 | load index 16 -> 15 (loads later = wins)
+  Divide and Conquer - A Noble Divider Replacer | parent <none> | depth 0 | load index 15 -> 14 (loads later = wins)
+  Comfy Coffins | parent <none> | depth 0 | load index 14 -> 13 (loads later = wins)
+  Malacath's Chosen - An Orc Furniture Replacer | parent <none> | depth 0 | load index 13 -> 12 (loads later = wins)
+  Reclusive Respite - BOS Color Variance Use Those Blankets patch | parent Use Those Blankets | depth 1 | load index 12 -> 8 (loads later = wins)
+  Use Those Blankets | parent <none> | depth 0 | load index 8 -> 7 (loads later = wins)
+  Deep Slumber - A Dwemer Bed Replacer | parent <none> | depth 0 | load index 7 -> 6 (loads later = wins)
+  Dunmer Dreams - A Dark Elf Bed Replacer | parent <none> | depth 0 | load index 6 -> 5 (loads later = wins)
+  Peasant Dreams - A Common Bed Replacer | parent <none> | depth 0 | load index 5 -> 4 (loads later = wins)
+  Ignoble Beds - A Noble and Upper Class Bed Replacer | parent <none> | depth 0 | load index 4 -> 3 (loads later = wins)
+  Whiterun Tablecloth Replacer | parent <none> | depth 0 | load index 3 -> 2 (loads later = wins)
+  Divine Dragonscale Decor - A Skyrim Furniture Overhaul | parent <none> | depth 0 | load index 2 -> 1 (loads later = wins)
+  Skyrim Overhauled Furniture Assembly-SOFA-Clean | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
 
 --- constraint placement [Exterior and Interior Patch Collection] ---
-  Snazzy Wall Mounted Trophies - DTA Patch | parent Dynamic Things Alternative - Base Object Swapper | depth 1 | load index 0 -> 8 (loads later = wins)
-  Dynamic Things Alternative - Base Object Swapper | parent <none> | depth 0 | load index 8 -> 7 (loads later = wins)
-  Optimised Scripts for Apocalypse | parent <none> | depth 0 | load index 7 -> 6 (loads later = wins)
-  Distinct Interiors for Cities of the North | parent <none> | depth 0 | load index 6 -> 5 (loads later = wins)
-  The Distinct JK's Ragged Flagon - Lux patch | parent Distinct JK's Ragged Flagon | depth 1 | load index 1 -> 4 (loads later = wins)
-  Distinct JK's Ragged Flagon | parent <none> | depth 0 | load index 5 -> 3 (loads later = wins)
-  Realm of Lorkhan Lighting Patch for Lux | parent <none> | depth 0 | load index 4 -> 2 (loads later = wins)
-  COTN Dawnstar Patch Collection | parent <none> | depth 0 | load index 3 -> 1 (loads later = wins)
-  Apocalypse - Magic of Skyrim | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
-
---- constraint placement [Unofficial Skyrim Modders Patch Emporium] ---
-  CC Fishing Campfire patch | parent Campfire - Complete Camping System (Supports Skyrim VR) | depth 1 | load index 0 -> 2 (loads later = wins)
-  Campfire - Complete Camping System (Supports Skyrim VR) | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
+  The Distinct JK's Ragged Flagon - Lux patch | parent Distinct JK's Ragged Flagon | depth 1 | load index 0 -> 4 (loads later = wins)
+  Distinct JK's Ragged Flagon | parent <none> | depth 0 | load index 4 -> 3 (loads later = wins)
+  Realm of Lorkhan Lighting Patch for Lux | parent <none> | depth 0 | load index 3 -> 2 (loads later = wins)
+  COTN Dawnstar Patch Collection | parent <none> | depth 0 | load index 2 -> 1 (loads later = wins)
+  Apocalypse - Magic of Skyrim | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
   [Special Load After Lighting Mods] Fixed Texture Paths for Small Things in EEK's Whiterun Interiors vs EEKs Whiterun Interiors SSE: 3 shared files -> patch must load after
 
 --- constraint placement [Special Load After Lighting Mods] ---
@@ -2320,7 +2295,7 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
 
 --- constraint placement [AI & Immersion] ---
   Kalilies NPCs AI Overhaul Patch | parent AI Overhaul SSE SkyPatcher Patch | depth 2 | load index 0 -> 5 (loads later = wins)
-  JK's Solitude Outskirts Patch Collection | parent AI Overhaul SSE SkyPatcher Patch | depth 2 | load index 1 -> 4 (loads later = wins)
+  AI Overhaul SSE - Official Patch Hub | parent AI Overhaul SSE SkyPatcher Patch | depth 2 | load index 1 -> 4 (loads later = wins)
   AI Overhaul SPID Patch | parent AI Overhaul SSE | depth 1 | load index 4 -> 3 (loads later = wins)
   AI Overhaul SSE SkyPatcher Patch | parent AI Overhaul SSE | depth 1 | load index 5 -> 2 (loads later = wins)
   AI Overhaul SSE | parent <none> | depth 0 | load index 3 -> 1 (loads later = wins)
@@ -2452,27 +2427,13 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   SexLab Framework PPLUS NG | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
   [Skin & Body] Female Hands Redone 3BA Patch for CBBE vs Female Hands Redone: 8 shared files -> patch must load after
   [Skin & Body] COtR - HQ Characters creation addon for RM vs COTR Overhaul: 81 shared files -> patch must load after
-  [Skin & Body] Charmers of the Reach SV Beards SE for COtR - HQ Characters creation addon | content DAG: loads after all parents (slot 9 -> past 12)
-  [Skin & Body] Female Hands Redone 3BA Patch for CBBE vs Female Hands Redone: 8 shared files -> patch must load after
-  [Skin & Body] COtR - HQ Characters creation addon for RM vs COTR Overhaul: 81 shared files -> patch must load after
   [Skin & Body] Female Hands Redone 3BA Patch for CBBE vs Female Hands Redone: 8 shared files -> patch must load after
   [Skin & Body] COtR - HQ Characters creation addon for RM vs COTR Overhaul: 81 shared files -> patch must load after
 
 --- constraint placement [Skin & Body] ---
-  Charmers of the Reach SV Beards SE for COtR - HQ Characters creation addon | parent COtR - HQ Characters creation addon for RM | depth 1 | load index 0 -> 13 (loads later = wins)
-  BnP - COtR faces | parent <none> | depth 0 | load index 13 -> 12 (loads later = wins)
-  COtR - HQ Characters creation addon for RM | parent <none> | depth 0 | load index 10 -> 11 (loads later = wins)
-  High Poly COTR | parent <none> | depth 0 | load index 12 -> 10 (loads later = wins)
-  COTR Overhaul | parent <none> | depth 0 | load index 11 -> 9 (loads later = wins)
-  High Poly Head SE | parent <none> | depth 0 | load index 9 -> 8 (loads later = wins)
-  Female Hands Redone 3BA Patch for CBBE | parent Female Hands Redone | depth 1 | load index 8 -> 7 (loads later = wins)
-  Female Hands Redone | parent <none> | depth 0 | load index 7 -> 6 (loads later = wins)
-  Expressive Facial Animation -Male Edition- | parent <none> | depth 0 | load index 6 -> 5 (loads later = wins)
-  Reverie | parent <none> | depth 0 | load index 5 -> 4 (loads later = wins)
-  BnP female skin (Replacer+Player version) | parent <none> | depth 0 | load index 4 -> 3 (loads later = wins)
-  BodySlide and Outfit Studio | parent <none> | depth 0 | load index 3 -> 2 (loads later = wins)
-  CBBE 3BA | parent <none> | depth 0 | load index 2 -> 1 (loads later = wins)
-  Caliente's Beautiful Bodies Enhancer -CBBE- | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
+  COtR - HQ Characters creation addon for RM | parent <none> | depth 0 | load index 9 -> 11 (loads later = wins)
+  High Poly COTR | parent <none> | depth 0 | load index 11 -> 10 (loads later = wins)
+  COTR Overhaul | parent <none> | depth 0 | load index 10 -> 9 (loads later = wins)
 
 --- constraint placement [Scars, Tints, Makeup, Tattoos and Warpaints] ---
   Lyru's Tattoo pack collection 2 | parent Lyru's Tattoo pack collection | depth 1 | load index 12 -> 13 (loads later = wins)
@@ -2513,10 +2474,6 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Silverstead Grass Patch | parent Silverstead (SE) | depth 1 | load index 16 -> 18 (loads later = wins)
   Silverstead Prebuilt Patch | parent Silverstead (SE) | depth 1 | load index 18 -> 16 (loads later = wins)
 
---- constraint placement [Fire and Forges] ---
-  Terrain Parallax Blending Fix | parent Embers XD | depth 1 | load index 0 -> 2 (loads later = wins)
-  Embers XD | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
-
 --- constraint placement [Shrines & Statues] ---
   Unofficial Material Fix - Stunning Statues of Skyrim patch | parent Stunning Statues of Skyrim | depth 1 | load index 1 -> 5 (loads later = wins)
   Stunning Statues of Skyrim | parent <none> | depth 0 | load index 5 -> 4 (loads later = wins)
@@ -2526,9 +2483,8 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Daedric Shrines - All in One | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
 
 --- constraint placement [Winterhold] ---
-  High Poly Project - My fixes SE-AE by Xtudo | parent Winterhold Restored | depth 1 | load index 0 -> 3 (loads later = wins)
-  Winterhold Restored - Parallax Meshes | parent Winterhold Restored | depth 1 | load index 3 -> 1 (loads later = wins)
-  Winterhold Restored | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
+  Winterhold Restored and Enhanced | parent Winterhold Restored | depth 1 | load index 1 -> 2 (loads later = wins)
+  Winterhold Restored - Parallax Meshes | parent Winterhold Restored | depth 1 | load index 2 -> 1 (loads later = wins)
   [Windhelm] Windhelm Bridge Revived - Patches and Add-ons vs Windhelm Bridge Revived - Upscaled Textures: 6 shared files -> patch must load after
 
 --- constraint placement [Windhelm] ---
@@ -2560,50 +2516,53 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Solitude farmhouses rework | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
 
 --- constraint placement [Riften] ---
-  BHKS - JK's Solitude Outskirts Patch - ESL-Flagged | parent JK's Solitude Outskirts | depth 1 | load index 0 -> 12 (loads later = wins)
-  JK's Solitude Outskirts | parent <none> | depth 0 | load index 12 -> 11 (loads later = wins)
-  HS Riften - Temple of Mara | parent <none> | depth 0 | load index 11 -> 10 (loads later = wins)
-  HS Riften - The Pawned Prawn | parent <none> | depth 0 | load index 10 -> 9 (loads later = wins)
-  HS Riften - Elgrim's Elixirs | parent <none> | depth 0 | load index 9 -> 8 (loads later = wins)
-  JKs Ragged Flagon Water Fix | parent <none> | depth 0 | load index 8 -> 7 (loads later = wins)
-  JK's The Ragged Flagon | parent <none> | depth 0 | load index 7 -> 6 (loads later = wins)
-  RYFTEN DOWN - A little addition to the Riften canal | parent <none> | depth 0 | load index 6 -> 5 (loads later = wins)
-  Riften Towers | parent <none> | depth 0 | load index 5 -> 4 (loads later = wins)
-  Rustling Riften Leaves SE-ParallaxR'd | parent Rustling Riften Leaves SE | depth 1 | load index 4 -> 3 (loads later = wins)
-  Rustling Riften Leaves SE | parent <none> | depth 0 | load index 3 -> 2 (loads later = wins)
-  Mayhem In Riften | parent <none> | depth 0 | load index 2 -> 1 (loads later = wins)
-  Riften of Reverie SE - 8K - Parallax | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
+  JK's Solitude Outskirts Patch Collection | parent JK's Solitude Outskirts | depth 1 | load index 0 -> 13 (loads later = wins)
+  BHKS - JK's Solitude Outskirts Patch - ESL-Flagged | parent JK's Solitude Outskirts | depth 1 | load index 1 -> 12 (loads later = wins)
+  JK's Solitude Outskirts | parent <none> | depth 0 | load index 13 -> 11 (loads later = wins)
+  HS Riften - Temple of Mara | parent <none> | depth 0 | load index 12 -> 10 (loads later = wins)
+  HS Riften - The Pawned Prawn | parent <none> | depth 0 | load index 11 -> 9 (loads later = wins)
+  HS Riften - Elgrim's Elixirs | parent <none> | depth 0 | load index 10 -> 8 (loads later = wins)
+  JKs Ragged Flagon Water Fix | parent <none> | depth 0 | load index 9 -> 7 (loads later = wins)
+  JK's The Ragged Flagon | parent <none> | depth 0 | load index 8 -> 6 (loads later = wins)
+  RYFTEN DOWN - A little addition to the Riften canal | parent <none> | depth 0 | load index 7 -> 5 (loads later = wins)
+  Riften Towers | parent <none> | depth 0 | load index 6 -> 4 (loads later = wins)
+  Rustling Riften Leaves SE-ParallaxR'd | parent Rustling Riften Leaves SE | depth 1 | load index 5 -> 3 (loads later = wins)
+  Rustling Riften Leaves SE | parent <none> | depth 0 | load index 4 -> 2 (loads later = wins)
+  Mayhem In Riften | parent <none> | depth 0 | load index 3 -> 1 (loads later = wins)
+  Riften of Reverie SE - 8K - Parallax | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
   [Morthal] Redbag's Morthal - Texture Fixes vs RedBag's Morthal - SE: 10 shared files -> patch must load after
 
 --- constraint placement [Morthal] ---
-  Fabled Forests Patch Compendium | parent Redbag's Morthal Fixes | depth 2 | load index 0 -> 3 (loads later = wins)
+  RedBag's Morthal Patches- FOMOD | parent Redbag's Morthal Fixes | depth 2 | load index 1 -> 3 (loads later = wins)
   Redbag's Morthal Fixes | parent RedBag's Morthal - SE | depth 1 | load index 3 -> 1 (loads later = wins)
-  RedBag's Morthal - SE | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
 
 --- constraint placement [Falkreath] ---
   RedBag's Falkreath - Half-Moon Mill Addon | parent RedBag's Falkreath | depth 1 | load index 0 -> 3 (loads later = wins)
   RedBag's Falkreath - Patch Collection | parent RedBag's Falkreath | depth 1 | load index 3 -> 1 (loads later = wins)
   RedBag's Falkreath | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
-  [Minor Town and City Overhauls] Gonzeh - Shor's Stone Overhaul - Spaghetti Patch | content DAG: loads after all parents (slot 25 -> past 26)
+  [Minor Town and City Overhauls] Gonzeh - Shor's Stone Overhaul - Spaghetti Patch | content DAG: loads after all parents (slot 28 -> past 29)
 
 --- constraint placement [Minor Town and City Overhauls] ---
-  Gonzeh - Shor's Stone Overhaul - Spaghetti Patch | parent Gonzeh - Shor's Stone Overhaul | depth 1 | load index 26 -> 27 (loads later = wins)
-  Markarth - City of Stone | parent <none> | depth 0 | load index 27 -> 26 (loads later = wins)
-  Riverwood Revitalized Sign Fix | parent Riverwood Revitalized | depth 1 | load index 0 -> 14 (loads later = wins)
-  Riverwood Revitalized | parent <none> | depth 0 | load index 14 -> 13 (loads later = wins)
-  Riverwood Mushroom Village | parent <none> | depth 0 | load index 13 -> 12 (loads later = wins)
-  Falls of Ivarstead | parent <none> | depth 0 | load index 12 -> 11 (loads later = wins)
-  Distinct Thuldor's Ivarstead | parent Thuldor's Ivarstead | depth 1 | load index 9 -> 10 (loads later = wins)
-  Thuldor's Ivarstead - Farmhouse Roofs | parent Thuldor's Ivarstead | depth 1 | load index 10 -> 9 (loads later = wins)
-  Thuldor's Ivarstead - Riften Stone Alternate Texture | parent Thuldor's Ivarstead | depth 1 | load index 11 -> 8 (loads later = wins)
-  Thuldor's Ivarstead | parent <none> | depth 0 | load index 8 -> 7 (loads later = wins)
-  Rodryk's Dragon Bridge Retexture 2K | parent Rodryk's Dragon Bridge | depth 1 | load index 7 -> 6 (loads later = wins)
-  Rodryk's Dragon Bridge | parent <none> | depth 0 | load index 6 -> 5 (loads later = wins)
-  JK's Fort Dawnguard | parent <none> | depth 0 | load index 5 -> 4 (loads later = wins)
-  JK's Sky Haven Temple | parent <none> | depth 0 | load index 4 -> 3 (loads later = wins)
-  Jets Resources | parent <none> | depth 0 | load index 3 -> 2 (loads later = wins)
-  Stroti's Mushroom House Resource | parent <none> | depth 0 | load index 2 -> 1 (loads later = wins)
-  HS Resources | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
+  Gonzeh - Shor's Stone Overhaul - Spaghetti Patch | parent Gonzeh - Shor's Stone Overhaul | depth 1 | load index 29 -> 30 (loads later = wins)
+  Markarth - City of Stone | parent <none> | depth 0 | load index 30 -> 29 (loads later = wins)
+  Riverwood Revitalized Sign Fix | parent Riverwood Revitalized | depth 1 | load index 1 -> 17 (loads later = wins)
+  Riverwood Revitalized | parent <none> | depth 0 | load index 17 -> 16 (loads later = wins)
+  Riverwood Mushroom Village | parent <none> | depth 0 | load index 16 -> 15 (loads later = wins)
+  Falls of Ivarstead | parent <none> | depth 0 | load index 15 -> 14 (loads later = wins)
+  Thuldor's Ivarstead - Tweaks and Addons | parent Thuldor's Ivarstead | depth 1 | load index 10 -> 13 (loads later = wins)
+  Distinct Thuldor's Ivarstead | parent Thuldor's Ivarstead | depth 1 | load index 11 -> 12 (loads later = wins)
+  Thuldor's Ivarstead Patch Hub | parent Thuldor's Ivarstead | depth 1 | load index 12 -> 11 (loads later = wins)
+  Thuldor's Ivarstead - Farmhouse Roofs | parent Thuldor's Ivarstead | depth 1 | load index 13 -> 10 (loads later = wins)
+  Thuldor's Ivarstead - Riften Stone Alternate Texture | parent Thuldor's Ivarstead | depth 1 | load index 14 -> 9 (loads later = wins)
+  Thuldor's Ivarstead | parent <none> | depth 0 | load index 9 -> 8 (loads later = wins)
+  Rodryk's Dragon Bridge - Patch Collection | parent Rodryk's Dragon Bridge | depth 1 | load index 0 -> 7 (loads later = wins)
+  Rodryk's Dragon Bridge Retexture 2K | parent Rodryk's Dragon Bridge | depth 1 | load index 8 -> 6 (loads later = wins)
+  Rodryk's Dragon Bridge | parent <none> | depth 0 | load index 7 -> 5 (loads later = wins)
+  JK's Fort Dawnguard | parent <none> | depth 0 | load index 6 -> 4 (loads later = wins)
+  JK's Sky Haven Temple | parent <none> | depth 0 | load index 5 -> 3 (loads later = wins)
+  Jets Resources | parent <none> | depth 0 | load index 4 -> 2 (loads later = wins)
+  Stroti's Mushroom House Resource | parent <none> | depth 0 | load index 3 -> 1 (loads later = wins)
+  HS Resources | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
 
 --- constraint placement [Expanded Cities, Towns, and Villages] ---
   ParallaxR-burpst | parent <none> | depth 0 | load index 14 -> 15 (loads later = wins)
@@ -2689,113 +2648,117 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   [Glaciers, Ice, Snow and Ash] Blubbo_Shrubs_Replacer_darker_Patch.zip vs Cathedral - 3D Pine Shrubs: 3 shared files -> patch must load after
 
 --- constraint placement [Glaciers, Ice, Snow and Ash] ---
-  Holidays Happy Little Trees Patch | parent Happy Little Trees | depth 1 | load index 0 -> 84 (loads later = wins)
-  HD Remastered Tree Bark - Happy Little Trees - 16k 8k 4k 2k | parent Happy Little Trees | depth 1 | load index 57 -> 83 (loads later = wins)
-  Happy Little Trees | parent <none> | depth 0 | load index 84 -> 82 (loads later = wins)
-  Skyrim 3D Docks and Boardwalks | parent <none> | depth 0 | load index 83 -> 81 (loads later = wins)
-  Nordic Stonewall Terraces | parent <none> | depth 0 | load index 81 -> 80 (loads later = wins)
-  Nordic Stonewalls Complex Parallax Material | parent Nordic Stonewalls | depth 1 | load index 82 -> 79 (loads later = wins)
-  Nordic Stonewalls | parent <none> | depth 0 | load index 80 -> 78 (loads later = wins)
-  Riton Farmhouse parallax III | parent <none> | depth 0 | load index 79 -> 77 (loads later = wins)
-  Unique Northern Vanilla Farmhouses - Roof remesh | parent <none> | depth 0 | load index 78 -> 76 (loads later = wins)
-  Unique Northern Vanilla Farmhouses - Non Snowy Regions | parent <none> | depth 0 | load index 77 -> 75 (loads later = wins)
-  TB's 8K Parallax Driftwood | parent <none> | depth 0 | load index 76 -> 74 (loads later = wins)
-  Diverse Downed Logs - Base Object Swapper | parent <none> | depth 0 | load index 75 -> 73 (loads later = wins)
-  Blubbos Apple Tree Replacer for JK Mods | parent <none> | depth 0 | load index 74 -> 72 (loads later = wins)
-  DMT's Stuie Appleseeds Apple Trees in Skyrim | parent <none> | depth 0 | load index 73 -> 71 (loads later = wins)
-  Skyfall's Sleeping Hist Tree Overhaul | parent <none> | depth 0 | load index 72 -> 70 (loads later = wins)
-  Blubbos Gildergreen 2023 | parent <none> | depth 0 | load index 71 -> 69 (loads later = wins)
-  Aspens Ablaze Add-On - DynDOLOD 3 -Quality | parent Aspens Ablaze | depth 1 | load index 1 -> 68 (loads later = wins)
-  Aspens Ablaze Add-On - DynDOLOD 3 -Performance | parent Aspens Ablaze | depth 1 | load index 2 -> 67 (loads later = wins)
-  Fabled Aspens Ablaze | parent Aspens Ablaze | depth 1 | load index 70 -> 66 (loads later = wins)
-  Aspens Ablaze | parent <none> | depth 0 | load index 69 -> 65 (loads later = wins)
-  Arboreal Ascension Improved Tree Textures 2K | parent <none> | depth 0 | load index 67 -> 64 (loads later = wins)
-  Fabled Forests - Arboreal Ascension Pines Mixed Patch | parent Arboreal Ascension - Enhanced Pine Trees of Skyrim | depth 1 | load index 68 -> 63 (loads later = wins)
-  Arboreal Ascension - Enhanced Pine Trees of Skyrim | parent <none> | depth 0 | load index 66 -> 62 (loads later = wins)
-  Fabled Forests - Floating Trees fix BOS version | parent Fabled Forests | depth 1 | load index 63 -> 61 (loads later = wins)
-  Fabled Forests - Ivy on Trees | parent Fabled Forests | depth 1 | load index 64 -> 60 (loads later = wins)
-  Fabled Forests - Exclude Morthal Marsh (Plus Various Enhanced Landscape - Dead Marsh Standalone Patches) | parent Fabled Forests | depth 1 | load index 65 -> 59 (loads later = wins)
-  Fabled Forests | parent <none> | depth 0 | load index 62 -> 58 (loads later = wins)
-  Another Whiterun Tree Circle - Raw Wood | parent <none> | depth 0 | load index 61 -> 57 (loads later = wins)
-  M.O.I.S.T. - Massive Outstandingly Insane Swamp Tree | parent <none> | depth 0 | load index 60 -> 56 (loads later = wins)
-  TREES ADDON SE | parent <none> | depth 0 | load index 59 -> 55 (loads later = wins)
-  Cover Woods SSE | parent <none> | depth 0 | load index 58 -> 54 (loads later = wins)
-  Rally's Hanging Moss | parent <none> | depth 0 | load index 55 -> 53 (loads later = wins)
-  Smaller Cathedral 3D Plants | parent <none> | depth 0 | load index 54 -> 52 (loads later = wins)
-  Rally's Cathedral 3D Dragons Tongue | parent <none> | depth 0 | load index 53 -> 51 (loads later = wins)
-  Cathedral 3D Plants - Darker and Desat | parent <none> | depth 0 | load index 52 -> 50 (loads later = wins)
-  Cathedral - Mushrooms | parent <none> | depth 0 | load index 51 -> 49 (loads later = wins)
-  Cathedral - 3D Tundra Cotton | parent <none> | depth 0 | load index 50 -> 48 (loads later = wins)
-  Cathedral - 3D Thistle | parent <none> | depth 0 | load index 49 -> 47 (loads later = wins)
-  Cathedral - 3D Sword Ferns | parent <none> | depth 0 | load index 48 -> 46 (loads later = wins)
-  Cathedral - 3D Snow Berries | parent <none> | depth 0 | load index 47 -> 45 (loads later = wins)
-  Cathedral - 3D Nightshade | parent <none> | depth 0 | load index 46 -> 44 (loads later = wins)
-  Reimagined Mountain Flowers - Base Object Swapper - Seasons of Skyrim | parent <none> | depth 0 | load index 45 -> 43 (loads later = wins)
-  Cathedral - 3D Mountain Flowers - Base Object Swapper | parent Cathedral - 3D Mountain Flowers | depth 1 | load index 44 -> 42 (loads later = wins)
-  Cathedral - 3D Mountain Flowers | parent <none> | depth 0 | load index 43 -> 41 (loads later = wins)
-  Cathedral - 3D Lavender | parent <none> | depth 0 | load index 42 -> 40 (loads later = wins)
-  Cathedral - 3D Deathbell | parent <none> | depth 0 | load index 41 -> 39 (loads later = wins)
-  Cathedral - 3D Clover Plant | parent <none> | depth 0 | load index 40 -> 38 (loads later = wins)
-  Creep Cluster Collision Fixes | parent <none> | depth 0 | load index 39 -> 37 (loads later = wins)
-  High Quality Ivy for SD's Farmhouse Fences | parent <none> | depth 0 | load index 38 -> 36 (loads later = wins)
-  High Quality Ivy | parent <none> | depth 0 | load index 37 -> 35 (loads later = wins)
-  A Nirnroot | parent <none> | depth 0 | load index 36 -> 34 (loads later = wins)
-  Vine Maple Redone | parent <none> | depth 0 | load index 35 -> 33 (loads later = wins)
-  Gourd Plant Mesh Fix (FOMOD check for Repatch) | parent <none> | depth 0 | load index 34 -> 32 (loads later = wins)
-  Mari's Reach Ferns - Vanilla Mesh Tweaks | parent <none> | depth 0 | load index 33 -> 31 (loads later = wins)
-  Juniper by Mari | parent <none> | depth 0 | load index 32 -> 30 (loads later = wins)
-  Simple Snow Improvements - Solstheim Ruins (BOS) | parent <none> | depth 0 | load index 31 -> 29 (loads later = wins)
-  Cathedral - 3D Tundra Shrubs | parent <none> | depth 0 | load index 30 -> 28 (loads later = wins)
-  Plant Size Variety | parent <none> | depth 0 | load index 29 -> 27 (loads later = wins)
-  ICFur's Tundra Scrubs Version 2 | parent <none> | depth 0 | load index 28 -> 26 (loads later = wins)
-  No More Dead Shrub | parent <none> | depth 0 | load index 27 -> 25 (loads later = wins)
-  Blubbo_Shrubs_Replacer_darker_Patch.zip | parent <none> | depth 0 | load index 26 -> 24 (loads later = wins)
-  Blubbos Shrub Replacer | parent <none> | depth 0 | load index 25 -> 23 (loads later = wins)
-  Fall Forest And Yellow Shrubs Redone | parent <none> | depth 0 | load index 24 -> 22 (loads later = wins)
-  Cathedral - 3D Pine Shrubs | parent <none> | depth 0 | load index 23 -> 21 (loads later = wins)
-  Skyrim Flora Overhaul SE | parent <none> | depth 0 | load index 22 -> 20 (loads later = wins)
-  ProjectedDiffuse Patch Hub | parent <none> | depth 0 | load index 21 -> 19 (loads later = wins)
-  Paraphernalia - Snow Colour Fixes | parent <none> | depth 0 | load index 20 -> 18 (loads later = wins)
-  Better Dynamic Snow - Complex Parallax Materials | parent Better Dynamic Snow SE | depth 1 | load index 18 -> 17 (loads later = wins)
-  Better Dynamic Snow SE - projected noise Tweak | parent Better Dynamic Snow SE | depth 1 | load index 19 -> 16 (loads later = wins)
-  Better Dynamic Snow SE | parent <none> | depth 0 | load index 17 -> 15 (loads later = wins)
-  Better Snowflakes - A falling snow improvement mod | parent <none> | depth 0 | load index 16 -> 14 (loads later = wins)
-  real life snowflakes SSE | parent <none> | depth 0 | load index 15 -> 13 (loads later = wins)
-  Floating Ash Pile Fix | parent <none> | depth 0 | load index 14 -> 12 (loads later = wins)
-  Simple Snow Improvements - Snow Forts (BOS) | parent <none> | depth 0 | load index 13 -> 11 (loads later = wins)
-  Simple Snow Improvements - Giant Obelisk Fixes (BOS) | parent Simple Snow Improvements - Skyrim Fixes (BOS) | depth 1 | load index 56 -> 10 (loads later = wins)
-  Simple Snow Improvements - Skyrim Fixes (BOS) | parent <none> | depth 0 | load index 12 -> 9 (loads later = wins)
-  Stones of Solitude - Better Blended Rock Piles | parent <none> | depth 0 | load index 11 -> 8 (loads later = wins)
-  Lightened Skyrim - Base Object Swapper edition | parent <none> | depth 0 | load index 10 -> 7 (loads later = wins)
-  Stretched Snow Begone Definitive Edition - Stretched Snow On Walls and Buildings Fix | parent <none> | depth 0 | load index 9 -> 6 (loads later = wins)
-  Icy Cave Remaster Patch | parent Icy Cave Remaster | depth 1 | load index 6 -> 5 (loads later = wins)
-  Icy Cave Remaster - Ice Material Patch | parent Icy Cave Remaster | depth 1 | load index 8 -> 4 (loads later = wins)
-  Icy Cave Remaster | parent <none> | depth 0 | load index 7 -> 3 (loads later = wins)
-  Icy Mesh Remaster | parent <none> | depth 0 | load index 5 -> 2 (loads later = wins)
-  Multilayer Glacier Replacer | parent <none> | depth 0 | load index 4 -> 1 (loads later = wins)
-  Glacierslab SSE | parent <none> | depth 0 | load index 3 -> 0 (loads later = wins)
+  Holidays Happy Little Trees Patch | parent Happy Little Trees | depth 1 | load index 0 -> 85 (loads later = wins)
+  HD Remastered Tree Bark - Happy Little Trees - 16k 8k 4k 2k | parent Happy Little Trees | depth 1 | load index 58 -> 84 (loads later = wins)
+  Happy Little Trees | parent <none> | depth 0 | load index 85 -> 83 (loads later = wins)
+  Skyrim 3D Docks and Boardwalks | parent <none> | depth 0 | load index 84 -> 82 (loads later = wins)
+  Nordic Stonewall Terraces | parent <none> | depth 0 | load index 82 -> 81 (loads later = wins)
+  Nordic Stonewalls Complex Parallax Material | parent Nordic Stonewalls | depth 1 | load index 83 -> 80 (loads later = wins)
+  Nordic Stonewalls | parent <none> | depth 0 | load index 81 -> 79 (loads later = wins)
+  Riton Farmhouse parallax III | parent <none> | depth 0 | load index 80 -> 78 (loads later = wins)
+  Unique Northern Vanilla Farmhouses - Roof remesh | parent <none> | depth 0 | load index 79 -> 77 (loads later = wins)
+  Unique Northern Vanilla Farmhouses - Non Snowy Regions | parent <none> | depth 0 | load index 78 -> 76 (loads later = wins)
+  TB's 8K Parallax Driftwood | parent <none> | depth 0 | load index 77 -> 75 (loads later = wins)
+  Diverse Downed Logs - Base Object Swapper | parent <none> | depth 0 | load index 76 -> 74 (loads later = wins)
+  Blubbos Apple Tree Replacer for JK Mods | parent <none> | depth 0 | load index 75 -> 73 (loads later = wins)
+  DMT's Stuie Appleseeds Apple Trees in Skyrim | parent <none> | depth 0 | load index 74 -> 72 (loads later = wins)
+  Skyfall's Sleeping Hist Tree Overhaul | parent <none> | depth 0 | load index 73 -> 71 (loads later = wins)
+  Blubbos Gildergreen 2023 | parent <none> | depth 0 | load index 72 -> 70 (loads later = wins)
+  Aspens Ablaze Add-On - DynDOLOD 3 -Quality | parent Aspens Ablaze | depth 1 | load index 2 -> 69 (loads later = wins)
+  Aspens Ablaze Add-On - DynDOLOD 3 -Performance | parent Aspens Ablaze | depth 1 | load index 3 -> 68 (loads later = wins)
+  Fabled Aspens Ablaze | parent Aspens Ablaze | depth 1 | load index 71 -> 67 (loads later = wins)
+  Aspens Ablaze | parent <none> | depth 0 | load index 70 -> 66 (loads later = wins)
+  Arboreal Ascension Improved Tree Textures 2K | parent <none> | depth 0 | load index 68 -> 65 (loads later = wins)
+  Fabled Forests - Arboreal Ascension Pines Mixed Patch | parent Arboreal Ascension - Enhanced Pine Trees of Skyrim | depth 1 | load index 69 -> 64 (loads later = wins)
+  Arboreal Ascension - Enhanced Pine Trees of Skyrim | parent <none> | depth 0 | load index 67 -> 63 (loads later = wins)
+  Fabled Forests Patch Compendium | parent Fabled Forests | depth 1 | load index 1 -> 62 (loads later = wins)
+  Fabled Forests - Floating Trees fix BOS version | parent Fabled Forests | depth 1 | load index 64 -> 61 (loads later = wins)
+  Fabled Forests - Ivy on Trees | parent Fabled Forests | depth 1 | load index 65 -> 60 (loads later = wins)
+  Fabled Forests - Exclude Morthal Marsh (Plus Various Enhanced Landscape - Dead Marsh Standalone Patches) | parent Fabled Forests | depth 1 | load index 66 -> 59 (loads later = wins)
+  Fabled Forests | parent <none> | depth 0 | load index 63 -> 58 (loads later = wins)
+  Another Whiterun Tree Circle - Raw Wood | parent <none> | depth 0 | load index 62 -> 57 (loads later = wins)
+  M.O.I.S.T. - Massive Outstandingly Insane Swamp Tree | parent <none> | depth 0 | load index 61 -> 56 (loads later = wins)
+  TREES ADDON SE | parent <none> | depth 0 | load index 60 -> 55 (loads later = wins)
+  Cover Woods SSE | parent <none> | depth 0 | load index 59 -> 54 (loads later = wins)
+  Rally's Hanging Moss | parent <none> | depth 0 | load index 56 -> 53 (loads later = wins)
+  Smaller Cathedral 3D Plants | parent <none> | depth 0 | load index 55 -> 52 (loads later = wins)
+  Rally's Cathedral 3D Dragons Tongue | parent <none> | depth 0 | load index 54 -> 51 (loads later = wins)
+  Cathedral 3D Plants - Darker and Desat | parent <none> | depth 0 | load index 53 -> 50 (loads later = wins)
+  Cathedral - Mushrooms | parent <none> | depth 0 | load index 52 -> 49 (loads later = wins)
+  Cathedral - 3D Tundra Cotton | parent <none> | depth 0 | load index 51 -> 48 (loads later = wins)
+  Cathedral - 3D Thistle | parent <none> | depth 0 | load index 50 -> 47 (loads later = wins)
+  Cathedral - 3D Sword Ferns | parent <none> | depth 0 | load index 49 -> 46 (loads later = wins)
+  Cathedral - 3D Snow Berries | parent <none> | depth 0 | load index 48 -> 45 (loads later = wins)
+  Cathedral - 3D Nightshade | parent <none> | depth 0 | load index 47 -> 44 (loads later = wins)
+  Reimagined Mountain Flowers - Base Object Swapper - Seasons of Skyrim | parent <none> | depth 0 | load index 46 -> 43 (loads later = wins)
+  Cathedral - 3D Mountain Flowers - Base Object Swapper | parent Cathedral - 3D Mountain Flowers | depth 1 | load index 45 -> 42 (loads later = wins)
+  Cathedral - 3D Mountain Flowers | parent <none> | depth 0 | load index 44 -> 41 (loads later = wins)
+  Cathedral - 3D Lavender | parent <none> | depth 0 | load index 43 -> 40 (loads later = wins)
+  Cathedral - 3D Deathbell | parent <none> | depth 0 | load index 42 -> 39 (loads later = wins)
+  Cathedral - 3D Clover Plant | parent <none> | depth 0 | load index 41 -> 38 (loads later = wins)
+  Creep Cluster Collision Fixes | parent <none> | depth 0 | load index 40 -> 37 (loads later = wins)
+  High Quality Ivy for SD's Farmhouse Fences | parent <none> | depth 0 | load index 39 -> 36 (loads later = wins)
+  High Quality Ivy | parent <none> | depth 0 | load index 38 -> 35 (loads later = wins)
+  A Nirnroot | parent <none> | depth 0 | load index 37 -> 34 (loads later = wins)
+  Vine Maple Redone | parent <none> | depth 0 | load index 36 -> 33 (loads later = wins)
+  Gourd Plant Mesh Fix (FOMOD check for Repatch) | parent <none> | depth 0 | load index 35 -> 32 (loads later = wins)
+  Mari's Reach Ferns - Vanilla Mesh Tweaks | parent <none> | depth 0 | load index 34 -> 31 (loads later = wins)
+  Juniper by Mari | parent <none> | depth 0 | load index 33 -> 30 (loads later = wins)
+  Simple Snow Improvements - Solstheim Ruins (BOS) | parent <none> | depth 0 | load index 32 -> 29 (loads later = wins)
+  Cathedral - 3D Tundra Shrubs | parent <none> | depth 0 | load index 31 -> 28 (loads later = wins)
+  Plant Size Variety | parent <none> | depth 0 | load index 30 -> 27 (loads later = wins)
+  ICFur's Tundra Scrubs Version 2 | parent <none> | depth 0 | load index 29 -> 26 (loads later = wins)
+  No More Dead Shrub | parent <none> | depth 0 | load index 28 -> 25 (loads later = wins)
+  Blubbo_Shrubs_Replacer_darker_Patch.zip | parent <none> | depth 0 | load index 27 -> 24 (loads later = wins)
+  Blubbos Shrub Replacer | parent <none> | depth 0 | load index 26 -> 23 (loads later = wins)
+  Fall Forest And Yellow Shrubs Redone | parent <none> | depth 0 | load index 25 -> 22 (loads later = wins)
+  Cathedral - 3D Pine Shrubs | parent <none> | depth 0 | load index 24 -> 21 (loads later = wins)
+  Skyrim Flora Overhaul SE | parent <none> | depth 0 | load index 23 -> 20 (loads later = wins)
+  ProjectedDiffuse Patch Hub | parent <none> | depth 0 | load index 22 -> 19 (loads later = wins)
+  Paraphernalia - Snow Colour Fixes | parent <none> | depth 0 | load index 21 -> 18 (loads later = wins)
+  Better Dynamic Snow - Complex Parallax Materials | parent Better Dynamic Snow SE | depth 1 | load index 19 -> 17 (loads later = wins)
+  Better Dynamic Snow SE - projected noise Tweak | parent Better Dynamic Snow SE | depth 1 | load index 20 -> 16 (loads later = wins)
+  Better Dynamic Snow SE | parent <none> | depth 0 | load index 18 -> 15 (loads later = wins)
+  Better Snowflakes - A falling snow improvement mod | parent <none> | depth 0 | load index 17 -> 14 (loads later = wins)
+  real life snowflakes SSE | parent <none> | depth 0 | load index 16 -> 13 (loads later = wins)
+  Floating Ash Pile Fix | parent <none> | depth 0 | load index 15 -> 12 (loads later = wins)
+  Simple Snow Improvements - Snow Forts (BOS) | parent <none> | depth 0 | load index 14 -> 11 (loads later = wins)
+  Simple Snow Improvements - Giant Obelisk Fixes (BOS) | parent Simple Snow Improvements - Skyrim Fixes (BOS) | depth 1 | load index 57 -> 10 (loads later = wins)
+  Simple Snow Improvements - Skyrim Fixes (BOS) | parent <none> | depth 0 | load index 13 -> 9 (loads later = wins)
+  Stones of Solitude - Better Blended Rock Piles | parent <none> | depth 0 | load index 12 -> 8 (loads later = wins)
+  Lightened Skyrim - Base Object Swapper edition | parent <none> | depth 0 | load index 11 -> 7 (loads later = wins)
+  Stretched Snow Begone Definitive Edition - Stretched Snow On Walls and Buildings Fix | parent <none> | depth 0 | load index 10 -> 6 (loads later = wins)
+  Icy Cave Remaster Patch | parent Icy Cave Remaster | depth 1 | load index 7 -> 5 (loads later = wins)
+  Icy Cave Remaster - Ice Material Patch | parent Icy Cave Remaster | depth 1 | load index 9 -> 4 (loads later = wins)
+  Icy Cave Remaster | parent <none> | depth 0 | load index 8 -> 3 (loads later = wins)
+  Icy Mesh Remaster | parent <none> | depth 0 | load index 6 -> 2 (loads later = wins)
+  Multilayer Glacier Replacer | parent <none> | depth 0 | load index 5 -> 1 (loads later = wins)
+  Glacierslab SSE | parent <none> | depth 0 | load index 4 -> 0 (loads later = wins)
 
 --- constraint placement [Landscape and Environment] ---
-  Northfire's Skidmarks SE 2K-4K | parent <none> | depth 0 | load index 12 -> 14 (loads later = wins)
-  Rally's Tel Mithryn | parent <none> | depth 0 | load index 11 -> 13 (loads later = wins)
-  Rally's Riekling Outposts | parent <none> | depth 0 | load index 10 -> 12 (loads later = wins)
-  Rally's Solstheim - Parallax | parent <none> | depth 0 | load index 9 -> 11 (loads later = wins)
-  Rally's Solstheim Landscapes Complex Terrain Parallax Edition 2k | parent <none> | depth 0 | load index 8 -> 10 (loads later = wins)
-  Riton Landscape | parent <none> | depth 0 | load index 7 -> 9 (loads later = wins)
-  Tomato's Complex Parallax Material Landscapes AIO - With DLCs | parent <none> | depth 0 | load index 6 -> 8 (loads later = wins)
-  Atlantean Landscape | parent <none> | depth 0 | load index 5 -> 7 (loads later = wins)
-  Rally's Raven Rock | parent <none> | depth 0 | load index 4 -> 6 (loads later = wins)
-  Misc. Blended Road Fixes | parent <none> | depth 0 | load index 3 -> 5 (loads later = wins)
-  Tomato's Landscape - Blended Roads CM Patch | parent Blended Roads | depth 1 | load index 13 -> 4 (loads later = wins)
-  Blended Roads | parent <none> | depth 0 | load index 2 -> 3 (loads later = wins)
-  Landscape Seam Fixes | parent Landscape Fixes For Grass Mods | depth 1 | load index 14 -> 2 (loads later = wins)
+  Northfire's Skidmarks SE 2K-4K | parent <none> | depth 0 | load index 13 -> 15 (loads later = wins)
+  Rally's Tel Mithryn | parent <none> | depth 0 | load index 12 -> 14 (loads later = wins)
+  Rally's Riekling Outposts | parent <none> | depth 0 | load index 11 -> 13 (loads later = wins)
+  Rally's Solstheim - Parallax | parent <none> | depth 0 | load index 10 -> 12 (loads later = wins)
+  Rally's Solstheim Landscapes Complex Terrain Parallax Edition 2k | parent <none> | depth 0 | load index 9 -> 11 (loads later = wins)
+  Riton Landscape | parent <none> | depth 0 | load index 8 -> 10 (loads later = wins)
+  Tomato's Complex Parallax Material Landscapes AIO - With DLCs | parent <none> | depth 0 | load index 7 -> 9 (loads later = wins)
+  Atlantean Landscape | parent <none> | depth 0 | load index 6 -> 8 (loads later = wins)
+  Rally's Raven Rock | parent <none> | depth 0 | load index 5 -> 7 (loads later = wins)
+  Misc. Blended Road Fixes | parent <none> | depth 0 | load index 4 -> 6 (loads later = wins)
+  Terrain Parallax Blending Fix | parent Blended Roads | depth 1 | load index 1 -> 5 (loads later = wins)
+  Tomato's Landscape - Blended Roads CM Patch | parent Blended Roads | depth 1 | load index 14 -> 4 (loads later = wins)
+  Landscape Seam Fixes | parent Landscape Fixes For Grass Mods | depth 1 | load index 15 -> 2 (loads later = wins)
+  Landscape Fixes For Grass Mods | parent <none> | depth 0 | load index 2 -> 1 (loads later = wins)
   [Grass] QW's Grass Patch 2 - Origins of Forest - Cathedral - Folkvangr | content DAG: loads after all parents (slot 2 -> past 4)
+  [General World Improvement] High Poly Project - My fixes SE-AE by Xtudo vs High Poly Project: 14 shared files -> patch must load after
 
 --- constraint placement [General World Improvement] ---
-  BLACKREACH OVERHAUL LUX PATCH Timelost Dwemer | parent Blackreach Overhaul Lux Patch | depth 2 | load index 1 -> 10 (loads later = wins)
-  Blackreach Overhaul Lux Patch | parent Blackreach Overhaul | depth 1 | load index 0 -> 9 (loads later = wins)
-  Blackreach Overhaul | parent <none> | depth 0 | load index 10 -> 8 (loads later = wins)
-  SMIM Up Furniture Smooth Dark 2K | parent <none> | depth 0 | load index 9 -> 7 (loads later = wins)
+  BLACKREACH OVERHAUL LUX PATCH Timelost Dwemer | parent Blackreach Overhaul Lux Patch | depth 2 | load index 1 -> 11 (loads later = wins)
+  Blackreach Overhaul Lux Patch | parent Blackreach Overhaul | depth 1 | load index 0 -> 10 (loads later = wins)
+  Blackreach Overhaul | parent <none> | depth 0 | load index 11 -> 9 (loads later = wins)
+  SMIM Up Furniture Smooth Dark 2K | parent <none> | depth 0 | load index 10 -> 8 (loads later = wins)
+  High Poly Project - My fixes SE-AE by Xtudo | parent High Poly Project | depth 1 | load index 9 -> 7 (loads later = wins)
   High Poly Project | parent <none> | depth 0 | load index 8 -> 6 (loads later = wins)
   Ruins Clutter Improved SE | parent <none> | depth 0 | load index 7 -> 5 (loads later = wins)
   Ruins Clutter Improved SE - Complex Parallax Addon | parent Ruins Clutter Improved - Fixes | depth 1 | load index 2 -> 4 (loads later = wins)
@@ -2833,17 +2796,14 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Effects 11 - Community Shaders | parent Community Shaders | depth 1 | load index 17 -> 2 (loads later = wins)
 
 --- constraint placement [Stargazing & Sky] ---
-  ETHEREAL CLOUDS - Special Edition | parent <none> | depth 0 | load index 19 -> 20 (loads later = wins)
-  Rally's Celestial Canvas | parent <none> | depth 0 | load index 18 -> 19 (loads later = wins)
-  DALC Fix Preset | parent <none> | depth 0 | load index 17 -> 18 (loads later = wins)
-  NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | parent E.C.D. Every Cloud Different NAT Add On | depth 1 | load index 20 -> 17 (loads later = wins)
-  Shooting Stars 2K SE - Cleaned and Upscaled Textures | parent Shooting Stars SE | depth 1 | load index 11 -> 14 (loads later = wins)
-  Shooting Stars SE - Remove Leaflet | parent Shooting Stars SE | depth 1 | load index 12 -> 13 (loads later = wins)
-  Shooting Stars SE | parent <none> | depth 0 | load index 14 -> 12 (loads later = wins)
-  ETHEREAL COSMOS - Special Edition | parent <none> | depth 0 | load index 13 -> 11 (loads later = wins)
-  Even Better Quest Objectives - Quests Are In Skyrim Patch | parent Quests Are In Skyrim | depth 1 | load index 0 -> 2 (loads later = wins)
-  Quests Are In Skyrim | parent <none> | depth 0 | load index 2 -> 1 (loads later = wins)
-  Solar Lens Flare Redux (SLFR) | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
+  Shooting Stars 2K SE - Cleaned and Upscaled Textures | parent Shooting Stars SE | depth 1 | load index 10 -> 13 (loads later = wins)
+  Shooting Stars SE - Remove Leaflet | parent Shooting Stars SE | depth 1 | load index 11 -> 12 (loads later = wins)
+  Shooting Stars SE | parent <none> | depth 0 | load index 13 -> 11 (loads later = wins)
+  ETHEREAL COSMOS - Special Edition | parent <none> | depth 0 | load index 12 -> 10 (loads later = wins)
+
+--- constraint placement [Weather Systems] ---
+  NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch | parent NAT.ENB III - Natural and Atmospheric Tamriel ENB 3.1.1C | depth 1 | load index 0 -> 1 (loads later = wins)
+  NAT.ENB III - Natural and Atmospheric Tamriel ENB 3.1.1C | parent <none> | depth 0 | load index 1 -> 0 (loads later = wins)
 
 --- constraint placement [Miscellaneous & Side Quest Fixes & Tweaks] ---
   Stormcloaks For Good Guys-LESS RACIST | parent <none> | depth 0 | load index 6 -> 8 (loads later = wins)
@@ -2855,13 +2815,13 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   Blood on the Ice Redux - Re-Voiced | parent Blood on the Ice Redux SE | depth 1 | load index 8 -> 2 (loads later = wins)
 
 --- constraint placement [Vanilla Quest Fixes & Tweaks] ---
-  Paarthurnax - Quest Expansion patch for Navigate VR or Even Better Quest Objectives | parent Even Better Quest Objectives SE | depth 1 | load index 0 -> 7 (loads later = wins)
-  Even Better Quest Objectives SE | parent <none> | depth 0 | load index 5 -> 6 (loads later = wins)
+  Paarthurnax - Quest Expansion patch for Navigate VR or Even Better Quest Objectives | parent Even Better Quest Objectives SE | depth 1 | load index 0 -> 8 (loads later = wins)
+  Even Better Quest Objectives - Quests Are In Skyrim Patch | parent Even Better Quest Objectives SE | depth 1 | load index 3 -> 7 (loads later = wins)
   Alternate Perspective - Helgen Reborn Patch | parent Helgen Reborn | depth 1 | load index 1 -> 5 (loads later = wins)
-  Unique Helgen Reborn | parent Helgen Reborn | depth 1 | load index 6 -> 4 (loads later = wins)
-  Helgen Reborn's Keepers of Hattu Retexture SE | parent Helgen Reborn | depth 1 | load index 7 -> 3 (loads later = wins)
-  Helgen Reborn | parent <none> | depth 0 | load index 4 -> 2 (loads later = wins)
-  Don't Rush Me - Riften (No Brynjolf and Maul Forcegreets) | parent <none> | depth 0 | load index 3 -> 1 (loads later = wins)
+  Unique Helgen Reborn | parent Helgen Reborn | depth 1 | load index 7 -> 4 (loads later = wins)
+  Helgen Reborn's Keepers of Hattu Retexture SE | parent Helgen Reborn | depth 1 | load index 8 -> 3 (loads later = wins)
+  Helgen Reborn | parent <none> | depth 0 | load index 5 -> 2 (loads later = wins)
+  Don't Rush Me - Riften (No Brynjolf and Maul Forcegreets) | parent <none> | depth 0 | load index 4 -> 1 (loads later = wins)
   Local Map Upgrade | parent <none> | depth 0 | load index 2 -> 0 (loads later = wins)
   [Character Creation] Race Compatibility SKSE - Patch Hub vs Race Compatibility SKSE: 5 shared files -> patch must load after
 
@@ -3104,7 +3064,22 @@ loot masterlist: C:\Users\Lore\AppData\Local\LOOT\games\Skyrim VR\masterlist.yam
   conflict audit complete: 0 violation(s)
 
 --- audit gate: master order ---
-  master-order audit complete: 0 violation(s) (0 forced by user pins)
+  AUDIT FAIL AI Overhaul SSE - Official Patch Hub loads before its master Distinct Interiors - Fixes (load (116, 4) < (127, 25))
+  AUDIT FAIL Fabled Forests Patch Compendium loads before its master Redbag's Morthal Fixes (load (40, 62) < (64, 1))
+  AUDIT FAIL Rodryk's Dragon Bridge - Patch Collection loads before its master Embers XD (load (61, 7) < (74, 0))
+  AUDIT FAIL JK's Solitude Outskirts Patch Collection loads before its master AI Overhaul SSE SkyPatcher Patch (load (65, 13) < (116, 2))
+  AUDIT FAIL Snazzy Wall Mounted Trophies - DTA Patch loads before its master Dynamic Things Alternative - Base Object Swapper (load (116, 8) < (123, 7))
+  AUDIT FAIL Miscellaneous Embers XD Patches loads before its master Campfire - Complete Camping System (Supports Skyrim VR) (load (112, 2) < (122, 0))
+  AUDIT FAIL CC Fishing Campfire patch loads before its master Campfire - Complete Camping System (Supports Skyrim VR) (load (112, 1) < (122, 0))
+  AUDIT FAIL Charmers of the Reach SV Beards SE for COtR - HQ Characters creation addon loads before its master COtR - HQ Characters creation addon for RM (load (82, 10) < (86, 11))
+  AUDIT FAIL RedBag's Morthal Patches- FOMOD loads before its master AI Overhaul SSE SkyPatcher Patch (load (64, 3) < (116, 2))
+  AUDIT FAIL Thuldor's Ivarstead Patch Hub loads before its master eFPS - Exterior FPS boost (load (61, 11) < (134, 6))
+  AUDIT FAIL Thuldor's Ivarstead - Tweaks and Addons loads before its master AI Overhaul SSE SkyPatcher Patch (load (61, 13) < (116, 2))
+  AUDIT FAIL Terrain Parallax Blending Fix loads before its master Embers XD (load (36, 5) < (74, 0))
+  AUDIT FAIL High Poly Project - My fixes SE-AE by Xtudo loads before its master Winterhold Restored (load (32, 7) < (69, 0))
+  AUDIT FAIL NAT III Weather - From Dusk Till Dawn - Every Cloud Different - SLFR - Bizarre Shadow Fix - Compatibility Patch loads before its master E.C.D. Every Cloud Different NAT Add On (load (27, 1) < (28, 15))
+  AUDIT FAIL Even Better Quest Objectives - Quests Are In Skyrim Patch loads before its master Quests Are In Skyrim (load (24, 7) < (28, 1))
+  master-order audit complete: 15 violation(s) (0 forced by user pins)
 
 --- plugin census (928 plugin(s) parsed) ---
   fnis.esp (Output - Pandora) | masters: - | 
