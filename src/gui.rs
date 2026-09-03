@@ -9,6 +9,13 @@ use eframe::egui;
 use std::path::{Path, PathBuf};
 use std::sync::{mpsc, Arc};
 
+// one conflict scan at a time, process-wide. ConflictIndex::build walks
+// every active mod's whole file tree and holds every relative path in
+// memory - with a big list that's a few hundred MB per scan. concurrent
+// scans (a reload per right-click pin while the ini is stale) freeze the
+// machine, so reloads join a wait instead of stacking scans.
+static SCAN_ACTIVE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
 // ---- loot-ish palette ----
 const BG: egui::Color32 = egui::Color32::from_rgb(0x2b, 0x2b, 0x2b);
 const PANEL: egui::Color32 = egui::Color32::from_rgb(0x33, 0x33, 0x33);
@@ -19,6 +26,7 @@ const PROM_CLR: egui::Color32 = egui::Color32::from_rgb(0x7f, 0xd6, 0x7f); // gr
 const SINK_CLR: egui::Color32 = egui::Color32::from_rgb(0xff, 0x9f, 0x6c); // orange
 const FLOT_CLR: egui::Color32 = egui::Color32::from_rgb(0xd6, 0x9f, 0xff); // purple
 const WARN_CLR: egui::Color32 = egui::Color32::from_rgb(0xff, 0x5f, 0x5f); // red
+const RENAME_CLR: egui::Color32 = egui::Color32::from_rgb(0x6c, 0xe0, 0xd6); // teal
 const DIM: egui::Color32 = egui::Color32::from_rgb(0xaa, 0xaa, 0xaa);
 const APPLY: egui::Color32 = egui::Color32::from_rgb(0x3a, 0x6b, 0x3f); // accent green
 const BTN: egui::Color32 = egui::Color32::from_rgb(0x44, 0x44, 0x44); // toolbar buttons
@@ -42,6 +50,7 @@ fn kind_color(k: ChangeKind) -> egui::Color32 {
         ChangeKind::Sink => SINK_CLR,
         ChangeKind::Float => FLOT_CLR,
         ChangeKind::Warn => WARN_CLR,
+        ChangeKind::Rename => RENAME_CLR,
     }
 }
 
@@ -53,6 +62,7 @@ fn kind_tag(k: ChangeKind) -> &'static str {
         ChangeKind::Sink => "SINK",
         ChangeKind::Float => "FLOT",
         ChangeKind::Warn => "WARN",
+        ChangeKind::Rename => "REN",
     }
 }
 
@@ -181,6 +191,7 @@ struct UiPrefs {
     panel: Option<f32>,
     size: Option<(f32, f32)>,
     pos: Option<(f32, f32)>,
+    user_rules_only: bool,
 }
 
 fn ui_prefs_path() -> Option<PathBuf> {
@@ -218,6 +229,7 @@ fn load_ui_prefs() -> UiPrefs {
                     }
                 }
             }
+            "user_rules_only" => out.user_rules_only = v.trim() == "1",
             _ => {}
         }
     }
@@ -239,6 +251,9 @@ fn save_ui_prefs(prefs: &UiPrefs) {
         if let Some((x, y)) = prefs.pos {
             text.push_str(&format!("pos={x:.0},{y:.0}\n"));
         }
+        if prefs.user_rules_only {
+            text.push_str("user_rules_only=1\n");
+        }
         std::fs::write(p, text).ok();
     }
 }
@@ -257,6 +272,16 @@ const USER_RULES_TEMPLATE: &str = "\
 #                                       (loses everything in-section - base replacers)
 #   ^Mod Name = Section Label           float: pin to the BOTTOM of that section
 #                                       (wins everything in-section)
+#
+# directives (a bare !line with no '=', put it anywhere):
+#   !proven-only                        only proven moves: your rules, loot,
+#                                       conflict data, plugin masters - no
+#                                       category/keyword guesses
+#   !rename-separators                  let modslut retitle separators to
+#                                       canonical concepts (off by default)
+#   !dump = Section Label               mark a separator as a waiting room:
+#                                       its contents get filed out, nothing
+#                                       ever moves IN (e.g. !dump = End of List)
 #
 # section labels must match your separator names exactly. examples:
 #   !Some Sexlab Mod - Argonian Addon = Skin and Body - Argonians and Khajiits
@@ -325,6 +350,8 @@ struct ModslutApp {
     selected_mod: Option<(String, String)>,
     // where the auto-written debug_sort.log landed (or why it didn't)
     debug_note: Option<String>,
+    // "user rules only" mode (persisted): built-in cascade + guess tiers off
+    user_rules_only: bool,
 }
 
 impl ModslutApp {
@@ -352,6 +379,7 @@ impl ModslutApp {
             parking_mods: Vec::new(),
             selected_mod: None,
             debug_note: None,
+            user_rules_only: prefs.user_rules_only,
         };
         match find_modlist() {
             Some(p) => app.load_and_preview(p),
@@ -379,7 +407,13 @@ impl ModslutApp {
             }
         };
         let mut ml: Modlist = parse(&text);
-        let (rules, user_files) = load_rules_for(None, Some(&path));
+        let (mut rules, user_files) = load_rules_for(None, Some(&path), self.user_rules_only);
+        if self.user_rules_only {
+            // "apply user rules only": the built-in cascade AND the guess
+            // tiers stay out - user pins + proven data (loot/conflict/
+            // census/family) are the only things allowed to move a mod
+            rules.proven_only = true;
+        }
         let cats = Categories::discover(&path);
 
         // conflict index: fresh cache loads instantly; a stale/missing one
@@ -388,18 +422,41 @@ impl ModslutApp {
         self.conflicts = None;
         self.scan_rx = None;
         if let Some(mods_dir) = ConflictIndex::mods_dir_of(&path) {
-            if ConflictIndex::is_fresh(&path) {
-                self.conflicts = ConflictIndex::ini_path(&path)
-                    .and_then(|ini| ConflictIndex::load(&ini))
-                    .map(Arc::new);
+            // fresh AND stamped for this instance (a cache next to the exe
+            // may belong to a different instance - that's a rescan, not a load)
+            let cached = if ConflictIndex::is_fresh(&path) {
+                ConflictIndex::ini_path(&path).and_then(|ini| ConflictIndex::load_checked(&ini, &mods_dir))
+            } else {
+                None
+            };
+            if let Some(ci) = cached {
+                self.conflicts = Some(Arc::new(ci));
+            } else if SCAN_ACTIVE.swap(true, std::sync::atomic::Ordering::SeqCst) {
+                // a scan is ALREADY walking the mods folder (kicked off by a
+                // previous reload). spawning another full walk per reload is
+                // how we get N parallel scans x hundreds of MB of path lists
+                // = a frozen machine. wait for the in-flight one to finish;
+                // it saves conflict.ini, so the next reload picks it up fresh.
+                self.status =
+                    "conflict scan still running in background - reload in a moment to use it"
+                        .into();
             } else {
                 let active = active_mods(&ml);
                 let ini_path = ConflictIndex::ini_path(&path);
                 let (tx, rx) = mpsc::channel();
                 std::thread::spawn(move || {
+                    // panic-safe: even if the scan dies, the flag resets so
+                    // the next reload can try again instead of waiting forever
+                    struct ResetFlag;
+                    impl Drop for ResetFlag {
+                        fn drop(&mut self) {
+                            SCAN_ACTIVE.store(false, std::sync::atomic::Ordering::SeqCst);
+                        }
+                    }
+                    let _guard = ResetFlag;
                     let ci = ConflictIndex::build(&mods_dir, &active);
                     if let Some(ini) = ini_path {
-                        ci.save(&ini).ok();
+                        ci.save(&ini, &mods_dir).ok();
                     }
                     tx.send(ci).ok();
                 });
@@ -446,8 +503,64 @@ impl ModslutApp {
             })
             .collect();
 
+        // plugin census BEFORE the sort: run() uses it for the
+        // plugin-master family pass (a mod may never land in a section
+        // that loads before the mod providing its plugin's masters)
+        let census_data: Option<(
+            Vec<crate::plugins::MasterViolation>,
+            Vec<(String, String, crate::plugins::PluginInfo)>,
+        )> = ConflictIndex::mods_dir_of(&path).and_then(|mods_dir| {
+            let load_order: Vec<String> = std::fs::read_to_string(path.with_file_name("plugins.txt"))
+                .map(|t| {
+                    t.lines()
+                        .filter_map(|l| {
+                            let l = l.trim();
+                            l.strip_prefix('*').map(|s| s.trim().to_lowercase())
+                        })
+                        .collect()
+                })
+                .unwrap_or_default();
+            if load_order.is_empty() {
+                None
+            } else {
+                // manifest: same enabled-mod set as last scan = load the
+                // cache; any +/- of mods (or a toggle) forces a rescan
+                let fp = crate::plugins::census_fingerprint(&enabled);
+                let cache = crate::plugins::census_cache_path(&path);
+                let cached = crate::plugins::load_census(&cache, fp).map(|entries| {
+                    // sections are re-attached from the CURRENT modlist -
+                    // a sort never makes the cache stale
+                    let sec_of: std::collections::HashMap<&str, &str> = enabled
+                        .iter()
+                        .map(|(n, s)| (n.as_str(), s.as_str()))
+                        .collect();
+                    entries
+                        .into_iter()
+                        .filter_map(|(m, info)| {
+                            sec_of
+                                .get(m.as_str())
+                                .map(|s| (m.clone(), s.to_string(), info))
+                        })
+                        .collect::<Vec<_>>()
+                });
+                match cached {
+                    Some(census) => {
+                        let violations = crate::plugins::violations_from_census(&census, &load_order);
+                        Some((violations, census))
+                    }
+                    None => {
+                        let (violations, census) =
+                            crate::plugins::master_violations(&enabled, &mods_dir, &load_order);
+                        crate::plugins::save_census(&cache, fp, &census);
+                        Some((violations, census))
+                    }
+                }
+            }
+        });
+
         let mut plan = Vec::new();
         let mut trace = String::new();
+        let (kw, _kw_files) = crate::Keywords::load(self.file.as_deref());
         run(
             &mut ml,
             &rules,
@@ -455,6 +568,9 @@ impl ModslutApp {
             &mut plan,
             cats.as_ref(),
             self.conflicts.as_deref(),
+            census_data.as_ref().map(|(_, c)| c.as_slice()),
+            &kw,
+            false,
             &mut trace,
         );
         self.trace = trace;
@@ -475,29 +591,15 @@ impl ModslutApp {
                 });
             }
 
-            // structural layer (skygen port): parse every plugin binary in
-            // enabled mods, then check plugins.txt for master-order
-            // violations - a child loading before a master it needs is a
-            // guaranteed ctd or broken records
-            let load_order: Vec<String> = std::fs::read_to_string(path.with_file_name("plugins.txt"))
-                .map(|t| {
-                    t.lines()
-                        .filter_map(|l| {
-                            let l = l.trim();
-                            l.strip_prefix('*').map(|s| s.trim().to_lowercase())
-                        })
-                        .collect()
-                })
-                .unwrap_or_default();
-            if !load_order.is_empty() {
-                let (violations, census) =
-                    crate::plugins::master_violations(&enabled, &mods_dir, &load_order);
+            // census was parsed before run() - here it becomes trace +
+            // WARN rows for master-order violations in plugins.txt
+            if let Some((violations, census)) = &census_data {
                 let _ = writeln!(
                     self.trace,
                     "\n--- plugin census ({} plugin(s) parsed) ---",
                     census.len()
                 );
-                for (mod_name, _sec, info) in &census {
+                for (mod_name, _sec, info) in census {
                     let _ = writeln!(
                         self.trace,
                         "  {} ({}){}{} | masters: {} | {}",
@@ -522,12 +624,12 @@ impl ModslutApp {
                     );
                     plan.push(Change {
                         kind: ChangeKind::Warn,
-                        name: v.mod_name,
+                        name: v.mod_name.clone(),
                         detail: format!(
                             "[master order] {} loads before its master {}",
                             v.plugin, v.master
                         ),
-                        section: v.section,
+                        section: v.section.clone(),
                     });
                 }
             }
@@ -536,7 +638,7 @@ impl ModslutApp {
         // the debug trace is always on disk, no button required - nobody
         // remembers to click "debug log" before reporting a bug
         if !self.trace.is_empty() {
-            let p = path.with_file_name("debug_sort.log");
+            let p = crate::debug_log_path();
             self.debug_note = match std::fs::write(&p, &self.trace) {
                 Ok(_) => Some(p.display().to_string()),
                 Err(e) => Some(format!("(debug log write failed: {e})")),
@@ -597,6 +699,70 @@ impl ModslutApp {
         }
     }
 
+    // "apply user rules only": write back a modlist where ONLY the user's
+    // own modslut_rules.txt rules have been applied - no built-ins, no
+    // guesses, no loot/family/census/conflict passes. for saving your pins
+    // without mass-accepting the whole computed plan.
+    fn apply_user_rules_only(&mut self) {
+        let Some(file) = self.file.clone() else {
+            return;
+        };
+        let text = match std::fs::read_to_string(&file) {
+            Ok(t) => t,
+            Err(e) => {
+                self.status = format!("couldn't read {}: {e}", file.display());
+                return;
+            }
+        };
+        let (rules, user_files) = load_rules_for(None, Some(&file), true);
+        if user_files.is_empty() {
+            self.status = "no modslut_rules.txt found - nothing of yours to apply".into();
+            return;
+        }
+        let mut ml: Modlist = parse(&text);
+        let cats = Categories::discover(&file);
+        let (kw, _) = crate::Keywords::load(Some(file.as_path()));
+        let mut log = String::new();
+        let mut plan = Vec::new();
+        let mut trace = String::new();
+        let n = run(
+            &mut ml,
+            &rules,
+            &mut log,
+            &mut plan,
+            cats.as_ref(),
+            None,
+            None,
+            &kw,
+            true,
+            &mut trace,
+        );
+        let _ = std::fs::write(crate::debug_log_path(), &trace);
+        if n == 0 {
+            self.status = "your user rules change nothing - the list already matches them".into();
+            return;
+        }
+        let bak = file.with_file_name(format!(
+            "{}.bak",
+            file.file_name().unwrap_or_default().to_string_lossy()
+        ));
+        if let Err(e) = std::fs::copy(&file, &bak) {
+            self.status = format!("backup failed ({e}) - not touching anything");
+            return;
+        }
+        match std::fs::write(&file, serialize(&ml)) {
+            Ok(()) => {
+                self.status = format!(
+                    "applied {n} user-rule change(s) only. backup at {} - close this window and mo2 will refresh",
+                    bak.display()
+                );
+                // refresh the preview against the new on-disk state
+                self.load_and_preview(file);
+            }
+            Err(e) => self.status = format!("couldn't write {}: {e}", file.display()),
+        }
+    }
+
     // append one rule line to the user rules file (creating it from the
     // template if needed), then reload so the preview reflects it
     // loot-style right-click menu, shared by changed and unchanged rows:
@@ -642,7 +808,8 @@ impl ModslutApp {
     // line underneath
     fn change_row(&mut self, ui: &mut egui::Ui, i: usize, section: &str) {
         let (kind, name, detail) = {
-            let c = &self.plan[i];
+            // defensive: a stale index after a plan rebuild must never panic
+            let Some(c) = self.plan.get(i) else { return };
             (c.kind, c.name.clone(), c.detail.clone())
         };
         let selected = self.selected == Some(i);
@@ -773,6 +940,29 @@ impl ModslutApp {
             std::fs::write(&path, USER_RULES_TEMPLATE).ok();
         }
         let mut text = std::fs::read_to_string(&path).unwrap_or_default();
+        // re-pinning a mod REPLACES its old rule. rules are checked
+        // first-hit-wins, so appending "!mod = B" under an old "!mod = A"
+        // silently keeps A - the user clicks pin, nothing changes, and the
+        // file fills up with contradicting duplicates (their live file had
+        // six pins for one mod pointing at three different sections)
+        if let Some(name) = line.get(1..).and_then(|r| r.split(" = ").next()) {
+            let name = name.trim().to_lowercase();
+            text = text
+                .lines()
+                .filter(|l| {
+                    let l = l.trim_start();
+                    let is_rule = l.starts_with('!') || l.starts_with('^') || l.starts_with('<');
+                    if !is_rule {
+                        return true;
+                    }
+                    match l.get(1..).and_then(|r| r.split(" = ").next()) {
+                        Some(n) => n.trim().to_lowercase() != name,
+                        None => true,
+                    }
+                })
+                .collect::<Vec<_>>()
+                .join("\n");
+        }
         if !text.ends_with('\n') {
             text.push('\n');
         }
@@ -824,6 +1014,7 @@ impl eframe::App for ModslutApp {
             panel: Some(self.changes_width),
             size: self.win_rect.map(|r| (r.width(), r.height())),
             pos: self.win_rect.map(|r| (r.min.x, r.min.y)),
+            user_rules_only: self.user_rules_only,
         };
         save_ui_prefs(&prefs);
     }
@@ -927,18 +1118,32 @@ impl eframe::App for ModslutApp {
                     {
                         self.open_user_rules();
                     }
+                    // "apply user rules only": built-in cascade AND guess
+                    // tiers off - only your pins + proven data move mods
+                    let mut uro = self.user_rules_only;
+                    if ui
+                        .checkbox(&mut uro, "user rules only")
+                        .on_hover_text(
+                            "built-in rules and category/keyword guesses stay out.\n\
+                             only your modslut_rules.txt pins plus proven data\n\
+                             (loot masterlist, conflict index, plugin masters,\n\
+                             patch-follows-master) are allowed to move mods.",
+                        )
+                        .changed()
+                    {
+                        self.user_rules_only = uro;
+                        if let Some(p) = self.file.clone() {
+                            self.load_and_preview(p);
+                        }
+                    }
                     if self.debug_note.is_some()
                         && self.file.is_some()
                         && ui
                             .add(btn("open log"))
-                            .on_hover_text("debug_sort.log - written automatically on every run, right next to modlist.txt")
+                            .on_hover_text("debug_sort.log - written automatically on every run, next to ModSlut.exe")
                             .clicked()
                     {
-                        let p = self
-                            .file
-                            .as_ref()
-                            .unwrap()
-                            .with_file_name("debug_sort.log");
+                        let p = crate::debug_log_path();
                         let opened = if cfg!(target_os = "windows") {
                             std::process::Command::new("notepad.exe").arg(&p).spawn().is_ok()
                         } else {
@@ -982,6 +1187,26 @@ impl eframe::App for ModslutApp {
                         if self.written {
                             ctx.send_viewport_cmd(egui::ViewportCommand::Close);
                         }
+                    }
+                    // save ONLY what your own rules say - the rest of the
+                    // computed plan stays unapplied
+                    if ui
+                        .add_enabled(
+                            self.file.is_some() && !self.written,
+                            egui::Button::new(
+                                egui::RichText::new("apply user rules only")
+                                    .color(egui::Color32::WHITE),
+                            )
+                            .fill(BTN),
+                        )
+                        .on_hover_text(
+                            "writes modlist.txt with ONLY your modslut_rules.txt\n\
+                             rules applied - no built-in rules, no guesses, no\n\
+                             loot/conflict/family moves. .bak backup is made first.",
+                        )
+                        .clicked()
+                    {
+                        self.apply_user_rules_only();
                     }
                     if self.written && ui.add(btn("exit")).clicked() {
                         ctx.send_viewport_cmd(egui::ViewportCommand::Close);
@@ -1196,6 +1421,34 @@ impl eframe::App for ModslutApp {
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
                         ui.spacing_mut().item_spacing.y = 4.0;
+                        // separator renames aren't mods, so they can't hang
+                        // under a section's mod list - they get their own
+                        // group at the very top
+                        let rename_idxs: Vec<usize> = self
+                            .plan
+                            .iter()
+                            .enumerate()
+                            .filter(|(_, c)| c.kind == ChangeKind::Rename)
+                            .map(|(i, _)| i)
+                            .collect();
+                        if !rename_idxs.is_empty() {
+                            egui::CollapsingHeader::new(
+                                egui::RichText::new(format!(
+                                    "separator renames  ·  {}",
+                                    rename_idxs.len()
+                                ))
+                                .strong()
+                                .color(RENAME_CLR),
+                            )
+                            .id_salt("sec::renames")
+                            .default_open(true)
+                            .show(ui, |ui| {
+                                for i in rename_idxs {
+                                    let sec = self.plan.get(i).map(|c| c.detail.clone()).unwrap_or_default();
+                                    self.change_row(ui, i, &sec);
+                                }
+                            });
+                        }
                         let mut groups: Vec<(String, Vec<String>)> = self.layout.clone();
                         if !self.parking_mods.is_empty() {
                             groups.push(("parking lot".to_string(), self.parking_mods.clone()));
@@ -1310,6 +1563,14 @@ impl eframe::App for ModslutApp {
                     ui.label(egui::RichText::new("base-replacer sinks").color(SINK_CLR));
                     ui.label(format!("{sinks}"));
                     ui.end_row();
+                    let renames = self
+                        .plan
+                        .iter()
+                        .filter(|c| c.kind == ChangeKind::Rename)
+                        .count();
+                    ui.label(egui::RichText::new("separator renames").color(RENAME_CLR));
+                    ui.label(format!("{renames}"));
+                    ui.end_row();
                     ui.label(egui::RichText::new("total").strong());
                     ui.label(format!("{}", self.plan.len()));
                     ui.end_row();
@@ -1320,7 +1581,12 @@ impl eframe::App for ModslutApp {
                 ui.add_space(8.0);
 
                 if let Some(i) = self.selected {
-                    let c = &self.plan[i];
+                    // plan can shrink after a reload (e.g. a rule vetoed the
+                    // selected change) - a stale index must not crash the ui
+                    let Some(c) = self.plan.get(i) else {
+                        self.selected = None;
+                        return;
+                    };
                     ui.label(
                         egui::RichText::new(&c.name)
                             .strong()
@@ -1346,11 +1612,18 @@ impl eframe::App for ModslutApp {
                             "pinned to the bottom of its section - it wins every conflict there."
                         }
                         ChangeKind::Warn => {
-                            "platform mismatch - this skse plugin wasn't built for skyrim vr."
+                            if c.detail.starts_with("[master order]") {
+                                "this mod's plugin loads before its master. if a pin or rule of yours put it here, that's your call - otherwise it's a sorter bug, report it."
+                            } else {
+                                "platform mismatch - this skse plugin wasn't built for skyrim vr."
+                            }
+                        }
+                        ChangeKind::Rename => {
+                            "separator renamed so rules can find it - your name stays, a concept tag gets appended."
                         }
                     };
                     ui.label(egui::RichText::new(blurb).color(DIM).italics());
-                    if c.kind == ChangeKind::Warn {
+                    if c.kind == ChangeKind::Warn && !c.detail.starts_with("[master order]") {
                         ui.add_space(8.0);
                         if ui
                             .button("disable this mod (untick in mo2)")

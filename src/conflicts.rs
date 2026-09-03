@@ -30,8 +30,21 @@ pub struct ConflictIndex {
 }
 
 impl ConflictIndex {
+    // resolution order: an existing per-profile cache wins (it matches that
+    // profile's scan), otherwise the tool folder next to the exe - modslut
+    // is a tool, its cache lives with it. a fresh scan writes to wherever
+    // this resolved, so the exe folder becomes the default home.
     pub fn ini_path(modlist: &Path) -> Option<PathBuf> {
-        Some(modlist.parent()?.join("conflict.ini"))
+        let profile = modlist.parent()?.join("conflict.ini");
+        if profile.is_file() {
+            return Some(profile);
+        }
+        if let Ok(exe) = std::env::current_exe() {
+            if let Some(d) = exe.parent() {
+                return Some(d.join("conflict.ini"));
+            }
+        }
+        Some(profile)
     }
 
     pub fn mods_dir_of(modlist: &Path) -> Option<PathBuf> {
@@ -130,9 +143,13 @@ impl ConflictIndex {
         None
     }
 
-    pub fn save(&self, ini: &Path) -> std::io::Result<()> {
+    pub fn save(&self, ini: &Path, mods_dir: &Path) -> std::io::Result<()> {
         let mut out = String::new();
         let _ = writeln!(out, "# modslut conflict index v1 - delete this file to force a rescan");
+        // instance stamp: a cache living next to the exe can be seen by
+        // OTHER mo2 instances - only trust it when it was scanned from
+        // this instance's mods folder.
+        let _ = writeln!(out, "# mods_dir: {}", mods_dir.display());
         let _ = writeln!(
             out,
             "# {} files indexed across {} mods; Winner > Loser = shared files (winner has higher priority)",
@@ -163,6 +180,27 @@ impl ConflictIndex {
         }
         Some(ConflictIndex { pairs, files_indexed: 0, mods_scanned: 0 })
     }
+
+    // load only if the cache was scanned from THIS instance's mods folder.
+    // caches without a stamp (pre-0.13.9) are accepted - they lived in the
+    // profile folder then, so they were per-instance by construction.
+    pub fn load_checked(ini: &Path, mods_dir: &Path) -> Option<ConflictIndex> {
+        let text = fs::read_to_string(ini).ok()?;
+        for line in text.lines() {
+            let l = line.trim();
+            if let Some(rest) = l.strip_prefix("# mods_dir:") {
+                let stamped = PathBuf::from(rest.trim());
+                if stamped != mods_dir {
+                    return None; // foreign instance - caller will rescan
+                }
+                break;
+            }
+            if !l.starts_with('#') {
+                break; // no stamp in header
+            }
+        }
+        Self::load(ini)
+    }
 }
 
 #[cfg(test)]
@@ -190,9 +228,12 @@ mod tests {
         assert_eq!(ci.shared("PatchMod", "Nope"), None);
 
         let ini = dir.join("conflict.ini");
-        ci.save(&ini).unwrap();
+        ci.save(&ini, &mods).unwrap();
         let re = ConflictIndex::load(&ini).unwrap();
         assert_eq!(re.shared("BaseMod", "PatchMod"), Some(("PatchMod", 3)));
+        // stamp check: right instance loads, foreign instance rejected
+        assert!(ConflictIndex::load_checked(&ini, &mods).is_some());
+        assert!(ConflictIndex::load_checked(&ini, Path::new("/other/instance/mods")).is_none());
         fs::remove_dir_all(&dir).ok();
     }
 }

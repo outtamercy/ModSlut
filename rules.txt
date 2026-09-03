@@ -1,0 +1,111 @@
+# modslut built-in rules - universal truths only.
+#
+# IMPORTANT: rule targets are CONCEPTS, not literal separator names.
+# each target resolves against the separators your list actually has:
+# exact label > normalized > containment > shared-token fuzzy. if no
+# separator matches, the rule quietly does nothing - so this file is
+# safe on ANY layout, separator-free lists included.
+#
+# layout-specific pins belong in modslut_rules.txt next to your
+# modlist.txt (right-click any mod in the gui to add one) - user rules
+# load ON TOP of these and can override any decision here.
+#
+# lines:
+#   keyword = Concept              substring match (case-insensitive)
+#   keyword !excl !excl = Concept  exclusions: skip if any appear
+#   !Exact Mod Name = Concept      exact match, beats everything
+#   >Winner = Loser                promote rule (winner wins conflicts)
+
+# --- vr core ---
+sksevr = Essentials
+vr address library = Essentials
+engine fixes vr = Essentials
+skyrim vr tools = Essentials
+skyrim vr refocused = Essentials
+
+# --- unofficial patches ---
+ussep = Unofficial Patches
+modder's patch = Unofficial Patches
+
+# --- extended-functionality frameworks ---
+# (exclusions kill lookalike words: "spid" alone catches "SPIDer webs")
+skypatcher = Extension Frameworks
+base object swapper = Extension Frameworks
+spid !spider = Extension Frameworks
+jcontainers = Extension Frameworks
+scaleform = Extension Frameworks
+fisses = Extension Frameworks
+powerofthree = Extension Frameworks
+papyrus extender = Extension Frameworks
+papyrusutil = Extension Frameworks
+
+# --- animation engines ---
+fnis = Animation
+pandora = Animation
+nemesis = Animation
+
+# --- interface ---
+skyui = Interface
+mcm = Interface
+racemenu = Character Creation
+vrik = VR Specific
+higgs = VR Specific
+planck = VR Specific
+
+# --- nsfw frameworks ---
+# body mods are NOT nsfw: himbo/sos/cbbe/3ba stay in body sections.
+# this block is framework names only - anything else is a judgment
+# call for YOUR user rules, not a built-in.
+sexlab = NSFW
+ostim = NSFW
+slal = NSFW
+aroused = NSFW
+nsfw = NSFW
+
+# --- body frameworks ---
+schlong = Male Body
+himbo = Male Body
+sosam = Male Body
+bodyslide = Bodyslide
+obody = Bodyslide
+cbbe = Body
+3ba = Body
+cotr = Skin & Body
+
+# --- lighting ecosystems ---
+# ("lux" alone catches "LuXon beacon" and "fLUX"-style names)
+lux !luxon !flux = Lighting
+relight = Lighting
+community shaders = Community Shaders
+enb !patch !fix = ENB
+
+# --- promote rules: vr/ng builds beat their se siblings ---
+# (these are mod names, not concepts - they only fire when both mods
+# exist, so they're safe on any list)
+>PapyrusUtil VR - Scripting Utility Functions = PapyrusUtil SE - Modders Scripting Utility Functions
+>SkyPatcher - VR = SkyPatcher - AE
+>powerofthree's Tweaks VR = powerofthree's Tweaks
+>Base Object Swapper VR = Base Object Swapper
+>AnimObject Swapper VR = AnimObject Swapper
+>FISSES DLL for VR = FileAccess Interface for Skyrim SE Scripts - FISSES
+>Scaleform Translation Plus Plus VR = Scaleform Translation Plus Plus NG
+>Better Combat Escape - NG = Better Combat Escape - SSE
+>Spell Perk Item Distributor (SPID) VR = Spell Perk Item Distributor
+>MCM Helper VR = MCM Helper
+>UIExtensions VR = UIExtensions
+>SkyUI - VR = SkyUI
+>RaceMenu VR = RaceMenu Anniversary Edition
+>Papyrus Extender VR = powerofthree's Papyrus Extender
+>ENB Helper VR = ENB Helper SE
+>YASTM - Yet Another Soul Trap Manager VR = YASTM - Yet Another Soul Trap Manager
+
+# --- sectionless sinks: no-esp frameworks that are masters for other mods.
+# the plugin census can't see them (no .esp to declare masters), so this is
+# the curated list - they load FIRST in whatever section they land in.
+# add to this via the masterlist as more no-esp frameworks show up.
+<SkyPatcher
+<SkyPatcher - VR
+<SkyPatcher - AE
+<SkyPatcher Keyword Framework
+<Mfg Fix
+<Mfg Fix NG
