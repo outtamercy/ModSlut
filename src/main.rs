@@ -996,6 +996,22 @@ fn resolve_targets(rules: &Rules, sections: &[Section], trace: &mut String) -> R
     out
 }
 
+fn is_esm_entry(
+    mod_name: &str,
+    census: Option<&[(String, String, crate::plugins::PluginInfo)]>,
+) -> bool {
+    if mod_name.to_lowercase().ends_with(".esm") {
+        return true;
+    }
+    if let Some(census) = census {
+        census.iter().any(|(m, _, info)| {
+            m == mod_name && (info.is_esm || info.plugin.to_lowercase().ends_with(".esm"))
+        })
+    } else {
+        false
+    }
+}
+
 // which tier of the cascade made the call - written into the debug trace
 #[derive(Clone)]
 enum Why {
@@ -1347,13 +1363,16 @@ fn run(
     let resolved_rules = resolve_targets(rules, &ml.sections, trace);
     let rules = &resolved_rules;
 
-    // "never move" means NEVER move: a !exact pin locks the section (T1)
-    // AND the in-section position. passes 2/2.5/3 consult this set and
-    // leave pinned mods exactly where they are - everything else flows
-    // around them. without this the user pins a mod and a reorder row
-    // still shows up, which reads exactly like "the pin didn't stick".
-    let pinned: std::collections::HashSet<&str> =
-        rules.exact.iter().map(|(n, _)| n.as_str()).collect();
+    // "never move" means NEVER move: explicit user pins lock section / in-section
+    // position. passes consult this set and leave pinned mods where they are.
+    let pinned: std::collections::HashSet<&str> = rules
+        .exact
+        .iter()
+        .map(|(n, _)| n.as_str())
+        .chain(rules.sink.iter().map(|(n, _)| n.as_str()))
+        .chain(rules.sink_any.iter().map(|n| n.as_str()))
+        .chain(rules.float.iter().map(|(n, _)| n.as_str()))
+        .collect();
 
     // index: mod name -> current section label
     let mut where_is: HashMap<String, String> = HashMap::new();
@@ -1546,42 +1565,15 @@ fn run(
         for (mod_name, _, info) in census {
             provider.entry(info.plugin.as_str()).or_insert(mod_name);
         }
-        // hub masters: a plugin that half the list builds on (ussep.esp,
-        // lux.esp...) must NOT drag its children around - they aren't
-        // "its patches", they just require it. over the threshold it's
-        // infrastructure, not a parent. counted as distinct (child mod,
-        // master plugin) pairs - a mod with several plugins all listing
-        // lux.esp is ONE child of lux, not four.
-        const HUB_THRESHOLD: usize = 20;
-        let mut child_count: HashMap<&str, usize> = HashMap::new();
-        let mut seen_pair: std::collections::HashSet<(String, &str)> =
-            std::collections::HashSet::new();
-        for (mod_name, _, info) in census {
-            for mp in info.masters.iter().filter(|mp| {
-                !base_game.contains(&mp.as_str()) && !mp.starts_with("cc")
-            }) {
-                if seen_pair.insert((mod_name.clone(), mp.as_str())) {
-                    *child_count.entry(mp.as_str()).or_insert(0) += 1;
-                }
-            }
-        }
         // mod -> content parents: other mods whose plugins it depends on.
         // a mod can ship SEVERAL plugins with different masters (one census
         // row per plugin) - the parents are the UNION across rows, or the
-        // last row silently drops the others. only patch-flavored children
-        // get pulled - a standalone mod that merely REQUIRES a master
-        // (distinct interiors needs ussep) is not that master's child.
+        // last row silently drops the others.
         let mut cparents: HashMap<String, Vec<String>> = HashMap::new();
         for (mod_name, _, info) in census {
-            if !patch_flavored(&mod_name.to_lowercase()) {
-                continue;
-            }
             let ps = cparents.entry(mod_name.clone()).or_default();
             for mp in info.masters.iter() {
                 if base_game.contains(&mp.as_str()) || mp.starts_with("cc") {
-                    continue;
-                }
-                if child_count.get(mp.as_str()).copied().unwrap_or(0) > HUB_THRESHOLD {
                     continue;
                 }
                 if let Some(m) = provider.get(mp.as_str()) {
@@ -1635,28 +1627,51 @@ fn run(
             );
         }
         content_parents = cparents.clone();
-        if !cparents.is_empty() {
-            // CANONICAL LOAD ORDER: from here on, every index is a LOAD
-            // index - 0 loads first, bigger loads later, and "child loads
-            // after its master" is plain "child index > parent index".
-            // load section index = (n_secs - 1 - file index); the only two
-            // places direction exists are this map and the label lookup
-            // below. nothing else in this function may think about mo2's
-            // file order.
-            let n_secs = ml.sections.len();
+
+        let esm_mods: std::collections::HashSet<String> = census
+            .iter()
+            .filter_map(|(m, _, info)| {
+                if info.is_esm
+                    || info.plugin.to_lowercase().ends_with(".esm")
+                    || m.to_lowercase().ends_with(".esm")
+                {
+                    Some(m.clone())
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        if !cparents.is_empty() || !esm_mods.is_empty() {
+            // CANONICAL LOAD ORDER: section file index 0 = loads first (top of file),
+            // section file index n_secs-1 = loads last (bottom of file).
             let lsec_of: HashMap<&str, usize> = ml
                 .sections
                 .iter()
                 .enumerate()
-                .map(|(i, s)| (s.label.as_str(), n_secs - 1 - i))
+                .map(|(i, s)| (s.label.as_str(), i))
                 .collect();
-            // final destination load-index per mod, recursively: own
-            // decision, but never loading before any content parent
+
+            let max_esm_sec = esm_mods
+                .iter()
+                .filter_map(|m| decisions.get(m))
+                .map(|d| {
+                    d.want
+                        .as_deref()
+                        .and_then(|w| lsec_of.get(w).copied())
+                        .unwrap_or_else(|| lsec_of.get(d.from.as_str()).copied().unwrap_or(0))
+                })
+                .max()
+                .unwrap_or(0);
+
+            // final destination load-index per mod, recursively
             fn cresolve(
                 name: &str,
                 cparents: &HashMap<String, Vec<String>>,
                 decisions: &HashMap<String, Decision>,
                 lsec_of: &HashMap<&str, usize>,
+                esm_mods: &std::collections::HashSet<String>,
+                max_esm_sec: usize,
                 memo: &mut HashMap<String, usize>,
                 depth: usize,
             ) -> usize {
@@ -1664,8 +1679,6 @@ fn run(
                     return *i;
                 }
                 if depth > 64 {
-                    // dependency cycle - bail, don't stack-overflow. under
-                    // max-constraint semantics "no constraint" is 0
                     return 0;
                 }
                 let d = &decisions[name];
@@ -1677,49 +1690,32 @@ fn run(
                 if let Some(ps) = cparents.get(name) {
                     for p in ps {
                         if decisions.contains_key(p) {
-                            let pi = cresolve(p, cparents, decisions, lsec_of, memo, depth + 1);
-                            // child must load AT OR AFTER every content
-                            // parent: constraint = MAX of parent indices
+                            let pi = cresolve(p, cparents, decisions, lsec_of, esm_mods, max_esm_sec, memo, depth + 1);
                             if pi > dest {
                                 dest = pi;
                             }
                         }
                     }
                 }
+                if !esm_mods.contains(name) {
+                    if max_esm_sec > dest {
+                        dest = max_esm_sec;
+                    }
+                }
                 memo.insert(name.to_string(), dest);
                 dest
             }
+
             let mut memo: HashMap<String, usize> = HashMap::new();
             let names: Vec<String> = decisions.keys().cloned().collect();
             let mut pulled = 0usize;
             for name in &names {
-                let Some(ps) = cparents.get(name) else { continue };
-                // a user's !exact pin (or the generated-output guard) is a
-                // hard veto: the family pass must never override it, even
-                // when the pin sorts the mod before a plugin master. the
-                // veto propagates DOWN family chains: a patch following a
-                // pinned master keeps the master's pinned destination - the
-                // user owns the list; we only advise.
-                let anchored = {
-                    let mut cur: &str = name;
-                    let mut hops = 0usize;
-                    loop {
-                        match &decisions[cur].why {
-                            Why::ExactRule | Why::OutputGuard => break true,
-                            Why::FollowParent(p)
-                                if decisions.contains_key(p.as_str()) && hops < 32 =>
-                            {
-                                cur = p;
-                                hops += 1;
-                            }
-                            _ => break false,
-                        }
-                    }
-                };
+                let anchored = matches!(decisions[name].why, Why::ExactRule | Why::OutputGuard)
+                    || pinned.contains(name.as_str());
                 if anchored {
                     continue;
                 }
-                let di = cresolve(name, &cparents, &decisions, &lsec_of, &mut memo, 0);
+                let di = cresolve(name, &cparents, &decisions, &lsec_of, &esm_mods, max_esm_sec, &mut memo, 0);
                 let cur = {
                     let d = &decisions[name];
                     d.want
@@ -1728,65 +1724,22 @@ fn run(
                         .unwrap_or_else(|| lsec_of.get(d.from.as_str()).copied().unwrap_or(0))
                 };
                 if di > cur {
-                    // the child's resolved constraint loads LATER than its
-                    // current destination: as-is it would load before a
-                    // master. a plugin-master edge is a LOAD-ORDER fact -
-                    // plugins.txt owns that, and ripping an established mod
-                    // out of its home section because its esp lists someone
-                    // else's esp as a master is how "Morthal patches" ended
-                    // up in [Performance]. so: only use the pull to FILE an
-                    // unclaimed mod (no rule home, sitting in a dump/parking
-                    // area). an established mod gets a WARN, not a move.
-                    let d0 = &decisions[name];
-                    let from_is_dump = rules
-                        .dump
-                        .iter()
-                        .any(|l| l.eq_ignore_ascii_case(&d0.from));
-                    let claimed = d0.want.is_some() || !from_is_dump;
-                    if claimed {
-                        let strongest = ps
-                            .iter()
-                            .filter(|p| decisions.contains_key(*p))
-                            .max_by_key(|p| memo.get(*p).copied().unwrap_or(0))
-                            .cloned()
-                            .unwrap_or_default();
-                        let msec = &ml.sections[n_secs - 1 - di].label;
-                        let _ = writeln!(
-                            trace,
-                            "  {name} | WARN: plugin master [{strongest}] lives in [{msec}] which loads later than [{from}] - left in place (pin it or check plugins.txt)",
-                            from = d0.from
-                        );
-                        let _ = writeln!(
-                            log,
-                            "WARN  {name} plugin master [{strongest}] is in later-loading [{msec}] - not moved (established home)"
-                        );
-                        out.push(Change {
-                            kind: ChangeKind::Warn,
-                            name: name.clone(),
-                            detail: format!(
-                                "plugin master [{strongest}] sits in later-loading [{msec}] - not moved"
-                            ),
-                            section: d0.from.clone(),
-                        });
-                        continue;
-                    }
-                    // unclaimed mod with nowhere to go: file it with the
-                    // latest-loading parent's band.
-                    let strongest = ps
-                        .iter()
-                        .filter(|p| decisions.contains_key(*p))
-                        .max_by_key(|p| memo.get(*p).copied().unwrap_or(0))
-                        .cloned()
-                        .unwrap_or_default();
-                    let target = ml.sections[n_secs - 1 - di].label.clone();
-                    // never pull a mod INTO a dump section - it's a waiting
-                    // room, not a destination
+                    let target = ml.sections[di].label.clone();
                     if rules.dump.iter().any(|l| l.eq_ignore_ascii_case(&target)) {
                         continue;
                     }
+                    let strongest = cparents
+                        .get(name)
+                        .and_then(|ps| {
+                            ps.iter()
+                                .filter(|p| decisions.contains_key(*p))
+                                .max_by_key(|p| memo.get(*p).copied().unwrap_or(0))
+                                .cloned()
+                        })
+                        .unwrap_or_else(|| "ESM master".to_string());
                     let _ = writeln!(
                         trace,
-                        "  {name} | plugin family: master [{strongest}] loads later | dest -> [{target}]"
+                        "  {name} | master constraint [{strongest}] loads later | dest -> [{target}]"
                     );
                     let d = decisions.get_mut(name).unwrap();
                     d.want = Some(target);
@@ -2222,16 +2175,12 @@ fn run(
             // constraint: content-parent DAG. a child must load after ALL
             // of its plugin-master parents in this section - including
             // PINNED parents, whose slots are fixed: the child goes to the
-            // first free slot past the latest parent's slot. (family
-            // grouping hangs a child on ONE display parent; a multi-parent
-            // patch would otherwise load after the base mod but before the
-            // patch hub that also masters it.)
+            // first free slot past the latest parent's slot.
             if !content_parents.is_empty() || !loot_after.is_empty() {
                 for _ in 0..6 {
                     let mut moved = false;
                     for ci in 0..u.len() {
                         let name = u[ci].name.clone();
-                        // census plugin masters + loot masterlist afters
                         let cps = content_parents.get(&name);
                         let lps2 = loot_after.get(&name);
                         if cps.is_none() && lps2.is_none() {
@@ -2256,6 +2205,47 @@ fn run(
                                 "  [{label}] {name} | {src}: loads after all parents (slot {child_slot} -> past {lps})",
                                 label = s.label
                             );
+                        }
+                    }
+                    if !moved {
+                        break;
+                    }
+                }
+            }
+
+            // constraint: ESM before non-ESM in-section
+            if census.is_some() {
+                for _ in 0..6 {
+                    let mut moved = false;
+                    let latest_esm_slot = (0..n)
+                        .filter(|slot| {
+                            let m_name = if let Some(p) = &slot_owner[*slot] {
+                                Some(&p.name)
+                            } else {
+                                let r = free.iter().position(|f| *f == *slot);
+                                r.and_then(|idx| u.get(idx)).map(|m| &m.name)
+                            };
+                            m_name.map_or(false, |nm| is_esm_entry(nm, census))
+                        })
+                        .max();
+                    if let Some(les) = latest_esm_slot {
+                        for ci in 0..u.len() {
+                            if !is_esm_entry(&u[ci].name, census) {
+                                let child_slot = free[ci.min(free.len().saturating_sub(1))];
+                                if child_slot < les {
+                                    let e = u.remove(ci);
+                                    let name = e.name.clone();
+                                    let r = free.partition_point(|f| *f <= les);
+                                    u.insert(r.min(u.len()), e);
+                                    moved = true;
+                                    let _ = writeln!(
+                                        trace,
+                                        "  [{label}] {name} | ESM DAG: non-ESM loads after ESM (slot {child_slot} -> past {les})",
+                                        label = s.label
+                                    );
+                                    break;
+                                }
+                            }
                         }
                     }
                     if !moved {
@@ -2476,33 +2466,14 @@ fn run(
         for (mod_name, _, info) in census {
             provider.entry(info.plugin.as_str()).or_insert(mod_name);
         }
-        // same exemptions as the family constraint: hub masters are
-        // infrastructure the user places deliberately (ussep lives at the
-        // bottom of their list and that's FINE in plugin terms) - without
-        // this gate the audit floods 50+ "loads before ussep" false alarms
-        const HUB_THRESHOLD: usize = 20;
-        let mut child_count: HashMap<&str, usize> = HashMap::new();
-        let mut seen_pair: std::collections::HashSet<(String, &str)> =
-            std::collections::HashSet::new();
-        for (mod_name, _, info) in census {
-            for mp in info.masters.iter().filter(|mp| {
-                !base_game.contains(&mp.as_str()) && !mp.starts_with("cc")
-            }) {
-                if seen_pair.insert((mod_name.clone(), mp.as_str())) {
-                    *child_count.entry(mp.as_str()).or_insert(0) += 1;
-                }
-            }
-        }
         // final position in CANONICAL LOAD ORDER: name -> (load section
-        // index, load index in section). one tuple compare says it all:
-        // child < parent means the child loads BEFORE its master - broken.
-        let n_secs = ml.sections.len();
+        // index, load index in section).
         let mut pos: HashMap<&str, (usize, usize)> = HashMap::new();
         for (si, s) in ml.sections.iter().enumerate() {
             let sn = s.mods.len();
             for (mi, m) in s.mods.iter().enumerate() {
                 if m.raw.trim_start().starts_with('+') {
-                    pos.insert(m.name.as_str(), (n_secs - 1 - si, sn - 1 - mi));
+                    pos.insert(m.name.as_str(), (si, sn - 1 - mi));
                 }
             }
         }
@@ -2511,16 +2482,12 @@ fn run(
         let mut forced = 0usize;
         let mut reported: std::collections::HashSet<&str> = std::collections::HashSet::new();
         for (mod_name, _, info) in census {
-            if !patch_flavored(&mod_name.to_lowercase()) {
-                continue; // only patch-flavored children have a parent worth reporting
-            }
             let Some(&p1) = pos.get(mod_name.as_str()) else { continue };
             // strongest master = latest-loading provider mod
             let strongest = info
                 .masters
                 .iter()
                 .filter(|mp| !base_game.contains(&mp.as_str()) && !mp.starts_with("cc"))
-                .filter(|mp| child_count.get(mp.as_str()).copied().unwrap_or(0) <= HUB_THRESHOLD)
                 .filter_map(|mp| provider.get(mp.as_str()))
                 .filter(|pm| **pm != mod_name.as_str())
                 .filter_map(|pm| pos.get(*pm).map(|p2| (*pm, *p2)))
@@ -2529,31 +2496,7 @@ fn run(
             let inverted = p1 < p2;
             if inverted && reported.insert(mod_name.as_str()) {
                 fails += 1;
-                // whose call is it? the child's own pin, obviously. but a
-                // PINNED MASTER can make satisfaction impossible: if every
-                // slot above it in the section is also pinned, there is no
-                // legal landing spot for the child and no ordering code
-                // could have fixed it. label those honestly instead of
-                // crying sorter bug.
-                let by_pin = if pinned.contains(mod_name.as_str()) {
-                    true
-                } else if pinned.contains(master_mod) {
-                    let fsec = &ml.sections[n_secs - 1 - p2.0];
-                    let sn = fsec.mods.len();
-                    // slots above the master (load order): file indices
-                    // below sn-1-p2.1. free = occupied by an unpinned mod.
-                    let mut free_above = false;
-                    for slot in (p2.1 + 1)..sn {
-                        let m = &fsec.mods[sn - 1 - slot];
-                        if !pinned.contains(m.name.as_str()) {
-                            free_above = true;
-                            break;
-                        }
-                    }
-                    !free_above
-                } else {
-                    false
-                };
+                let by_pin = pinned.contains(mod_name.as_str()) || pinned.contains(master_mod);
                 if by_pin {
                     forced += 1;
                 }
@@ -2565,16 +2508,61 @@ fn run(
                 );
                 let _ = writeln!(
                     log,
-                    "WARN  {mod_name} loads before its master {master_mod}"
+                    "WARN  {mod_name} loads before its master {master_mod}{}",
+                    if by_pin { " (forced by user pin)" } else { "" }
                 );
                 out.push(Change {
                     kind: ChangeKind::Warn,
                     name: mod_name.clone(),
                     detail: format!(
-                        "[master order] loads before its master {master_mod}"
+                        "[master order] loads before its master {master_mod}{}",
+                        if by_pin { " (forced by user pin)" } else { "" }
                     ),
-                    section: ml.sections[n_secs - 1 - p1.0].label.clone(),
+                    section: ml.sections[p1.0].label.clone(),
                 });
+            }
+        }
+
+        // ESM vs non-ESM flag audit
+        for (mod_name, _, _) in census {
+            if is_esm_entry(mod_name, Some(census)) {
+                continue;
+            }
+            let Some(&p1) = pos.get(mod_name.as_str()) else { continue };
+            let latest_esm = census
+                .iter()
+                .map(|(m, _, _)| m.as_str())
+                .filter(|m| is_esm_entry(m, Some(census)) && *m != mod_name.as_str())
+                .filter_map(|m| pos.get(m).map(|p2| (m, *p2)))
+                .max_by_key(|(_, p2)| *p2);
+            if let Some((esm_mod, p2)) = latest_esm {
+                if p1 < p2 && reported.insert(mod_name.as_str()) {
+                    fails += 1;
+                    let by_pin = pinned.contains(mod_name.as_str()) || pinned.contains(esm_mod);
+                    if by_pin {
+                        forced += 1;
+                    }
+                    let _ = writeln!(
+                        trace,
+                        "  AUDIT FAIL non-ESM {mod_name} loads before ESM {esm_mod} (load {:?} < {:?}){}",
+                        p1, p2,
+                        if by_pin { " [forced by user pin]" } else { "" }
+                    );
+                    let _ = writeln!(
+                        log,
+                        "WARN  non-ESM {mod_name} loads before ESM {esm_mod}{}",
+                        if by_pin { " (forced by user pin)" } else { "" }
+                    );
+                    out.push(Change {
+                        kind: ChangeKind::Warn,
+                        name: mod_name.clone(),
+                        detail: format!(
+                            "[ESM order] non-ESM loads before ESM {esm_mod}{}",
+                            if by_pin { " (forced by user pin)" } else { "" }
+                        ),
+                    section: ml.sections[p1.0].label.clone(),
+                    });
+                }
             }
         }
         let _ = writeln!(
@@ -3139,5 +3127,176 @@ mod tests {
         assert_eq!(out.exact[0].1, "Gameplay");
         assert_eq!(out.promote.len(), 1); // promote rhs is a mod name - untouched
         assert!(trace.contains("no matching separator"));
+    }
+
+    #[test]
+    fn master_dependency_enforced_non_patch_flavored() {
+        let text = "# modlist\n+DependentMod\n-Gameplay_separator\n+MasterMod\n-Essentials_separator\n";
+        let mut ml = parse(text);
+        let rules = Rules::empty();
+        let mut log = String::new();
+        let mut out = Vec::new();
+        let mut trace = String::new();
+        let kw = Keywords::default();
+        let census = vec![
+            (
+                "DependentMod".to_string(),
+                "Gameplay".to_string(),
+                crate::plugins::PluginInfo {
+                    plugin: "standalone_plugin.esp".to_string(), // non-patch-flavored name!
+                    masters: vec!["master.esm".to_string()],
+                    is_esm: false,
+                    is_esl: false,
+                    record_count: 5,
+                    groups: vec![],
+                },
+            ),
+            (
+                "MasterMod".to_string(),
+                "Essentials".to_string(),
+                crate::plugins::PluginInfo {
+                    plugin: "master.esm".to_string(),
+                    masters: vec![],
+                    is_esm: true,
+                    is_esl: false,
+                    record_count: 10,
+                    groups: vec![],
+                },
+            ),
+        ];
+
+        run(
+            &mut ml,
+            &rules,
+            &mut log,
+            &mut out,
+            None,
+            None,
+            Some(&census),
+            &kw,
+            false,
+            &mut trace,
+        );
+
+        // DependentMod must be shifted down into or after Essentials_separator so MasterMod loads first!
+        let dep_sec = ml.sections.iter().find(|s| s.mods.iter().any(|m| m.name == "DependentMod")).unwrap();
+        assert_eq!(dep_sec.label, "Essentials");
+    }
+
+    #[test]
+    fn esm_loads_before_non_esm() {
+        let text = "# modlist\n+NonEsmMod\n+EsmMod\n-Section_separator\n";
+        let mut ml = parse(text);
+        let rules = Rules::empty();
+        let mut log = String::new();
+        let mut out = Vec::new();
+        let mut trace = String::new();
+        let kw = Keywords::default();
+        let census = vec![
+            (
+                "NonEsmMod".to_string(),
+                "Section".to_string(),
+                crate::plugins::PluginInfo {
+                    plugin: "plugin.esp".to_string(),
+                    masters: vec![],
+                    is_esm: false,
+                    is_esl: false,
+                    record_count: 5,
+                    groups: vec![],
+                },
+            ),
+            (
+                "EsmMod".to_string(),
+                "Section".to_string(),
+                crate::plugins::PluginInfo {
+                    plugin: "master.esm".to_string(),
+                    masters: vec![],
+                    is_esm: true,
+                    is_esl: false,
+                    record_count: 10,
+                    groups: vec![],
+                },
+            ),
+        ];
+
+        run(
+            &mut ml,
+            &rules,
+            &mut log,
+            &mut out,
+            None,
+            None,
+            Some(&census),
+            &kw,
+            false,
+            &mut trace,
+        );
+
+        let sec = &ml.sections[0];
+        // In MO2 file order: bottom of section (sec.mods[1]) loads FIRST.
+        // So EsmMod (loads first) is at sec.mods[1], NonEsmMod (loads later) is at sec.mods[0].
+        assert_eq!(sec.mods[1].name, "EsmMod");
+        assert_eq!(sec.mods[0].name, "NonEsmMod");
+    }
+
+    #[test]
+    fn user_pin_overrides_master_order_and_warns() {
+        let text = "# modlist\n+DependentMod\n-Gameplay_separator\n+MasterMod\n-Essentials_separator\n";
+        let mut ml = parse(text);
+        let mut rules = Rules::empty();
+        // User explicitly pins DependentMod to Gameplay
+        rules.exact.push(("DependentMod".to_string(), "Gameplay".to_string()));
+
+        let mut log = String::new();
+        let mut out = Vec::new();
+        let mut trace = String::new();
+        let kw = Keywords::default();
+        let census = vec![
+            (
+                "DependentMod".to_string(),
+                "Gameplay".to_string(),
+                crate::plugins::PluginInfo {
+                    plugin: "standalone_plugin.esp".to_string(),
+                    masters: vec!["master.esm".to_string()],
+                    is_esm: false,
+                    is_esl: false,
+                    record_count: 5,
+                    groups: vec![],
+                },
+            ),
+            (
+                "MasterMod".to_string(),
+                "Essentials".to_string(),
+                crate::plugins::PluginInfo {
+                    plugin: "master.esm".to_string(),
+                    masters: vec![],
+                    is_esm: true,
+                    is_esl: false,
+                    record_count: 10,
+                    groups: vec![],
+                },
+            ),
+        ];
+
+        run(
+            &mut ml,
+            &rules,
+            &mut log,
+            &mut out,
+            None,
+            None,
+            Some(&census),
+            &kw,
+            false,
+            &mut trace,
+        );
+
+        // DependentMod stayed in Gameplay due to user pin
+        let dep_sec = ml.sections.iter().find(|s| s.mods.iter().any(|m| m.name == "DependentMod")).unwrap();
+        assert_eq!(dep_sec.label, "Gameplay");
+
+        // A warning change must be output
+        let has_warn = out.iter().any(|c| c.kind == ChangeKind::Warn && c.detail.contains("loads before its master"));
+        assert!(has_warn, "Expected warning for master order violation caused by user pin");
     }
 }
