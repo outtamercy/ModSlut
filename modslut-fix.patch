@@ -1,0 +1,104 @@
+--- main.rs.orig	2026-09-03 23:18:39.081418500 -0500
++++ main.rs	2026-09-03 23:18:38.344963600 -0500
+@@ -1628,21 +1628,7 @@
+         }
+         content_parents = cparents.clone();
+ 
+-        let esm_mods: std::collections::HashSet<String> = census
+-            .iter()
+-            .filter_map(|(m, _, info)| {
+-                if info.is_esm
+-                    || info.plugin.to_lowercase().ends_with(".esm")
+-                    || m.to_lowercase().ends_with(".esm")
+-                {
+-                    Some(m.clone())
+-                } else {
+-                    None
+-                }
+-            })
+-            .collect();
+-
+-        if !cparents.is_empty() || !esm_mods.is_empty() {
++        if !cparents.is_empty() {
+             // CANONICAL LOAD ORDER: section file index 0 = loads first (top of file),
+             // section file index n_secs-1 = loads last (bottom of file).
+             let lsec_of: HashMap<&str, usize> = ml
+@@ -1652,26 +1638,12 @@
+                 .map(|(i, s)| (s.label.as_str(), i))
+                 .collect();
+ 
+-            let max_esm_sec = esm_mods
+-                .iter()
+-                .filter_map(|m| decisions.get(m))
+-                .map(|d| {
+-                    d.want
+-                        .as_deref()
+-                        .and_then(|w| lsec_of.get(w).copied())
+-                        .unwrap_or_else(|| lsec_of.get(d.from.as_str()).copied().unwrap_or(0))
+-                })
+-                .max()
+-                .unwrap_or(0);
+-
+             // final destination load-index per mod, recursively
+             fn cresolve(
+                 name: &str,
+                 cparents: &HashMap<String, Vec<String>>,
+                 decisions: &HashMap<String, Decision>,
+                 lsec_of: &HashMap<&str, usize>,
+-                esm_mods: &std::collections::HashSet<String>,
+-                max_esm_sec: usize,
+                 memo: &mut HashMap<String, usize>,
+                 depth: usize,
+             ) -> usize {
+@@ -1690,18 +1662,13 @@
+                 if let Some(ps) = cparents.get(name) {
+                     for p in ps {
+                         if decisions.contains_key(p) {
+-                            let pi = cresolve(p, cparents, decisions, lsec_of, esm_mods, max_esm_sec, memo, depth + 1);
++                            let pi = cresolve(p, cparents, decisions, lsec_of, memo, depth + 1);
+                             if pi > dest {
+                                 dest = pi;
+                             }
+                         }
+                     }
+                 }
+-                if !esm_mods.contains(name) {
+-                    if max_esm_sec > dest {
+-                        dest = max_esm_sec;
+-                    }
+-                }
+                 memo.insert(name.to_string(), dest);
+                 dest
+             }
+@@ -1715,7 +1682,7 @@
+                 if anchored {
+                     continue;
+                 }
+-                let di = cresolve(name, &cparents, &decisions, &lsec_of, &esm_mods, max_esm_sec, &mut memo, 0);
++                let di = cresolve(name, &cparents, &decisions, &lsec_of, &mut memo, 0);
+                 let cur = {
+                     let d = &decisions[name];
+                     d.want
+@@ -1736,7 +1703,7 @@
+                                 .max_by_key(|p| memo.get(*p).copied().unwrap_or(0))
+                                 .cloned()
+                         })
+-                        .unwrap_or_else(|| "ESM master".to_string());
++                        .unwrap_or_else(|| "unknown master".to_string());
+                     let _ = writeln!(
+                         trace,
+                         "  {name} | master constraint [{strongest}] loads later | dest -> [{target}]"
+@@ -1957,8 +1924,11 @@
+         let mut parent: Vec<Option<usize>> = vec![None; n];
+         for i in 0..n {
+             if let Some(ps) = content_parents.get(&work[i].name) {
+-                if let Some(p) = ps.iter().find_map(|p| idx_of.get(p.as_str())) {
+-                    parent[i] = Some(*p);
++                if let Some(&p) = ps.iter()
++                    .filter_map(|p| idx_of.get(p.as_str()))
++                    .max_by_key(|&&idx| idx)
++                {
++                    parent[i] = Some(p);
+                     continue;
+                 }
+             }
