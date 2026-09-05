@@ -1573,9 +1573,6 @@ fn run(
         // (distinct interiors needs ussep) is not that master's child.
         let mut cparents: HashMap<String, Vec<String>> = HashMap::new();
         for (mod_name, _, info) in census {
-            if !patch_flavored(&mod_name.to_lowercase()) {
-                continue;
-            }
             let ps = cparents.entry(mod_name.clone()).or_default();
             for mp in info.masters.iter() {
                 if base_game.contains(&mp.as_str()) || mp.starts_with("cc") {
@@ -2004,8 +2001,11 @@ fn run(
         let mut parent: Vec<Option<usize>> = vec![None; n];
         for i in 0..n {
             if let Some(ps) = content_parents.get(&work[i].name) {
-                if let Some(p) = ps.iter().find_map(|p| idx_of.get(p.as_str())) {
-                    parent[i] = Some(*p);
+                if let Some(p) = ps.iter()
+                    .filter_map(|p| idx_of.get(p.as_str()).copied())
+                    .max_by_key(|&idx| idx)
+                {
+                    parent[i] = Some(p);
                     continue;
                 }
             }
@@ -2511,9 +2511,6 @@ fn run(
         let mut forced = 0usize;
         let mut reported: std::collections::HashSet<&str> = std::collections::HashSet::new();
         for (mod_name, _, info) in census {
-            if !patch_flavored(&mod_name.to_lowercase()) {
-                continue; // only patch-flavored children have a parent worth reporting
-            }
             let Some(&p1) = pos.get(mod_name.as_str()) else { continue };
             // strongest master = latest-loading provider mod
             let strongest = info
