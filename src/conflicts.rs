@@ -62,7 +62,9 @@ impl ConflictIndex {
         let (Some(ini), Some(mods)) = (Self::ini_path(modlist), Self::mods_dir_of(modlist)) else {
             return false;
         };
-        let Some(t) = Self::mtime(&ini) else { return false };
+        let Some(t) = Self::mtime(&ini) else {
+            return false;
+        };
         let newer = |p: &Path| Self::mtime(p).is_some_and(|m| m > t);
         !newer(modlist) && !newer(&mods)
     }
@@ -90,7 +92,9 @@ impl ConflictIndex {
                     if !e.file_type().is_file() {
                         continue;
                     }
-                    let Ok(rel) = e.path().strip_prefix(&dir) else { continue };
+                    let Ok(rel) = e.path().strip_prefix(&dir) else {
+                        continue;
+                    };
                     let rel = rel.to_string_lossy().replace('\\', "/").to_lowercase();
                     if rel == "meta.ini" {
                         continue;
@@ -129,7 +133,11 @@ impl ConflictIndex {
             }
         }
 
-        ConflictIndex { pairs, files_indexed, mods_scanned: rank.len() }
+        ConflictIndex {
+            pairs,
+            files_indexed,
+            mods_scanned: rank.len(),
+        }
     }
 
     // shared files between two mods: Some((winner, count)) if they're related
@@ -145,7 +153,10 @@ impl ConflictIndex {
 
     pub fn save(&self, ini: &Path, mods_dir: &Path) -> std::io::Result<()> {
         let mut out = String::new();
-        let _ = writeln!(out, "# modslut conflict index v1 - delete this file to force a rescan");
+        let _ = writeln!(
+            out,
+            "# modslut conflict index v1 - delete this file to force a rescan"
+        );
         // instance stamp: a cache living next to the exe can be seen by
         // OTHER mo2 instances - only trust it when it was scanned from
         // this instance's mods folder.
@@ -173,12 +184,22 @@ impl ConflictIndex {
             if l.is_empty() || l.starts_with('#') {
                 continue;
             }
-            let Some((names, n)) = l.split_once('=') else { continue };
-            let Some((w, lose)) = names.split_once('>') else { continue };
-            let Ok(n) = n.trim().parse::<u32>() else { continue };
+            let Some((names, n)) = l.split_once('=') else {
+                continue;
+            };
+            let Some((w, lose)) = names.split_once('>') else {
+                continue;
+            };
+            let Ok(n) = n.trim().parse::<u32>() else {
+                continue;
+            };
             pairs.insert((w.trim().to_string(), lose.trim().to_string()), n);
         }
-        Some(ConflictIndex { pairs, files_indexed: 0, mods_scanned: 0 })
+        Some(ConflictIndex {
+            pairs,
+            files_indexed: 0,
+            mods_scanned: 0,
+        })
     }
 
     // load only if the cache was scanned from THIS instance's mods folder.

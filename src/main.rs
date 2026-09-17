@@ -8,14 +8,25 @@
 //   modslut sort   <modlist.txt> [-r rules.txt] [-o out] shows plan, asks, then writes
 //   modslut rules  > rules.txt                          dump the built-in default rules
 
-// no console window popping up next to the gui on windows
-#![cfg_attr(all(target_os = "windows", not(debug_assertions)), windows_subsystem = "windows")]
+// ModSlut is a GUI tool in both debug and release builds. The previous
+// debug-only console was the terminal shown by MO2, and closing it killed
+// its child GUI process.
+#![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
 
 pub(crate) mod conflicts;
+pub(crate) mod content_index;
 pub(crate) mod game;
-pub(crate) mod loot;
-pub(crate) mod plugins;
+pub(crate) mod groups;
 mod gui;
+pub(crate) mod learning;
+pub(crate) mod libloot_adapter;
+pub(crate) mod loot;
+pub(crate) mod metadata;
+pub(crate) mod plugins;
+pub(crate) mod priority_manifest;
+pub(crate) mod record_keywords;
+pub(crate) mod reference;
+pub(crate) mod section_map;
 
 use conflicts::ConflictIndex;
 use std::collections::HashMap;
@@ -29,9 +40,9 @@ use std::process::ExitCode;
 #[derive(Clone)]
 struct ModEntry {
     raw: String,
-    name: String,   // flag-stripped, as-is case
-    lower: String,  // lowercase, for keyword matching
-    norm: String,   // alnum-only, for parent/child containment checks
+    name: String,  // flag-stripped, as-is case
+    lower: String, // lowercase, for keyword matching
+    norm: String,  // alnum-only, for parent/child containment checks
 }
 
 struct Section {
@@ -42,7 +53,7 @@ struct Section {
 
 struct Modlist {
     header: String,
-    parking: Vec<String>,  // everything before the first separator
+    parking: Vec<String>, // everything before the first separator
     sections: Vec<Section>,
     trailing: Vec<String>, // anything after the last separator (shouldn't happen, but stay lossless)
 }
@@ -52,7 +63,27 @@ fn strip_flag(line: &str) -> &str {
 }
 
 fn norm(s: &str) -> String {
-    s.chars().filter(|c| c.is_ascii_alphanumeric()).flat_map(|c| c.to_lowercase()).collect()
+    s.chars()
+        .filter(|c| c.is_ascii_alphanumeric())
+        .flat_map(|c| c.to_lowercase())
+        .collect()
+}
+
+// Built-in rule phrases are evidence only when they match complete words.
+// `pandora` inside `Pandorable` is not an animation engine, and substring
+// matching is how a tidy rule list turns into a very enthusiastic liar.
+fn keyword_words(s: &str) -> String {
+    let lower = s.to_ascii_lowercase();
+    let words = lower
+        .split(|c: char| !c.is_ascii_alphanumeric())
+        .filter(|word| !word.is_empty())
+        .collect::<Vec<_>>();
+    format!(" {} ", words.join(" "))
+}
+
+fn keyword_matches(haystack: &str, phrase: &str) -> bool {
+    let phrase = keyword_words(phrase);
+    phrase.trim().len() >= 3 && haystack.contains(&phrase)
 }
 
 fn parse(text: &str) -> Modlist {
@@ -70,7 +101,10 @@ fn parse(text: &str) -> Modlist {
             continue;
         }
         if t.contains("_separator") {
-            let label = strip_flag(t).trim_end_matches("_separator").trim().to_string();
+            let label = strip_flag(t)
+                .trim_end_matches("_separator")
+                .trim()
+                .to_string();
             sections.push(Section {
                 sep_line: t.to_string(),
                 label,
@@ -92,7 +126,12 @@ fn parse(text: &str) -> Modlist {
         // mods after the final separator - keep them at the end, lossless
         (Vec::new(), pending.drain(..).map(|m| m.raw).collect())
     };
-    Modlist { header, parking, sections, trailing }
+    Modlist {
+        header,
+        parking,
+        sections,
+        trailing,
+    }
 }
 
 fn serialize(ml: &Modlist) -> String {
@@ -125,7 +164,7 @@ fn serialize(ml: &Modlist) -> String {
 //   keyword !excl !excl = Section    (exclusions: skip if any of these appear)
 //   !exact Mod Name = Section Label  (exact name match, checked before keywords)
 //   @Category Name = Section Label   (mo2 category match, from meta.ini/categories.dat)
-//   >Winner Name = Loser Name        (promote rule: winner sorts above loser in-file)
+//   >After Name = Before Name        (explicit load-after rule: After loads later)
 //   <Mod Name                        (sectionless sink: load first in whatever section
 //                                     holds the mod - for no-esp frameworks that are
 //                                     masters for other mods but census-invisible)
@@ -138,14 +177,17 @@ fn serialize(ml: &Modlist) -> String {
 //
 // precedence: !exact > @category > category name matching a separator name > keyword
 //
-// USER RULES: "modslut_rules.txt" next to modlist.txt (per-profile) and/or next
-// to the exe (global) is loaded ON TOP of the built-ins - same syntax, checked
-// first, so user rules can override any built-in decision.
+// USER RULES: one profile-named file beside the EXE, e.g.
+// "modslut_rules_Mayhem_s_Madness.txt". It is loaded ON TOP of the built-ins
+// with the same syntax, so user rules override any built-in decision without
+// bleeding into another MO2 profile.
 
 struct Rules {
     exact: Vec<(String, String)>,
     keyword: Vec<(String, Vec<String>, String)>, // (phrase, exclusions, section)
     category: Vec<(String, String)>,
+    // (after, before): first mod must have higher effective MO2 priority.
+    // The old internal name survives so existing user rules stay compatible.
     promote: Vec<(String, String)>,
     sink: Vec<(String, String)>,
     float: Vec<(String, String)>,
@@ -153,14 +195,25 @@ struct Rules {
     // directives (switches, not rules): a bare `!name` line with no '='
     rename_separators: bool, // opt-in: pass 0 retitles separators to concepts
     proven_only: bool,       // opt-in: only proven moves (rules/loot/conflict/census), no guesses
-    dump: Vec<String>, // dump sections ("!dump = End of List"): a waiting room, not a
-                       // real section - rules never resolve INTO it, and nothing gets
-                       // moved there. list-specific, so it's opt-in per user rules.
+    dump: Vec<String>,       // dump sections ("!dump = End of List"): a waiting room, not a
+                             // real section - rules never resolve INTO it, and nothing gets
+                             // moved there. list-specific, so it's opt-in per user rules.
 }
 
 impl Rules {
     fn empty() -> Rules {
-        Rules { exact: vec![], keyword: vec![], category: vec![], promote: vec![], sink: vec![], float: vec![], sink_any: vec![], rename_separators: false, proven_only: false, dump: vec![] }
+        Rules {
+            exact: vec![],
+            keyword: vec![],
+            category: vec![],
+            promote: vec![],
+            sink: vec![],
+            float: vec![],
+            sink_any: vec![],
+            rename_separators: false,
+            proven_only: false,
+            dump: vec![],
+        }
     }
     // user rules get checked first (first hit wins), so they go in front
     fn prepend(&mut self, user: Rules) {
@@ -197,7 +250,38 @@ fn patch_flavored(lower: &str) -> bool {
         && !lower.contains("skypatcher")
 }
 
-// all active mods in priority order (file order: first = highest = wins)
+// Pluginless addon packs have no TES4 header to name their parent. Their
+// titles do, though: "Septentrional Parallax", "Happy Little Trees Bark",
+// and "Riton Farmhouse Retex" are not independent mods merely because they
+// ship loose files. Keep this deliberately about addon-shaped words, not
+// every title that happens to share a brand token with another mod.
+fn asset_addon_flavored(lower: &str) -> bool {
+    let words = keyword_words(lower);
+    [
+        "parallax",
+        "texture",
+        "textures",
+        "retexture",
+        "retex",
+        "replacer",
+        "mesh",
+        "meshes",
+        "material",
+        "materials",
+        "lod",
+        "output",
+        "bark",
+    ]
+    .iter()
+    .any(|word| keyword_matches(&words, word))
+}
+
+fn family_child_candidate(lower: &str) -> bool {
+    patch_flavored(lower) || asset_addon_flavored(lower)
+}
+
+// all active mods in effective MO2 priority order (raw file order is the
+// inverse of the left-pane priority display).
 pub(crate) fn active_mods(ml: &Modlist) -> Vec<String> {
     let mut v: Vec<String> = ml
         .parking
@@ -249,7 +333,9 @@ fn parse_rules_into(text: &str, r: &mut Rules) {
                 // no target: sink in whatever section the mod lives in.
                 // for no-esp frameworks (skypatcher, mfg fix) that are
                 // masters for other mods but invisible to the plugin
-                // census - they must load EARLY and the file can't prove it.
+                // census - they must sit at the lowest-priority slot in
+                // their own section; this says nothing about the section's
+                // global priority.
                 r.sink_any.push(rest.trim().to_string());
             }
         } else if let Some(rest) = l.strip_prefix('^') {
@@ -258,7 +344,8 @@ fn parse_rules_into(text: &str, r: &mut Rules) {
             }
         } else if let Some(rest) = l.strip_prefix('@') {
             if let Some((a, b)) = rest.split_once('=') {
-                r.category.push((a.trim().to_lowercase(), b.trim().to_string()));
+                r.category
+                    .push((a.trim().to_lowercase(), b.trim().to_string()));
             }
         } else if let Some((a, b)) = l.split_once('=') {
             // exclusions: "enb !patch !fix = ENB" - split on ' !' so the
@@ -277,11 +364,12 @@ fn parse_rules_into(text: &str, r: &mut Rules) {
 //   [alias]   Canonical = variant, ...  variant resolves to canonical (HARD)
 //   [family]  Canonical = sibling, ...  platform siblings: equal for ORDER only
 //   [never]   Name = other, ...         key must NEVER match any listed name
-// lives next to modlist.txt (per-profile) and/or next to the exe. optional.
+// Shipped defaults are embedded. Optional additions live in ModSlut's tool
+// folder and/or its own per-profile folder, never in MO2's profile data.
 #[derive(Default)]
 pub(crate) struct Keywords {
     strip: std::collections::HashSet<String>,
-    alias: HashMap<String, String>,  // tnorm(variant) -> tnorm(canonical)
+    alias: HashMap<String, String>, // tnorm(variant) -> tnorm(canonical)
     family: HashMap<String, String>, // tnorm(member)  -> tnorm(canonical)
     never: Vec<(Vec<String>, Vec<Vec<String>>)>, // key tokens -> excluded token sets
 }
@@ -291,7 +379,11 @@ impl Keywords {
     fn tnorm(&self, s: &str) -> String {
         let mut t = String::new();
         for c in s.chars() {
-            t.push(if c.is_ascii_alphanumeric() { c.to_ascii_lowercase() } else { ' ' });
+            t.push(if c.is_ascii_alphanumeric() {
+                c.to_ascii_lowercase()
+            } else {
+                ' '
+            });
         }
         t.split_whitespace()
             .filter(|w| !self.strip.contains(*w))
@@ -310,7 +402,9 @@ impl Keywords {
                 section = line[1..line.len() - 1].trim().to_lowercase();
                 continue;
             }
-            let Some((k, v)) = line.split_once('=') else { continue };
+            let Some((k, v)) = line.split_once('=') else {
+                continue;
+            };
             match section.as_str() {
                 "strip" => {
                     for w in v.split(',') {
@@ -331,19 +425,32 @@ impl Keywords {
                         .filter(|t| !t.is_empty())
                         .collect();
                     vars.push(canon.clone());
-                    let map = if section == "alias" { &mut kw.alias } else { &mut kw.family };
+                    let map = if section == "alias" {
+                        &mut kw.alias
+                    } else {
+                        &mut kw.family
+                    };
                     for tv in vars {
                         map.insert(tv, canon.clone());
                     }
                 }
                 "never" => {
-                    let key: Vec<String> = kw.tnorm(k.trim()).split_whitespace().map(String::from).collect();
+                    let key: Vec<String> = kw
+                        .tnorm(k.trim())
+                        .split_whitespace()
+                        .map(String::from)
+                        .collect();
                     if key.is_empty() {
                         continue;
                     }
                     let excl: Vec<Vec<String>> = v
                         .split(',')
-                        .map(|e| kw.tnorm(e.trim()).split_whitespace().map(String::from).collect())
+                        .map(|e| {
+                            kw.tnorm(e.trim())
+                                .split_whitespace()
+                                .map(String::from)
+                                .collect()
+                        })
                         .filter(|t: &Vec<String>| !t.is_empty())
                         .collect();
                     if !excl.is_empty() {
@@ -358,9 +465,13 @@ impl Keywords {
     pub(crate) fn load(modlist: Option<&Path>) -> (Keywords, Vec<PathBuf>) {
         let mut kw = Keywords::default();
         let mut loaded = Vec::new();
+        // Small, universally known aliases ship with the program. They are
+        // identity bridges, not placement rules: the parent still decides
+        // its own separator through the normal evidence cascade.
+        Self::parse_into(DEFAULT_KEYWORDS, &mut kw);
         let mut files = Vec::new();
-        if let Some(d) = modlist.and_then(|m| m.parent()) {
-            files.push(d.join("keywords.ini"));
+        if let Some(modlist) = modlist {
+            files.push(crate::profile_data_path(modlist, "keywords.ini"));
         }
         if let Ok(exe) = env::current_exe() {
             if let Some(d) = exe.parent() {
@@ -424,10 +535,12 @@ impl Keywords {
     }
 }
 
-// user rule file locations, most specific first: the profile folder holding
-// this modlist, then the folder the exe lives in
+const DEFAULT_KEYWORDS: &str = include_str!("../keywords.ini");
+
 // debug_sort.log lives next to ms.exe (the tool folder), same place as
-// keywords.ini and conflict.ini - everything modslut needs in one spot.
+// keywords.ini, conflict.ini, roadmap/cache files, and profile-named rules.
+// Everything ModSlut owns stays in one spot; the MO2 profile remains data,
+// not a dumping ground for tool config.
 pub(crate) fn debug_log_path() -> PathBuf {
     std::env::current_exe()
         .ok()
@@ -435,17 +548,52 @@ pub(crate) fn debug_log_path() -> PathBuf {
         .unwrap_or_else(|| PathBuf::from("debug_sort.log"))
 }
 
-pub(crate) fn user_rule_files(modlist: Option<&Path>) -> Vec<PathBuf> {
-    let mut v = Vec::new();
-    if let Some(d) = modlist.and_then(|m| m.parent()) {
-        v.push(d.join("modslut_rules.txt"));
-    }
-    if let Ok(exe) = env::current_exe() {
-        if let Some(d) = exe.parent() {
-            v.push(d.join("modslut_rules.txt"));
+pub(crate) fn profile_key(modlist: &Path) -> String {
+    modlist
+        .parent()
+        .and_then(|p| p.file_name())
+        .and_then(|name| name.to_str())
+        .unwrap_or("default")
+        .chars()
+        .map(|c| if c.is_ascii_alphanumeric() { c } else { '_' })
+        .collect()
+}
+
+pub(crate) fn profile_data_path(modlist: &Path, file_name: &str) -> PathBuf {
+    let root = env::current_exe()
+        .ok()
+        .and_then(|exe| exe.parent().map(Path::to_path_buf))
+        .unwrap_or_else(|| modlist.parent().unwrap_or(Path::new(".")).to_path_buf());
+    root.join("profiles")
+        .join(profile_key(modlist))
+        .join(file_name)
+}
+
+// The first profile-folder build quietly moves its own old root-level files.
+// This is a layout migration, not a rule import: old rules may be stale and
+// are intentionally left for the user to review or delete.
+pub(crate) fn migrate_profile_file(modlist: &Path, file_name: &str, legacy: PathBuf) -> PathBuf {
+    let target = profile_data_path(modlist, file_name);
+    if target != legacy && !target.exists() && legacy.is_file() {
+        if let Some(parent) = target.parent() {
+            let _ = fs::create_dir_all(parent);
         }
+        let _ = fs::rename(&legacy, &target);
     }
-    v
+    target
+}
+
+pub(crate) fn ensure_profile_data_parent(path: &Path) -> std::io::Result<()> {
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    Ok(())
+}
+
+pub(crate) fn user_rule_files(modlist: Option<&Path>) -> Vec<PathBuf> {
+    modlist
+        .map(|modlist| vec![profile_data_path(modlist, "rules.txt")])
+        .unwrap_or_default()
 }
 
 pub(crate) fn load_rules_for(
@@ -539,7 +687,11 @@ impl Categories {
                 }
             }
         }
-        Some(Categories { id_to_name, nexus_to_local, mods_dir })
+        Some(Categories {
+            id_to_name,
+            nexus_to_local,
+            mods_dir,
+        })
     }
 
     // primary category name for a mod, if mo2 has one assigned
@@ -595,16 +747,13 @@ impl Categories {
 // junk catch-all categories that carry no sorting signal. "visuals and
 // graphics" was once here, but it's a real concept (imaginator, flt and
 // friends live there) - it can drive fuzzy matches and separator renames.
-const FUZZY_DENY: &[&str] = &[
-    "miscellaneous",
-    "models and textures",
-    "vr",
-];
+const FUZZY_DENY: &[&str] = &["miscellaneous", "models and textures", "vr"];
 
 // words that carry no meaning for matching category names to separator
 // labels - "Landscape and Environment" and "Environment" must collide
 const STOPWORDS: &[&str] = &[
-    "and", "the", "for", "with", "of", "a", "an", "mod", "mods", "se", "vr", "to", "in", "on",
+    "and", "the", "for", "with", "of", "from", "a", "an", "mod", "mods", "se", "vr", "to", "in",
+    "on",
 ];
 
 // words that describe SHAPE, not content: "Bug Fixes" and "Weapons, Armour,
@@ -613,8 +762,77 @@ const STOPWORDS: &[&str] = &[
 // match needs a DISTINCTIVE shared token (or two generic ones).
 // (stored in tokens()'s singularized form: "fixes" -> "fixe", etc.)
 const GENERIC_TOKENS: &[&str] = &[
-    "fix", "fixe", "patch", "patche", "overhaul", "collection",
-    "compendium", "tweak", "improvement", "resource", "addon",
+    "fix",
+    "fixe",
+    "patch",
+    "patche",
+    "overhaul",
+    "collection",
+    "compendium",
+    "tweak",
+    "improvement",
+    "resource",
+    "asset",
+    "addon",
+];
+
+// Extra words that are acceptable category evidence but are worthless on
+// their own in a mod title. Keep this separate from GENERIC_TOKENS: an MO2
+// category of "Models and Textures" can be useful, while "Any Texture Pack"
+// absolutely cannot choose a home just because it said texture.
+const TITLE_GENERIC_TOKENS: &[&str] = &[
+    "skyrim",
+    "world",
+    "texture",
+    "player",
+    "system",
+    "specific",
+    "only",
+    "after",
+    "monster",
+    "animal",
+    "conversion",
+    "immersive",
+    "extended",
+    "preset",
+    "item",
+    "object",
+    // Distribution labels, not product identities. In particular, every
+    // Creation Club download shares these words; allowing them to establish
+    // a resource family made one "Asset Patch" parent a whole 80-mod chain.
+    "creation",
+    "club",
+    "content",
+    // Colours, editions and format fluff are never a family identity. A
+    // rare-stem learner treating "Grey" as a product name is how a mountain
+    // mod wakes up filed with Argonians. Cute once. Not twice.
+    "black",
+    "blue",
+    "brown",
+    "dark",
+    "gold",
+    "gray",
+    "grey",
+    "green",
+    "light",
+    "red",
+    "white",
+];
+
+// In a patch title, these describe the relationship, not the subject. They
+// must never turn "Race Compatibility Patch" into a choice among every
+// Compatibility/Patch separator in the list.
+const PATCH_TITLE_SHAPE_TOKENS: &[&str] = &[
+    "patch",
+    "patche",
+    "compatibility",
+    "compatible",
+    "compat",
+    "fix",
+    "fixe",
+    "hotfix",
+    "tweak",
+    "addon",
 ];
 
 // qualifier tokens that NARROW a section's scope: a category that doesn't
@@ -690,10 +908,7 @@ fn fuzzy_match_scored<'a>(
         // Hair" is a body category that also does hair, so "Skin & Body"
         // wins over "Hair". final tiebreak: fewer label tokens = broader
         // scope ("Skin & Body" over "Skin and Body - Argonians and Khajiits")
-        let min_pos = ct
-            .iter()
-            .position(|t| st.contains(t))
-            .unwrap_or(usize::MAX);
+        let min_pos = ct.iter().position(|t| st.contains(t)).unwrap_or(usize::MAX);
         let cand = (
             distinctive,
             shared.len(),
@@ -720,6 +935,252 @@ fn fuzzy_match_scored<'a>(
 
 fn fuzzy_match_section<'a>(cat: &str, sections: &'a [Section], strict: bool) -> Option<&'a str> {
     fuzzy_match_scored(cat, sections, strict).map(|(l, _)| l)
+}
+
+// A real name-to-separator pass. Categories are often vague or simply wrong
+// on old/FOMOD installs, while titles such as "Happy Little Trees" and
+// "Riton Mountains" carry perfectly usable evidence. This is intentionally
+// stricter than the category fuzzy matcher: protected/terminal shelves are
+// out, generic-only overlap is out, and a tie is held rather than resolved by
+// whichever separator happens to be earlier in the file.
+fn title_match_section<'a>(
+    title: &str,
+    sections: &'a [Section],
+    roadmap: Option<&crate::section_map::SectionMap>,
+) -> Option<(&'a str, Vec<String>)> {
+    let title_tokens = tokens(title);
+    if title_tokens.is_empty() {
+        return None;
+    }
+    let mut best: Option<(usize, usize, usize, &Section, Vec<String>)> = None;
+    let mut tied = false;
+    for section in sections {
+        let allowed = roadmap
+            .map(|map| {
+                map.is_automatic_destination(&section.label) && !map.is_terminal(&section.label)
+            })
+            .unwrap_or_else(|| {
+                let label = section.label.to_ascii_lowercase();
+                !["end of list", "output", "testing", "optional", "pick one"]
+                    .iter()
+                    .any(|word| label.contains(word))
+            });
+        if !allowed {
+            continue;
+        }
+        let section_tokens = tokens(&section.label);
+        if QUALIFIER_TOKENS.iter().any(|qualifier| {
+            section_tokens.iter().any(|token| token == qualifier)
+                && !title_tokens.iter().any(|token| token == qualifier)
+        }) {
+            continue;
+        }
+        let shared: Vec<String> = title_tokens
+            .iter()
+            .filter(|token| section_tokens.contains(token))
+            .cloned()
+            .collect();
+        let distinctive = shared
+            .iter()
+            .filter(|token| {
+                !GENERIC_TOKENS.contains(&token.as_str())
+                    && !TITLE_GENERIC_TOKENS.contains(&token.as_str())
+            })
+            .count();
+        if distinctive == 0 {
+            continue;
+        }
+        let first_hit = title_tokens
+            .iter()
+            .position(|token| section_tokens.contains(token))
+            .unwrap_or(usize::MAX);
+        let score = (distinctive, shared.len(), usize::MAX - first_hit);
+        match &best {
+            None => {
+                best = Some((score.0, score.1, score.2, section, shared));
+                tied = false;
+            }
+            Some((best_distinctive, best_shared, best_position, _, _))
+                if score > (*best_distinctive, *best_shared, *best_position) =>
+            {
+                best = Some((score.0, score.1, score.2, section, shared));
+                tied = false;
+            }
+            Some((best_distinctive, best_shared, best_position, _, _))
+                if score == (*best_distinctive, *best_shared, *best_position) =>
+            {
+                tied = true;
+            }
+            _ => {}
+        }
+    }
+    (!tied).then(|| best.map(|(_, _, _, section, shared)| (section.label.as_str(), shared)))?
+}
+
+// Patch titles are a special case. "Race Compatibility Patch" can name one
+// clear domain, while "Whiterun Lighting Patch" names two and must not be
+// guessed into whichever separator happened to win a score tiebreak. Route a
+// patch by title only when exactly one safe section has meaningful overlap.
+fn unique_patch_title_section<'a>(
+    title: &str,
+    sections: &'a [Section],
+    roadmap: Option<&crate::section_map::SectionMap>,
+) -> Option<(&'a str, Vec<String>)> {
+    let title_tokens = tokens(title);
+    let mut found: Option<(&Section, Vec<String>)> = None;
+    for section in sections {
+        let allowed = roadmap
+            .map(|map| {
+                map.is_automatic_destination(&section.label) && !map.is_terminal(&section.label)
+            })
+            .unwrap_or_else(|| !section.label.to_ascii_lowercase().contains("end of list"));
+        if !allowed {
+            continue;
+        }
+        let section_tokens = tokens(&section.label);
+        if QUALIFIER_TOKENS.iter().any(|qualifier| {
+            section_tokens.iter().any(|token| token == qualifier)
+                && !title_tokens.iter().any(|token| token == qualifier)
+        }) {
+            continue;
+        }
+        let shared: Vec<String> = title_tokens
+            .iter()
+            .filter(|token| section_tokens.contains(token))
+            .cloned()
+            .collect();
+        let meaningful = shared.iter().any(|token| {
+            !GENERIC_TOKENS.contains(&token.as_str())
+                && !TITLE_GENERIC_TOKENS.contains(&token.as_str())
+                && !PATCH_TITLE_SHAPE_TOKENS.contains(&token.as_str())
+        });
+        if !meaningful {
+            continue;
+        }
+        if found.is_some() {
+            return None;
+        }
+        found = Some((section, shared));
+    }
+    found.map(|(section, shared)| (section.label.as_str(), shared))
+}
+
+// Pick among the profile's *declared patch branch leaves*, never among every
+// separator in the list.  A patch gets one of those late shelves only when
+// its subject names a clear best fit: "Follower Compatibility Patch" can
+// choose a follower-compatibility shelf, while "Lux Patch" waits for its
+// real parent/dependency evidence instead of pretending that every patch is
+// miscellaneous compatibility.
+fn patch_bucket_section<'a>(
+    title: &str,
+    sections: &'a [Section],
+    roadmap: Option<&crate::section_map::SectionMap>,
+) -> Option<(&'a str, Vec<String>)> {
+    let routes = roadmap?.branch_destinations_for("patches")?;
+    let title_tokens: std::collections::HashSet<String> = tokens(title)
+        .into_iter()
+        .filter(|token| {
+            !GENERIC_TOKENS.contains(&token.as_str())
+                && !TITLE_GENERIC_TOKENS.contains(&token.as_str())
+                && (!PATCH_TITLE_SHAPE_TOKENS.contains(&token.as_str()) || token == "compatibility")
+        })
+        .collect();
+    if title_tokens.is_empty() {
+        return None;
+    }
+    // More shared subject words is better; on that tie, a bucket with fewer
+    // unmatched subject words is narrower and therefore safer. Exact ties
+    // remain deliberately unresolved.
+    let mut best: Option<(usize, usize, &Section, Vec<String>)> = None;
+    let mut tied = false;
+    for label in routes {
+        let Some(section) = sections.iter().find(|section| &section.label == label) else {
+            continue;
+        };
+        if !roadmap.is_some_and(|map| map.is_automatic_destination(&section.label)) {
+            continue;
+        }
+        let bucket_tokens: std::collections::HashSet<String> = tokens(&section.label)
+            .into_iter()
+            .filter(|token| {
+                !GENERIC_TOKENS.contains(&token.as_str())
+                    && !TITLE_GENERIC_TOKENS.contains(&token.as_str())
+                    && (!PATCH_TITLE_SHAPE_TOKENS.contains(&token.as_str())
+                        || token == "compatibility")
+            })
+            .collect();
+        let shared: Vec<String> = title_tokens.intersection(&bucket_tokens).cloned().collect();
+        if shared.is_empty() {
+            continue;
+        }
+        let score = (
+            shared.len(),
+            bucket_tokens.difference(&title_tokens).count(),
+        );
+        match &best {
+            None => {
+                best = Some((score.0, score.1, section, shared));
+                tied = false;
+            }
+            Some((old_shared, old_extra, _, _))
+                if score.0 > *old_shared || (score.0 == *old_shared && score.1 < *old_extra) =>
+            {
+                best = Some((score.0, score.1, section, shared));
+                tied = false;
+            }
+            Some((old_shared, old_extra, _, _))
+                if score.0 == *old_shared && score.1 == *old_extra =>
+            {
+                tied = true;
+            }
+            _ => {}
+        }
+    }
+    if !tied {
+        if let Some(found) = best.map(|(_, _, section, shared)| (section.label.as_str(), shared)) {
+            return Some(found);
+        }
+    }
+
+    // City patches often name only their city ("RedBag's Morthal Patches"),
+    // while the correct late shelf is a generic "Exterior and Interior Patch
+    // Collection".  The normal subject-to-bucket comparison above cannot
+    // see that relationship because Morthal is rightly absent from the
+    // bucket label.  Let a title name one of Skyrim's major-city separators,
+    // then use a profile-declared exterior/interior patch leaf.  Both halves
+    // must already exist in this particular profile; this adds no hard-coded
+    // separator name or destination.
+    let names_major_city = [
+        "whiterun",
+        "riften",
+        "solitude",
+        "windhelm",
+        "markarth",
+        "falkreath",
+        "dawnstar",
+        "morthal",
+        "winterhold",
+    ]
+    .iter()
+    .any(|city| has_word(title, city) && section_named(sections, city).is_some());
+    if names_major_city {
+        let interior_exterior_leaf = routes.iter().find_map(|label| {
+            let section = sections.iter().find(|section| &section.label == label)?;
+            let bucket = norm(&section.label);
+            (bucket.contains("interior")
+                && bucket.contains("exterior")
+                && bucket.contains("patch")
+                && roadmap.is_some_and(|map| map.is_automatic_destination(&section.label)))
+            .then_some(section)
+        });
+        if let Some(section) = interior_exterior_leaf {
+            return Some((
+                section.label.as_str(),
+                vec!["major-city".into(), "patch".into()],
+            ));
+        }
+    }
+    None
 }
 
 // ---- concept-targeted rules ----
@@ -785,7 +1246,11 @@ fn resolve_concept<'a>(concept: &str, sections: &'a [Section]) -> Option<(&'a st
                 continue;
             };
             let cand = (rank, sn.len(), s);
-            if best.as_ref().map(|b| (cand.0, cand.1) < (b.0, b.1)).unwrap_or(true) {
+            if best
+                .as_ref()
+                .map(|b| (cand.0, cand.1) < (b.0, b.1))
+                .unwrap_or(true)
+            {
                 best = Some(cand);
             }
         }
@@ -885,7 +1350,10 @@ fn suggest_sep_renames(
             continue; // too little signal to name a section by its contents
         }
         let Some(cats) = cats else { continue };
-        if STRUCTURAL.iter().any(|t| s.label.to_lowercase().contains(t)) {
+        if STRUCTURAL
+            .iter()
+            .any(|t| s.label.to_lowercase().contains(t))
+        {
             continue;
         }
         // dominant nexus category
@@ -917,10 +1385,7 @@ fn suggest_sep_renames(
         // rename only when the label is SILENT about the concept: if label
         // and category share any word at all ("Skin & Body" ~ "Body, Face,
         // and Hair"), the label already says what it is and a suffix is noise
-        if dominant
-            && !label_has_concept(&s.label, top_cat)
-            && !shared_stem(&s.label, top_cat, 3)
-        {
+        if dominant && !label_has_concept(&s.label, top_cat) && !shared_stem(&s.label, top_cat, 3) {
             out.push((idx, format!("{} - {}", s.label, top_cat)));
             let _ = writeln!(
                 trace,
@@ -935,8 +1400,41 @@ fn suggest_sep_renames(
 // rewrite every rule's target through resolve_concept, dropping rules whose
 // concept doesn't exist in this list (with a trace note). promote rules are
 // exempt: their right-hand side is a mod NAME, not a section.
-fn resolve_targets(rules: &Rules, sections: &[Section], trace: &mut String) -> Rules {
-    let _ = writeln!(trace, "\n--- concept resolution (rule targets -> actual separators) ---");
+fn is_waiting_room(
+    label: &str,
+    rules: &Rules,
+    roadmap: Option<&crate::section_map::SectionMap>,
+) -> bool {
+    // `!dump` is the explicit escape hatch for arbitrary parking sections.
+    // A roadmap terminal is the same thing operationally: it may hold
+    // unresolved mods, but is never a home. Its name is profile data, never
+    // a built-in label such as "End of List".
+    rules
+        .dump
+        .iter()
+        .any(|dump| dump.eq_ignore_ascii_case(label))
+        || roadmap.is_some_and(|map| map.is_terminal(label))
+}
+
+// These are intentional priority shelves, not ordinary topic buckets.  A
+// curated "Load After …" separator is a user-provided ordering constraint
+// for every mod it contains. Name/category guesses must not dismantle it;
+// an explicit exact rule remains the deliberate escape hatch.
+fn is_priority_anchor_section(label: &str) -> bool {
+    let words = keyword_words(label);
+    keyword_matches(&words, "load after") || keyword_matches(&words, "load before")
+}
+
+fn resolve_targets(
+    rules: &Rules,
+    sections: &[Section],
+    roadmap: Option<&crate::section_map::SectionMap>,
+    trace: &mut String,
+) -> Rules {
+    let _ = writeln!(
+        trace,
+        "\n--- concept resolution (rule targets -> actual separators) ---"
+    );
     let mut out = Rules::empty();
     out.rename_separators = rules.rename_separators;
     out.proven_only = rules.proven_only;
@@ -945,7 +1443,7 @@ fn resolve_targets(rules: &Rules, sections: &[Section], trace: &mut String) -> R
         match resolve_concept(target, sections) {
             Some((label, how)) => {
                 // a dump section is a waiting room, never a destination
-                if rules.dump.iter().any(|d| d.eq_ignore_ascii_case(label)) {
+                if is_waiting_room(label, rules, roadmap) {
                     let _ = writeln!(
                         trace,
                         "  [{target}] ({kind}): resolved to dump section [{label}] - rule skipped"
@@ -999,28 +1497,610 @@ fn resolve_targets(rules: &Rules, sections: &[Section], trace: &mut String) -> R
 // which tier of the cascade made the call - written into the debug trace
 #[derive(Clone)]
 enum Why {
-    OutputGuard,                    // generated output, never moves
-    ExactRule,                      // !exact name rule
-    CategoryRule(String),           // @category rule (category name)
-    CategoryExactMatch(String),     // category name == separator label
-    CategoryFuzzy(String, Vec<String>), // category, shared tokens
-    Keyword(String),                // keyword rule (the phrase that hit)
-    NoMatch,                        // nothing claimed this mod
-    FollowParent(String),           // family integrity: follows its master
+    OutputGuard,                  // generated output follows the protected Outputs route
+    ExactRule,                    // !exact name rule
+    CategoryRule(String),         // @category rule (category name)
+    Roadmap(String),              // reviewed concept -> separator bridge
+    RoadmapBranch(String),        // narrow profile roadmap branch (eg a named city)
+    PatchBucket(Vec<String>),     // title chose one profile-owned late patch shelf
+    PatchShelfGuard(String),      // already in a profile-declared patch shelf
+    PriorityShelfGuard(String),   // curated Load After/Before separator
+    LiblootBand(String),          // solved plugin rank is bracketed by this separator
+    TitleMatch(Vec<String>),      // literal mod-title -> separator evidence
+    ContentEvidence(String, u8),  // parsed record evidence -> reviewed roadmap
+    PrivateReference(String, u8), // a local human-sorted profile agreed
+    Learned(String),              // user moved it after MS's last Apply
+    SharedReferenceStem(String, String), // rare title stem agrees with reference homes
+    CategoryExactMatch(String),   // category name == separator label
+    Keyword(String),              // keyword rule (the phrase that hit)
+    CategoryGuard(String),        // category vetoed a misleading keyword route
+    NoMatch,                      // nothing claimed this mod
+    FollowParent(String),         // family integrity: follows its master
 }
 
 impl std::fmt::Display for Why {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Why::OutputGuard => write!(f, "guard: generated output, never moves"),
+            Why::OutputGuard => write!(f, "generated output -> protected Outputs route"),
             Why::ExactRule => write!(f, "T1 exact name rule"),
             Why::CategoryRule(c) => write!(f, "T2 @category rule [{c}]"),
+            Why::Roadmap(c) => write!(f, "T2 separator roadmap [{c}]"),
+            Why::RoadmapBranch(c) => write!(f, "T2 separator roadmap branch [{c}]"),
+            Why::PatchBucket(tokens) => write!(f, "T2 patch bucket [{}]", tokens.join(", ")),
+            Why::PatchShelfGuard(section) => write!(f, "T1 patch shelf guard [{section}]"),
+            Why::PriorityShelfGuard(section) => write!(f, "T1 priority shelf guard [{section}]"),
+            Why::LiblootBand(section) => write!(
+                f,
+                "T1 libloot reverse projection: neighboring plugin ranks agree on [{section}]"
+            ),
+            Why::TitleMatch(tokens) => write!(f, "T2 title~separator [{}]", tokens.join(", ")),
+            Why::ContentEvidence(c, confidence) => write!(
+                f,
+                "T2 record evidence [{c}, {confidence}%] via separator roadmap"
+            ),
+            Why::PrivateReference(section, confidence) => write!(
+                f,
+                "T1.5 private human reference -> [{section}] ({confidence}%)"
+            ),
+            Why::Learned(section) => write!(f, "learned manual home [{section}]"),
+            Why::SharedReferenceStem(stem, section) => write!(
+                f,
+                "T1.5 shared title stem [{stem}] follows reference home [{section}]"
+            ),
             Why::CategoryExactMatch(c) => write!(f, "T2 category==separator [{c}]"),
-            Why::CategoryFuzzy(c, t) => write!(f, "T2 category~separator fuzzy [{c}] shared={}", t.join("+")),
             Why::Keyword(k) => write!(f, "T3 keyword [{k}]"),
+            Why::CategoryGuard(k) => write!(
+                f,
+                "T2 equipment category blocks body-framework keyword [{k}]"
+            ),
             Why::NoMatch => write!(f, "T4 no rule, category, or keyword matched"),
             Why::FollowParent(p) => write!(f, "family: follows master [{p}]"),
         }
+    }
+}
+
+fn has_word(text: &str, wanted: &str) -> bool {
+    keyword_matches(&keyword_words(text), wanted)
+}
+
+fn is_patch_flavoured(name: &str) -> bool {
+    let words = keyword_words(name);
+    [
+        "patch",
+        "patches",
+        "compatibility",
+        "compatibilities",
+        "compatible",
+        "compat",
+        "hotfix",
+        "hotfixes",
+        "fix",
+        "fixes",
+    ]
+    .iter()
+    .any(|word| keyword_matches(&words, word))
+}
+
+fn is_resource_pack(name: &str) -> bool {
+    let words = keyword_words(name);
+    [
+        "resource",
+        "resources",
+        "asset",
+        "assets",
+        "requirement",
+        "requirements",
+        "basefiles",
+        "corefiles",
+    ]
+    .iter()
+    .any(|word| keyword_matches(&words, word))
+}
+
+// A resource-only folder normally has no plugin, so libloot cannot see the
+// relationship. When its title clearly names the same product as a consumer,
+// make it that consumer's ordering parent: resource first, consumer later.
+// This is intentionally stricter than normal family matching: a shared
+// two-word identity (COTN -> Cities of the North, etc.) or one long product
+// word is required, so generic "Resources" packs never become a gravity well.
+fn resource_parent_score(
+    resource: &ModEntry,
+    consumer: &ModEntry,
+    keywords: &Keywords,
+) -> Option<usize> {
+    if !is_resource_pack(&resource.lower) || is_resource_pack(&consumer.lower) {
+        return None;
+    }
+    // CC is a distribution collection, not a product identity. Its shared
+    // label survives some punctuation/alias normalization paths, so reject
+    // the pair before token scoring as a belt-and-suspenders guard. Specific
+    // CC patches still use their real plugin/title evidence; this only stops
+    // the collection-wide loose-file "resource" relationship.
+    if norm(&keywords.canonical(&resource.name)).contains("creationclub")
+        && norm(&keywords.canonical(&consumer.name)).contains("creationclub")
+    {
+        return None;
+    }
+    let resource_tokens: std::collections::HashSet<String> = keywords
+        .canonical(&resource.name)
+        .split_whitespace()
+        .filter(|word| {
+            !GENERIC_TOKENS.contains(word)
+                && !TITLE_GENERIC_TOKENS.contains(word)
+                && word.len() >= 3
+        })
+        .map(str::to_string)
+        .collect();
+    let consumer_tokens: std::collections::HashSet<String> = keywords
+        .canonical(&consumer.name)
+        .split_whitespace()
+        .filter(|word| {
+            !GENERIC_TOKENS.contains(word)
+                && !TITLE_GENERIC_TOKENS.contains(word)
+                && word.len() >= 3
+        })
+        .map(str::to_string)
+        .collect();
+    let shared: Vec<&String> = resource_tokens.intersection(&consumer_tokens).collect();
+    // A distributor/collection label is never enough to make a resource
+    // parent. This matters for Creation Club: "Creation Club Asset Patch"
+    // shares two generic words with every individual package, but is not the
+    // resource parent of Umbra, Fishing, or any other package. Require a
+    // product identity left after the generic-title filter.
+    if shared.is_empty() {
+        return None;
+    }
+    let has_long_identity = shared.iter().any(|word| word.len() >= 8);
+    (shared.len() >= 2 || has_long_identity)
+        .then(|| shared.iter().map(|word| word.len()).sum::<usize>() + shared.len() * 10)
+}
+
+fn shared_distribution_label(left_normalized: &str, right_normalized: &str) -> bool {
+    // MO2 folder names for Creation Club content all begin alike. That is a
+    // collection prefix, not evidence that one package is another's base.
+    // Both callers already pass `ModEntry::norm` / keyword canonical values;
+    // normalising again here used to allocate twice for every candidate pair
+    // in the whole-list family pass (millions of allocations on 2k lists).
+    left_normalized.contains("creationclub") && right_normalized.contains("creationclub")
+}
+
+// Return a deterministic parent score for a genuine addon/patch family.
+// Literal containment is ideal.  A lot of real-world patches instead use a
+// shared product stem, though: "Alternate Perspective - Assorted Fixes" is
+// obviously for "Alternate Perspective - Alternate Start", but neither
+// title contains the other whole title.  Accept that fallback only for a
+// patch-flavoured child, never for a patch parent, and require a long shared
+// prefix.  That keeps common words like "Skyrim" from inventing families.
+fn family_parent_score_for_names(
+    child: &ModEntry,
+    parent: &ModEntry,
+    child_name: &str,
+    parent_name: &str,
+) -> Option<(u8, usize, std::cmp::Reverse<usize>)> {
+    if child_name == parent_name || parent_name.len() < 10 {
+        return None;
+    }
+    // A bare classification word is not a product identity. A patch whose
+    // title says "ESSENTIALS" must not be adopted by the unrelated
+    // Essentials section/mod instead of following its real named master.
+    if matches!(
+        parent_name,
+        "essential" | "essentials" | "patch" | "patches" | "fix" | "fixes"
+    ) {
+        return None;
+    }
+    if shared_distribution_label(child_name, parent_name) {
+        return None;
+    }
+    if child_name.contains(parent_name) {
+        return Some((2, parent_name.len(), std::cmp::Reverse(parent_name.len())));
+    }
+    if !family_child_candidate(&child.lower) || is_patch_flavoured(&parent.lower) {
+        return None;
+    }
+    // For loose-file asset addons, a shared brand prefix only identifies a
+    // base when the candidate base carries more identity than the addon.
+    // Otherwise two sibling packs such as "Foo Parallax" and "Foo Mesh"
+    // can nominate each other and create a bogus family loop. Patches retain
+    // the old flexible rule because their patch wording supplies that extra
+    // directional evidence.
+    if !is_patch_flavoured(&child.lower) && parent_name.len() <= child_name.len() {
+        return None;
+    }
+    let shared = child_name
+        .bytes()
+        .zip(parent_name.bytes())
+        .take_while(|(left, right)| left == right)
+        .count();
+    (shared >= 12).then_some((1, shared, std::cmp::Reverse(parent_name.len())))
+}
+
+fn family_parent_score(
+    child: &ModEntry,
+    parent: &ModEntry,
+) -> Option<(u8, usize, std::cmp::Reverse<usize>)> {
+    family_parent_score_for_names(child, parent, &child.norm, &parent.norm)
+}
+
+// A patch can name several real parents: "Realistic RS Children and
+// Alternate Perspective Patch" must stay after *both* mods, not merely the
+// one whose title happens to make the best family score.  Plugin headers are
+// authoritative whenever they expose every edge, but FOMODs and optional
+// patch variants do not always do that.  This is a deliberately narrow
+// learning bridge for that gap.
+//
+// A candidate must share two meaningful title words and contain at most one
+// extra meaningful word of its own. That admits a base named "Alternate
+// Perspective - Alternate Start", while rejecting a broader sibling such as
+// "Helgen and Alternate Perspective NPC replacer". A single title anchor is
+// left to the ordinary family matcher; this bridge exists only for genuine
+// multi-parent patch titles.
+fn meaningful_patch_tokens(name: &str) -> std::collections::HashSet<String> {
+    tokens(name)
+        .into_iter()
+        .filter(|token| {
+            !GENERIC_TOKENS.contains(&token.as_str())
+                && !TITLE_GENERIC_TOKENS.contains(&token.as_str())
+                && !PATCH_TITLE_SHAPE_TOKENS.contains(&token.as_str())
+        })
+        .collect()
+}
+
+fn multi_parent_patch_title_anchors(child: &ModEntry, mods: &[ModEntry]) -> Vec<String> {
+    if !is_patch_flavoured(&child.lower) {
+        return Vec::new();
+    }
+    let child_words = meaningful_patch_tokens(&child.name);
+    if child_words.len() < 4 {
+        return Vec::new();
+    }
+    let mut anchors = mods
+        .iter()
+        .filter(|parent| parent.name != child.name && !is_patch_flavoured(&parent.lower))
+        .filter_map(|parent| {
+            let parent_words = meaningful_patch_tokens(&parent.name);
+            let shared = child_words.intersection(&parent_words).count();
+            let extra = parent_words.difference(&child_words).count();
+            (shared >= 2 && extra <= 1).then(|| parent.name.clone())
+        })
+        .collect::<Vec<_>>();
+    anchors.sort();
+    anchors.dedup();
+    (anchors.len() >= 2).then_some(anchors).unwrap_or_default()
+}
+
+// The GUI evaluates every installed patch title. Build each mod's meaningful
+// token set once instead of rebuilding hundreds of HashSets for every patch.
+fn multi_parent_patch_title_anchors_cached(
+    child: &ModEntry,
+    mods: &[ModEntry],
+    words: &HashMap<String, std::collections::HashSet<String>>,
+) -> Vec<String> {
+    if !is_patch_flavoured(&child.lower) {
+        return Vec::new();
+    }
+    let Some(child_words) = words.get(&child.name) else {
+        return Vec::new();
+    };
+    if child_words.len() < 4 {
+        return Vec::new();
+    }
+    let mut anchors = mods
+        .iter()
+        .filter(|parent| parent.name != child.name && !is_patch_flavoured(&parent.lower))
+        .filter_map(|parent| {
+            let parent_words = words.get(&parent.name)?;
+            let shared = child_words.intersection(parent_words).count();
+            let extra = parent_words.difference(child_words).count();
+            (shared >= 2 && extra <= 1).then(|| parent.name.clone())
+        })
+        .collect::<Vec<_>>();
+    anchors.sort();
+    anchors.dedup();
+    (anchors.len() >= 2).then_some(anchors).unwrap_or_default()
+}
+
+// libloot returns one solved global plugin order. MO2 separators are not part
+// of that order, so project it back only where the immediate solved-order
+// neighbours independently agree on a real separator. This is intentionally
+// narrower than interpolating broad rank ranges: a messy list should gain
+// evidence-backed homes, not receive confident fiction between two unrelated
+// shelves.
+fn agreed_libloot_band(rank: usize, anchors: &[(usize, String)]) -> Option<String> {
+    let before = anchors
+        .iter()
+        .rev()
+        .find(|(anchor_rank, _)| *anchor_rank < rank)?;
+    let after = anchors
+        .iter()
+        .find(|(anchor_rank, _)| *anchor_rank > rank)?;
+    (before.1 == after.1).then(|| before.1.clone())
+}
+
+fn section_named<'a>(sections: &'a [Section], wanted: &str) -> Option<&'a str> {
+    sections
+        .iter()
+        .find(|section| norm(&section.label) == norm(wanted))
+        .map(|section| section.label.as_str())
+}
+
+// A city category is much too broad for a real MO2 layout: one profile can
+// have a shelf for each vanilla hold, a different shelf for minor towns, and
+// another for detail work. These branches deliberately require narrow title
+// evidence plus a matching separator already present in the active profile.
+// They are not universal destinations and they never catch patches.
+fn roadmap_branch<'a>(
+    m: &ModEntry,
+    category: Option<&str>,
+    sections: &'a [Section],
+    content: Option<&crate::content_index::ModContent>,
+    roadmap: Option<&crate::section_map::SectionMap>,
+) -> Option<(&'a str, Why)> {
+    let name = &m.lower;
+    // A category labelled Patches is useful for broad inference, but it
+    // cannot veto a literal city name on a FOMOD's base package. RedBag's
+    // Morthal is the obvious case: its MO2 category says Patches while the
+    // title itself is simply the Morthal mod. Only patch/fix language in the
+    // title is strong enough to block a named-city route.
+    let title_patch = is_patch_flavoured(name);
+    let category_patch = category.is_some_and(|category| {
+        let category = norm(category);
+        category.contains("patch") || category.contains("compatib")
+    });
+    let patch = title_patch || category_patch;
+    let has_worldspace = content.is_some_and(|entry| {
+        entry
+            .facts
+            .iter()
+            .any(|fact| fact.concept == "worldspace" && fact.confidence >= 85)
+    });
+    // A concept picked in the separator roadmap is a profile decision, not a
+    // guessed layout. Keep the small title families here so an "Interior
+    // Patch" can use an interior shelf even though generic patch matching is
+    // intentionally held for review.
+    let explicit_roadmap_destination = |concept: &str| {
+        roadmap
+            .and_then(|map| map.explicit_destination_for(concept))
+            .filter(|destination| !roadmap.is_some_and(|map| map.is_terminal(destination)))
+            .and_then(|destination| sections.iter().find(|s| s.label == destination))
+    };
+    if name.contains("interior") {
+        if let Some(destination) = explicit_roadmap_destination("interior") {
+            return Some((
+                destination.label.as_str(),
+                Why::RoadmapBranch("interior-title".into()),
+            ));
+        }
+    }
+    let community_shaders_title =
+        name.contains("community shader") || (has_word(name, "cs") && has_word(name, "shader"));
+    if community_shaders_title {
+        if let Some(destination) = explicit_roadmap_destination("community-shaders") {
+            return Some((
+                destination.label.as_str(),
+                Why::RoadmapBranch("community-shaders-title".into()),
+            ));
+        }
+    }
+
+    // A full new land is not a city overhaul merely because its title uses a
+    // Skyrim place name. This catches the known Vvardenfell case as well as
+    // ordinary "new lands/world" mods, but asks for actual plugin evidence.
+    if !patch
+        && has_worldspace
+        && [
+            "vvardenfell",
+            "new land",
+            "new lands",
+            "new world",
+            "beyond skyrim",
+        ]
+        .iter()
+        .any(|needle| name.contains(needle))
+    {
+        if let Some(destination) = section_named(sections, "New Lands and Quests") {
+            return Some((destination, Why::RoadmapBranch("new-world-quest".into())));
+        }
+    }
+
+    if !title_patch {
+        // Optional/pick-one shelves are protected from ordinary category and
+        // keyword guesses.  A title that plainly names the same runtime
+        // family is different: route it only through an exact, profile-owned
+        // roadmap concept.  This keeps Open Composite out of End of List
+        // without turning every optional shelf into a junk drawer.
+        if name.contains("controller binding") {
+            if let Some(destination) = explicit_roadmap_destination("vr-controller-bindings") {
+                return Some((
+                    destination.label.as_str(),
+                    Why::RoadmapBranch("vr-controller-binding-title".into()),
+                ));
+            }
+        }
+        if name.contains("open composite") || name.contains("opencomposite") {
+            if let Some(destination) = explicit_roadmap_destination("open-composite") {
+                return Some((
+                    destination.label.as_str(),
+                    Why::RoadmapBranch("open-composite-title".into()),
+                ));
+            }
+        }
+
+        // Post-processing controllers are not texture packs. They alter the
+        // game's visual controls at runtime, so keep this exact-name family
+        // distinct from ENB, weather, and generic graphics mods.
+        let visual_control_title = ["imaginator", "konsume", "kreate"]
+            .iter()
+            .any(|needle| name.contains(needle));
+        if visual_control_title {
+            if let Some(destination) = roadmap
+                .and_then(|map| map.destination_for_category("visual-control"))
+                .filter(|destination| {
+                    roadmap.is_some_and(|map| map.is_automatic_destination(destination))
+                })
+                .and_then(|destination| sections.iter().find(|s| s.label == destination))
+            {
+                return Some((
+                    destination.label.as_str(),
+                    Why::RoadmapBranch("visual-control-title".into()),
+                ));
+            }
+        }
+
+        // Creature folders are commonly uncategorised in MO2, while their
+        // titles are often wonderfully literal.  Do not turn every named
+        // monster into a domestic-animal shelf; only route a small,
+        // unmistakable domestic/ambient animal family through the profile
+        // roadmap.  Wild creatures (bears, wolves, etc.) are a separate
+        // concept in this layout and get no free pass here.
+        // family through the profile roadmap.  The roadmap still chooses the
+        // actual separator, so this is portable concept evidence rather than
+        // a Mayhem layout rule baked into the EXE.
+        let domestic_animal_title = [
+            "rat", "rats", "cow", "cows", "chicken", "chickens", "pigeon", "pigeons", "frog",
+            "frogs", "crow", "crows", "raven", "ravens",
+        ]
+        .iter()
+        .any(|word| has_word(name, word));
+        if domestic_animal_title {
+            if let Some(destination) = roadmap
+                .and_then(|map| map.destination_for_category("animals"))
+                .filter(|destination| {
+                    roadmap.is_some_and(|map| map.is_automatic_destination(destination))
+                })
+                .and_then(|destination| sections.iter().find(|s| s.label == destination))
+            {
+                return Some((
+                    destination.label.as_str(),
+                    Why::RoadmapBranch("domestic-animal-title".into()),
+                ));
+            }
+        }
+
+        // These are deliberately only the vanilla major cities. Minor towns
+        // use a different branch below; invented worlds do not get a free
+        // Whiterun ticket just for mentioning Skyrim lore in their title.
+        for city in [
+            "whiterun",
+            "riften",
+            "solitude",
+            "windhelm",
+            "markarth",
+            "falkreath",
+            "dawnstar",
+            "morthal",
+            "winterhold",
+        ] {
+            if has_word(name, city) {
+                if let Some(destination) = section_named(sections, city) {
+                    return Some((
+                        destination,
+                        Why::RoadmapBranch(format!("vanilla-city:{city}")),
+                    ));
+                }
+            }
+        }
+
+        let overhaul = ["overhaul", "expansion", "expanded", "rebuilt", "restored"]
+            .iter()
+            .any(|word| has_word(name, word));
+        let minor_settlement = [
+            "riverwood",
+            "dragon bridge",
+            "ivarstead",
+            "shors stone",
+            "rorkistead",
+            "karthwasten",
+            "kynesgrove",
+            "heljarchen",
+            "nightgate",
+            "high hrothgar",
+            "sky haven",
+            "village",
+            "town",
+            "hamlet",
+        ]
+        .iter()
+        .any(|needle| name.contains(needle));
+        if overhaul && minor_settlement {
+            if let Some(destination) = section_named(sections, "Minor Town and City Overhauls") {
+                return Some((
+                    destination,
+                    Why::RoadmapBranch("minor-town-overhaul".into()),
+                ));
+            }
+        }
+
+        // This is Lexy's useful distinction: local visual/detail additions
+        // (Farmhouse Chimneys is the obvious example) are not settlement
+        // overhauls. Keep this intentionally small until the user reviews
+        // more evidence rather than stuffing every loose texture into it.
+        if [
+            "chimney",
+            "farmhouse",
+            "streetlights",
+            "street light",
+            "notice board",
+        ]
+        .iter()
+        .any(|needle| name.contains(needle))
+        {
+            if let Some(destination) =
+                section_named(sections, "Expanded Cities, Towns, and Villages")
+            {
+                return Some((destination, Why::RoadmapBranch("settlement-detail".into())));
+            }
+        }
+    }
+    None
+}
+
+fn equipment_category(cat: &str) -> bool {
+    let words = keyword_words(cat);
+    [
+        "armor",
+        "armour",
+        "clothing",
+        "accessories",
+        "jewelry",
+        "weapons",
+    ]
+    .iter()
+    .any(|word| keyword_matches(&words, word))
+}
+
+fn body_framework_section(section: &str) -> bool {
+    let section = norm(section);
+    section.contains("skinbody")
+        || section.contains("malebody")
+        || section.contains("obody")
+        || section.contains("bodyslidepreset")
+}
+
+// Record evidence can prove that a plugin actually edits armor. Its title
+// then distinguishes the three normal left-pane homes without mistaking the
+// WACCF fixes bucket for a closet full of outfits.
+fn armor_route_concept(mod_name: &str) -> &'static str {
+    let mod_name = mod_name.to_ascii_lowercase();
+    if ["conversion", "converted", "refit", "ported", "port of"]
+        .iter()
+        .any(|needle| mod_name.contains(needle))
+    {
+        "armor-converted"
+    } else if [
+        "retexture",
+        "replacer",
+        "baseline",
+        "vanilla",
+        "textures",
+        "texture",
+    ]
+    .iter()
+    .any(|needle| mod_name.contains(needle))
+    {
+        "armor-base"
+    } else {
+        "armor-new"
     }
 }
 
@@ -1047,10 +2127,46 @@ fn suggest_explained<'a>(
     rules: &'a Rules,
     cat: Option<&str>,
     sections: &'a [Section],
+    roadmap: Option<&crate::section_map::SectionMap>,
+    content: Option<&crate::content_index::ModContent>,
+    reference: Option<&crate::reference::ReferenceIndex>,
+    keywords: Option<&Keywords>,
 ) -> (Option<&'a str>, Why) {
-    // generated outputs never move, no matter what the keywords say
+    // Generated outputs must never be guessed into content sections. But an
+    // existing Outputs separator is a deterministic, protected home - and it
+    // lets End of List remain the actual end of the list instead of trapping
+    // DynDOLOD/Bash/etc. below it forever.
     if m.lower.starts_with("output") {
+        if let Some(output) = sections
+            .iter()
+            .find(|section| section.label.to_ascii_lowercase().contains("output"))
+        {
+            return (Some(output.label.as_str()), Why::OutputGuard);
+        }
         return (None, Why::OutputGuard);
+    }
+    // "Quick Start" is not crafting just because a separate curated list
+    // happened to park one there. It is an alternate-start mod family. Keep
+    // this deliberately two-phrase narrow: a bare "start" catches far too
+    // much installer, quest, and startup-script noise.
+    if ["quick start", "alternate start"]
+        .iter()
+        .any(|phrase| m.lower.contains(phrase))
+    {
+        if let Some(destination) = roadmap
+            .and_then(|map| map.explicit_destination_for("alternate-start"))
+            .filter(|destination| {
+                roadmap.is_some_and(|map| {
+                    map.is_automatic_destination(destination) && !map.is_terminal(destination)
+                })
+            })
+            .and_then(|destination| sections.iter().find(|s| s.label == destination))
+        {
+            return (
+                Some(destination.label.as_str()),
+                Why::RoadmapBranch("alternate-start-title".into()),
+            );
+        }
     }
     for (name, sec) in &rules.exact {
         if m.name == *name {
@@ -1064,25 +2180,134 @@ fn suggest_explained<'a>(
                 return (Some(sec), Why::CategoryRule(c.to_string()));
             }
         }
+        if let Some(destination) = roadmap
+            .and_then(|map| map.destination_for_category(c).map(|d| (map, d)))
+            .and_then(|(map, destination)| {
+                map.is_automatic_destination(destination)
+                    .then(|| sections.iter().find(|s| s.label == destination))
+                    .flatten()
+            })
+        {
+            return (
+                Some(destination.label.as_str()),
+                Why::Roadmap(c.to_string()),
+            );
+        }
         let cn = norm(c);
         if let Some(s) = sections.iter().find(|s| norm(&s.label) == cn) {
-            return (Some(s.label.as_str()), Why::CategoryExactMatch(c.to_string()));
+            return (
+                Some(s.label.as_str()),
+                Why::CategoryExactMatch(c.to_string()),
+            );
         }
-        // junk mega-categories never fuzzy-match: their only shared tokens
-        // are words like "miscellaneous", which turned "Miscellaneous
-        // Compatibility Patches" into a 25-mod junk drawer through the
-        // back door. these fall through to keyword rules / stay put.
-        if !FUZZY_DENY.contains(&cl.as_str()) {
-            if let Some((label, shared)) = fuzzy_match_scored(c, sections, true) {
-                return (Some(label), Why::CategoryFuzzy(c.to_string(), shared));
+    }
+    // A title such as "Whiterun Lighting Patch" tells us it is related to
+    // Whiterun, but it does *not* tell us whether this profile wants city
+    // patches, lighting patches, a consistency shelf, or the parent itself.
+    // Let the patch-parent/conflict/LOOT passes settle that with actual
+    // relationship evidence.  The broad title matcher is for normal mods.
+    if is_patch_flavoured(&m.lower) {
+        // COTN, FISS/FISSES, and similar abbreviations name their parent in
+        // shorthand. Expand only the matching identity before patch routing;
+        // the mod's displayed name is never changed.
+        let patch_identity = keywords
+            .map(|keywords| keywords.canonical(&m.name))
+            .unwrap_or_else(|| m.name.clone());
+        if let Some((destination, shared)) =
+            patch_bucket_section(&patch_identity, sections, roadmap)
+        {
+            return (Some(destination), Why::PatchBucket(shared));
+        }
+        if let Some((destination, shared)) =
+            unique_patch_title_section(&patch_identity, sections, roadmap)
+        {
+            return (Some(destination), Why::TitleMatch(shared));
+        }
+    }
+    // Imported human placements are useful, but they cannot turn a patch
+    // into a parent/content mod. Patches need their profile-owned late
+    // buckets first; a reference becomes the next best tie-breaker.
+    if let Some(reference) = reference {
+        let labels: Vec<String> = sections
+            .iter()
+            .map(|section| section.label.clone())
+            .collect();
+        if let Some((destination, confidence)) = reference.destination(&m.name, &labels) {
+            let automatic = roadmap
+                .map(|map| {
+                    map.is_automatic_destination(&destination) && !map.is_terminal(&destination)
+                })
+                .unwrap_or_else(|| norm(&destination) != "endoflist");
+            if automatic {
+                if let Some(section) = sections.iter().find(|section| section.label == destination)
+                {
+                    return (
+                        Some(section.label.as_str()),
+                        Why::PrivateReference(destination, confidence),
+                    );
+                }
             }
         }
     }
-    let hay = format!(" {} ", m.lower.replace('_', " "));
+    // References preserve profile-specific exceptions. Generic title branches
+    // only get a say after those curated placements have declined to route it.
+    if let Some((destination, why)) = roadmap_branch(m, cat, sections, content, roadmap) {
+        return (Some(destination), why);
+    }
+    if !is_patch_flavoured(&m.lower) {
+        if let Some((destination, shared)) = title_match_section(&m.name, sections, roadmap) {
+            return (Some(destination), Why::TitleMatch(shared));
+        }
+    }
+    // Actual plugin records are useful only after the user-reviewable
+    // separator roadmap supplies one clear home. A bare content fact never
+    // gets to invent a destination, and low-confidence hints stay visible in
+    // the cache but don't move anything.
+    if let (Some(map), Some(content)) = (roadmap, content) {
+        for fact in &content.facts {
+            let concept = if fact.concept.starts_with("equipment-armor") {
+                armor_route_concept(&m.lower)
+            } else {
+                fact.concept.as_str()
+            };
+            // Compatibility is deliberately a lower-confidence structural
+            // fact: a patch can touch only a handful of records. It becomes
+            // actionable only after the profile roadmap names an exact home;
+            // without that human bridge it remains visible but cannot move.
+            let minimum_confidence = if concept == "compatibility" { 60 } else { 85 };
+            if fact.confidence < minimum_confidence {
+                continue;
+            }
+            if let Some(destination) = map.destination_for_category(concept) {
+                if map.is_automatic_destination(destination) {
+                    if let Some(section) = sections.iter().find(|s| s.label == destination) {
+                        return (
+                            Some(section.label.as_str()),
+                            Why::ContentEvidence(concept.to_string(), fact.confidence),
+                        );
+                    }
+                }
+            }
+        }
+    }
+    let hay = keyword_words(&m.lower);
+    let category_is_equipment = cat.is_some_and(equipment_category);
+    let mut blocked_body_keyword: Option<String> = None;
     for (kw, excl, sec) in &rules.keyword {
-        if hay.contains(kw.as_str()) && !excl.iter().any(|e| hay.contains(e.as_str())) {
+        if keyword_matches(&hay, kw) && !excl.iter().any(|e| keyword_matches(&hay, e)) {
+            // CBBE/3BA/BHUNP/HIMBO describe the body an outfit fits. They do
+            // not turn an armour or clothing mod INTO a body mod. Let an
+            // explicit rule or a reviewed roadmap decide that placement;
+            // otherwise preserve the existing home rather than misfile it.
+            if category_is_equipment && body_framework_section(sec) {
+                blocked_body_keyword.get_or_insert_with(|| kw.clone());
+                continue;
+            }
             return (Some(sec), Why::Keyword(kw.clone()));
         }
+    }
+    if let Some(keyword) = blocked_body_keyword {
+        return (None, Why::CategoryGuard(keyword));
     }
     (None, Why::NoMatch)
 }
@@ -1094,7 +2319,7 @@ fn suggest_section<'a>(
     cat: Option<&str>,
     sections: &'a [Section],
 ) -> Option<&'a str> {
-    suggest_explained(m, rules, cat, sections).0
+    suggest_explained(m, rules, cat, sections, None, None, None, None).0
 }
 
 // is this mod name patch-flavored? kept for future use by the gui
@@ -1129,12 +2354,244 @@ struct Change {
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum ChangeKind {
     Move,
+    // A separator shelf changed visible position. This is deliberately
+    // separate from a mod move so Apply makes the structural change obvious.
+    Separator,
     Reorder,
     Promote,
     Sink,
     Float,
     Warn,
     Rename,
+}
+
+// Creation Club belongs at the very top of an MO2 left pane when it is
+// actually managed by MO2. Detect the shelf from both its label and its
+// children: a random separator mentioning "creation" must not become a
+// special global rule, while a real CC shelf reliably has CC-named folders.
+// This is a structural game convention, not a destination for ordinary mods.
+fn is_managed_creation_club_shelf(section: &Section) -> bool {
+    let label = section.label.to_ascii_lowercase();
+    let label_claims_cc = label.contains("creation club") || label.contains("creationclub");
+    let cc_children = section
+        .mods
+        .iter()
+        .filter(|entry| {
+            let name = entry.name.trim().to_ascii_lowercase();
+            name.contains("creation club")
+                || name.contains("creationclub")
+                || name.starts_with("ccbg")
+                || name.starts_with("cced")
+                || name.starts_with("ccff")
+                || name.starts_with("cckr")
+                || name.starts_with("ccmtys")
+                || name.starts_with("ccqdrsse")
+        })
+        .count();
+    label_claims_cc && (cc_children > 0 || section.mods.is_empty())
+}
+
+/// Keep managed Creation Club immediately below profile-defined context rows
+/// in MO2's *visible* order. `modlist.txt` stores the inverse order, hence
+/// the reverse/reverse dance. This purposefully moves only the confidently
+/// identified CC shelf: arbitrary separator sorting remains roadmap/group
+/// work and must never be guessed from names.
+fn pin_managed_creation_club_shelf(
+    ml: &mut Modlist,
+    roadmap: Option<&crate::section_map::SectionMap>,
+    out: &mut Vec<Change>,
+    trace: &mut String,
+    log: &mut String,
+) {
+    let mut visible: Vec<usize> = (0..ml.sections.len()).rev().collect();
+    let pinned: Vec<usize> = visible
+        .iter()
+        .copied()
+        .filter(|index| {
+            let section = &ml.sections[*index];
+            !roadmap.is_some_and(|map| map.is_context(&section.label))
+                && !roadmap.is_some_and(|map| map.is_terminal(&section.label))
+                && is_managed_creation_club_shelf(section)
+        })
+        .collect();
+    if pinned.is_empty() {
+        return;
+    }
+
+    let before = visible.clone();
+    visible.retain(|index| !pinned.contains(index));
+    // Context rows are non-sortable presentation rows. Insert CC immediately
+    // after their visible run; that means below the profile title, rather
+    // than merely "somewhere early" in serialized disk order.
+    let insert_at = visible
+        .iter()
+        .take_while(|index| roadmap.is_some_and(|map| map.is_context(&ml.sections[**index].label)))
+        .count();
+    for (offset, index) in pinned.iter().copied().enumerate() {
+        visible.insert(insert_at + offset, index);
+    }
+    if visible == before {
+        return;
+    }
+
+    let before_positions: HashMap<usize, usize> = before
+        .iter()
+        .enumerate()
+        .map(|(position, index)| (*index, position + 1))
+        .collect();
+    let after_positions: HashMap<usize, usize> = visible
+        .iter()
+        .enumerate()
+        .map(|(position, index)| (*index, position + 1))
+        .collect();
+    let old = std::mem::take(&mut ml.sections);
+    let mut slots: Vec<Option<Section>> = old.into_iter().map(Some).collect();
+    ml.sections = visible
+        .iter()
+        .rev()
+        .map(|index| slots[*index].take().expect("one section per visible slot"))
+        .collect();
+
+    for index in pinned {
+        let label = &before_sections_label(&ml.sections, &after_positions, index);
+        let from = before_positions[&index];
+        let to = after_positions[&index];
+        let detail = format!(
+            "visible position {from} -> {to}; managed Creation Club shelf pinned below context"
+        );
+        let _ = writeln!(trace, "SEPARATOR  [{label}] {detail}");
+        let _ = writeln!(log, "SEPARATOR  [{label}] {detail}");
+        out.push(Change {
+            kind: ChangeKind::Separator,
+            name: label.clone(),
+            detail,
+            section: label.clone(),
+        });
+    }
+}
+
+// `index` is a former raw-section slot; after the visible reorder, recover
+// the corresponding shelf from its new visible position without retaining a
+// second full clone of every section just for preview wording.
+fn before_sections_label(
+    sections: &[Section],
+    after_positions: &HashMap<usize, usize>,
+    former_index: usize,
+) -> String {
+    let visible_position = after_positions[&former_index];
+    sections[sections.len() - visible_position].label.clone()
+}
+
+// Raw plugin-master headers remain right-pane evidence: a master relation by
+// itself does not tell us where a folder belongs in MO2.  LOOT's explicit
+// `after` metadata is different: it is the user-selected ordering spine and
+// can safely become a left-pane precedence edge after plugins are matched
+// back to their owning mods.
+// Plugin header masters are non-negotiable load-order facts. Keep every
+// plugin-owning MO2 folder after its non-game masters, even when other
+// placement evidence would otherwise put it earlier.
+const ENFORCE_PLUGIN_EDGES_IN_MOD_SORT: bool = true;
+
+// -------------------------------------------------------------------------
+// Global priority graph
+//
+// Separators are presentation buckets, not the source of dependency truth.
+// This graph is deliberately built from effective MO2 priority (low -> high)
+// before any section-local reorder happens. It gives the sorter one stable
+// answer to "what has to come after what?" and lets the separator projection
+// report cross-bucket conflicts honestly instead of inventing local wording.
+// -------------------------------------------------------------------------
+#[derive(Clone, Debug)]
+struct PriorityEdge {
+    after: String,
+    before: String,
+    source: &'static str,
+}
+
+#[derive(Clone, Debug)]
+struct PriorityGraph {
+    order: Vec<String>,
+    rank: HashMap<String, usize>,
+    cycles: Vec<String>,
+}
+
+fn effective_priority_names(ml: &Modlist) -> Vec<String> {
+    // The raw file is the reverse of the effective left-pane priority view.
+    // Include disabled rows too: a LOOT masterlist is metadata for installed
+    // plugins, not merely the subset toggled on this afternoon. Produce one
+    // canonical low -> high sequence here and nowhere else.
+    ml.sections
+        .iter()
+        .rev()
+        .flat_map(|s| s.mods.iter().rev())
+        .map(|m| m.name.clone())
+        .collect()
+}
+
+fn build_priority_graph(nodes: Vec<String>, edges: &[PriorityEdge]) -> PriorityGraph {
+    use std::collections::{BTreeSet, HashSet};
+
+    let original: HashMap<String, usize> = nodes
+        .iter()
+        .enumerate()
+        .map(|(i, name)| (name.clone(), i))
+        .collect();
+    let mut outgoing: HashMap<String, Vec<String>> = HashMap::new();
+    let mut indegree: HashMap<String, usize> =
+        nodes.iter().map(|name| (name.clone(), 0usize)).collect();
+    let mut seen: HashSet<(String, String)> = HashSet::new();
+    for edge in edges {
+        // `before -> after`: the dependency must have lower priority.
+        if !original.contains_key(&edge.before)
+            || !original.contains_key(&edge.after)
+            || edge.before == edge.after
+            || !seen.insert((edge.before.clone(), edge.after.clone()))
+        {
+            continue;
+        }
+        outgoing
+            .entry(edge.before.clone())
+            .or_default()
+            .push(edge.after.clone());
+        *indegree.get_mut(&edge.after).unwrap() += 1;
+    }
+
+    // Stable Kahn topological sort: when several mods are equally legal,
+    // retain their existing effective priority. No random HashMap nonsense.
+    let mut ready: BTreeSet<(usize, String)> = indegree
+        .iter()
+        .filter(|(_, degree)| **degree == 0)
+        .map(|(name, _)| (original[name], name.clone()))
+        .collect();
+    let mut order = Vec::with_capacity(nodes.len());
+    while let Some((_, name)) = ready.pop_first() {
+        order.push(name.clone());
+        for child in outgoing.get(&name).into_iter().flatten() {
+            let degree = indegree.get_mut(child).unwrap();
+            *degree -= 1;
+            if *degree == 0 {
+                ready.insert((original[child], child.clone()));
+            }
+        }
+    }
+    let cycles: Vec<String> = nodes
+        .iter()
+        .filter(|name| !order.contains(name))
+        .cloned()
+        .collect();
+    // A cycle is a user-facing conflict, not permission to drop mods. Keep
+    // the unresolved nodes in their current order after the sortable graph.
+    order.extend(cycles.iter().cloned());
+    let rank = order
+        .iter()
+        .enumerate()
+        .map(|(i, name)| (name.clone(), i))
+        .collect();
+    PriorityGraph {
+        order,
+        rank,
+        cycles,
+    }
 }
 
 // ---- platform guard ----
@@ -1179,10 +2636,7 @@ pub fn platform_scan(enabled: &[(String, String)], mods_dir: &Path) -> Vec<Platf
             .filter_map(|e| e.ok())
         {
             let p = entry.path();
-            if !p
-                .extension()
-                .is_some_and(|e| e.eq_ignore_ascii_case("dll"))
-            {
+            if !p.extension().is_some_and(|e| e.eq_ignore_ascii_case("dll")) {
                 continue;
             }
             // only skse plugin locations matter - random dlls elsewhere in a
@@ -1247,6 +2701,13 @@ fn run(
     conflicts: Option<&ConflictIndex>,
     census: Option<&[(String, String, crate::plugins::PluginInfo)]>,
     kw: &Keywords,
+    roadmap: Option<&crate::section_map::SectionMap>,
+    content_index: Option<&crate::content_index::ContentIndex>,
+    reference: Option<&crate::reference::ReferenceIndex>,
+    learning: Option<&crate::learning::LearningIndex>,
+    libloot_mod_rank: Option<&HashMap<String, usize>>,
+    libloot_dependencies: Option<&HashMap<String, Vec<String>>>,
+    default_game: Option<game::Game>,
     // solo = "apply user rules only": every proven pass (loot, family,
     // census masters, conflict) stays out - the caller hands in ONLY the
     // user's rules, and category-name guessing is suppressed too, so the
@@ -1255,12 +2716,30 @@ fn run(
     solo: bool,
     trace: &mut String,
 ) -> usize {
-    let mut changes = 0usize;
     if solo {
         let _ = writeln!(
             trace,
-            "user-rules-only apply: solo run - only modslut_rules.txt rules act (loot/family/census/conflict passes skipped)"
+            "user-rules-only apply: solo run - only profile rules act (loot/family/census/conflict passes skipped)"
         );
+    }
+
+    // Context rows and terminal shelves belong to this profile's roadmap.
+    // Do not bake a creator's title wrapper, Creation Kit, or End of List
+    // spelling into a Nexus build: another profile can name/layout them
+    // differently. The generated roadmap infers its own context once and
+    // leaves the resulting [context] / [terminal] rows user-editable.
+    let mut sort_excluded_sections = std::collections::HashSet::<String>::new();
+    if let Some(map) = roadmap {
+        for section in &ml.sections {
+            if map.is_context(&section.label) {
+                sort_excluded_sections.insert(section.label.clone());
+            }
+        }
+    }
+    if !sort_excluded_sections.is_empty() {
+        let mut held: Vec<_> = sort_excluded_sections.iter().cloned().collect();
+        held.sort();
+        let _ = writeln!(trace, "sort boundary: held untouched [{}]", held.join(", "));
     }
 
     // canonical name identities from keywords.ini: alias hits are HARD
@@ -1272,7 +2751,12 @@ fn run(
         .flat_map(|s| s.mods.iter())
         .map(|m| (m.name.clone(), kw.cnorm(&m.name)))
         .collect();
-    let cn = |m: &ModEntry| -> String { cnorm_of.get(&m.name).cloned().unwrap_or_else(|| m.norm.clone()) };
+    let cn = |m: &ModEntry| -> String {
+        cnorm_of
+            .get(&m.name)
+            .cloned()
+            .unwrap_or_else(|| m.norm.clone())
+    };
     if !kw.alias.is_empty() || !kw.family.is_empty() || !kw.never.is_empty() {
         let _ = writeln!(
             trace,
@@ -1293,13 +2777,61 @@ fn run(
     let _ = writeln!(
         trace,
         "categories.dat: {}",
-        if cats.is_some() { "found" } else { "NOT FOUND - category tiers skipped" }
+        if cats.is_some() {
+            "found"
+        } else {
+            "NOT FOUND - category tiers skipped"
+        }
     );
     let ci_note = match conflicts {
         Some(ci) => format!("{} related pair(s) loaded", ci.pairs.len()),
         None => "NOT AVAILABLE - conflict auto-fix pass skipped".to_string(),
     };
     let _ = writeln!(trace, "conflict index: {ci_note}");
+    match roadmap {
+        Some(map) => {
+            let _ = writeln!(
+                trace,
+                "separator roadmap: {} mapping(s), {} ambiguous concept(s) held for review from {}",
+                map.mapping_count(),
+                map.ambiguous_count(),
+                map.path.display()
+            );
+        }
+        None => {
+            let _ = writeln!(
+                trace,
+                "separator roadmap: NOT AVAILABLE - roadmap tier skipped"
+            );
+        }
+    }
+
+    // MO2's raw modlist serialization is inverse to the left-pane priority
+    // display. A terminal separator such as "End of List" is therefore the
+    // FIRST separator in modlist.txt. Warn; never rearrange the user's layout.
+    if let Some(map) = roadmap {
+        for (idx, section) in ml
+            .sections
+            .iter()
+            .enumerate()
+            .filter(|(_, section)| map.is_terminal(&section.label))
+        {
+            if idx > 0 {
+                let detail = format!(
+                    "[terminal separator] [{}] has {} section(s) before it in modlist.txt",
+                    section.label, idx,
+                );
+                let _ = writeln!(trace, "WARN  {detail}");
+                let _ = writeln!(log, "WARN  {detail}");
+                out.push(Change {
+                    kind: ChangeKind::Warn,
+                    name: section.label.clone(),
+                    detail,
+                    section: section.label.clone(),
+                });
+            }
+        }
+    }
 
     // concept-targeted rules: rewrite targets to this list's actual
     // separators (or drop the rule if the concept doesn't exist here)
@@ -1308,7 +2840,7 @@ fn run(
     // "- Concept", an old rule target still containment-matches the new
     // label, so user pins written against the old name keep working.
     // off by default: most users have established separator names already.
-    // opt in with a bare `!rename-separators` line in modslut_rules.txt.
+    // opt in with a bare `!rename-separators` line in this profile's rules.
     if rules.rename_separators {
         let renames = suggest_sep_renames(ml, cats, trace);
         if !renames.is_empty() {
@@ -1323,7 +2855,6 @@ fn run(
             let _ = writeln!(trace, "  REN   [{old}] -> [{new_label}]");
             let _ = writeln!(log, "REN   [{old}] -> [{new_label}]");
             ml.sections[idx].label = new_label.clone();
-            changes += 1;
             out.push(Change {
                 kind: ChangeKind::Rename,
                 name: old.clone(),
@@ -1334,7 +2865,7 @@ fn run(
     } else {
         let _ = writeln!(
             trace,
-            "\n--- pass 0: separator auto-rename OFF (add `!rename-separators` to modslut_rules.txt to enable) ---"
+            "\n--- pass 0: separator auto-rename OFF (add `!rename-separators` to profile rules to enable) ---"
         );
     }
     if rules.proven_only {
@@ -1344,7 +2875,7 @@ fn run(
         );
     }
 
-    let resolved_rules = resolve_targets(rules, &ml.sections, trace);
+    let resolved_rules = resolve_targets(rules, &ml.sections, roadmap, trace);
     let rules = &resolved_rules;
 
     // "never move" means NEVER move: a !exact pin locks the section (T1)
@@ -1358,6 +2889,9 @@ fn run(
     // index: mod name -> current section label
     let mut where_is: HashMap<String, String> = HashMap::new();
     for s in &ml.sections {
+        if sort_excluded_sections.contains(&s.label) {
+            continue;
+        }
         for m in &s.mods {
             where_is.insert(m.name.clone(), s.label.clone());
         }
@@ -1374,28 +2908,42 @@ fn run(
         why: Why,
         cat_str: String,
     }
+    let assignment_started = std::time::Instant::now();
+    // Several evidence sources need the live separator vocabulary. Build it
+    // once per sort rather than cloning every label for every mod.
+    let section_labels: Vec<String> = ml.sections.iter().map(|s| s.label.clone()).collect();
     let mut decisions: HashMap<String, Decision> = HashMap::new();
     let mut all_mods: Vec<ModEntry> = Vec::new();
     let mut guess_suppressed = 0usize;
     for s in &ml.sections {
+        if sort_excluded_sections.contains(&s.label) {
+            continue;
+        }
         for m in &s.mods {
             let cat = cats.and_then(|c| c.category_detail_of(&m.name));
-            let (want, why) = suggest_explained(
-                m,
-                rules,
-                cat.as_ref().map(|(_, n)| n.as_str()),
-                &ml.sections,
-            );
-            // proven-only: guesses (category≈separator fuzzy, keyword hits)
+            let learned_home =
+                learning.and_then(|index| index.destination(&m.name, &section_labels));
+            let (want, why) = if let Some(home) = learned_home.as_deref() {
+                (Some(home), Why::Learned(home.to_string()))
+            } else {
+                suggest_explained(
+                    m,
+                    rules,
+                    cat.as_ref().map(|(_, n)| n.as_str()),
+                    &ml.sections,
+                    roadmap,
+                    content_index.and_then(|index| index.get(&m.name)),
+                    reference,
+                    Some(kw),
+                )
+            };
+            // proven-only: unreviewed category/name guesses and keyword hits
             // never move a mod - only what the user or the data can PROVE.
             // solo keeps rule-driven tiers (they're all user rules there) but
             // drops the category-name guesses, which need no rule at all.
-            let guess = matches!(
-                why,
-                Why::CategoryExactMatch(_) | Why::CategoryFuzzy(..) | Why::Keyword(_)
-            );
+            let guess = matches!(why, Why::CategoryExactMatch(_) | Why::Keyword(_));
             let (want, why) = if (rules.proven_only && guess)
-                || (solo && matches!(why, Why::CategoryExactMatch(_) | Why::CategoryFuzzy(..)))
+                || (solo && matches!(why, Why::CategoryExactMatch(_)))
             {
                 guess_suppressed += 1;
                 (None, Why::NoMatch)
@@ -1412,15 +2960,125 @@ fn run(
             all_mods.push(m.clone());
             decisions.insert(
                 m.name.clone(),
-                Decision { from: s.label.clone(), want, why, cat_str },
+                Decision {
+                    from: s.label.clone(),
+                    want,
+                    why,
+                    cat_str,
+                },
             );
         }
     }
+    let initial_decision_elapsed = assignment_started.elapsed();
     if rules.proven_only && guess_suppressed > 0 {
         let _ = writeln!(
             trace,
             "proven-only: {guess_suppressed} guess-tier move(s) suppressed (category/keyword tiers held)"
         );
+    }
+
+    // Preserve every current priority shelf as a backbone. This happens
+    // before title families and libloot bands so neither can scatter a
+    // hand-curated "Special Load After Lighting Mods" section one child at
+    // a time. Exact rules remain intentional user authority.
+    for decision in decisions.values_mut() {
+        if is_priority_anchor_section(&decision.from)
+            && decision.want.as_deref() != Some(decision.from.as_str())
+            && !matches!(decision.why, Why::ExactRule)
+        {
+            decision.want = None;
+            decision.why = Why::PriorityShelfGuard(decision.from.clone());
+        }
+    }
+
+    // A literal product-name family is great when a patch says "Base Mod -
+    // Patch", but asset authors do not always cooperate. OSHA-Compliant
+    // Sovngarde Mesh Fixes and CleverCharff's Sovngarde share the rare title
+    // stem "sovngarde", not a prefix. For terminal/EOL stragglers only, let
+    // a rare stem inherit a destination when every independently imported
+    // human-reference match agrees. This is evidence propagation, not fuzzy
+    // category guessing: common stems like "mesh" never qualify.
+    if !solo && reference.is_some() {
+        let mut stem_frequency: HashMap<String, usize> = HashMap::new();
+        for mod_entry in &all_mods {
+            for stem in tokens(&mod_entry.name) {
+                if !GENERIC_TOKENS.contains(&stem.as_str())
+                    && !TITLE_GENERIC_TOKENS.contains(&stem.as_str())
+                {
+                    *stem_frequency.entry(stem).or_default() += 1;
+                }
+            }
+        }
+        // Index only the reference-backed destinations once. The old form
+        // rescanned every one of ~2k names for every terminal candidate,
+        // repeatedly tokenising the same strings (millions of allocations
+        // on this profile). The inverted map preserves the exact evidence:
+        // a rare title stem is usable only when all reference routes agree.
+        let mut reference_routes: HashMap<String, std::collections::HashSet<String>> =
+            HashMap::new();
+        for other in &all_mods {
+            let Some(other_decision) = decisions.get(&other.name) else {
+                continue;
+            };
+            if !matches!(other_decision.why, Why::PrivateReference(_, _)) {
+                continue;
+            }
+            let Some(destination) = other_decision.want.as_ref() else {
+                continue;
+            };
+            for stem in tokens(&other.name) {
+                if stem_frequency
+                    .get(stem.as_str())
+                    .copied()
+                    .unwrap_or(usize::MAX)
+                    <= 4
+                {
+                    reference_routes
+                        .entry(stem)
+                        .or_default()
+                        .insert(destination.clone());
+                }
+            }
+        }
+        let mut inherited: Vec<(String, String, String)> = Vec::new();
+        for mod_entry in &all_mods {
+            let Some(decision) = decisions.get(&mod_entry.name) else {
+                continue;
+            };
+            let terminal_source = roadmap.is_some_and(|map| map.is_terminal(&decision.from));
+            // A reference-backed rare stem is stronger than a generic title
+            // overlap ("mesh fixes"), but never overrides an explicit rule,
+            // roadmap branch, or another already-proven placement.
+            let can_refine = decision.want.is_none() || matches!(decision.why, Why::TitleMatch(_));
+            if !can_refine || !terminal_source {
+                continue;
+            }
+            let own_stems = tokens(&mod_entry.name);
+            let mut agreed: Vec<(String, String)> = own_stems
+                .into_iter()
+                .filter_map(|stem| {
+                    reference_routes
+                        .get(&stem)
+                        .filter(|destinations| destinations.len() == 1)
+                        .map(|destinations| {
+                            (
+                                stem,
+                                destinations.iter().next().expect("one destination").clone(),
+                            )
+                        })
+                })
+                .collect();
+            agreed.sort();
+            if let Some((stem, destination)) = agreed.pop() {
+                inherited.push((mod_entry.name.clone(), stem, destination));
+            }
+        }
+        for (name, stem, destination) in inherited {
+            if let Some(decision) = decisions.get_mut(&name) {
+                decision.want = Some(destination.clone());
+                decision.why = Why::SharedReferenceStem(stem, destination);
+            }
+        }
     }
 
     // family integrity: a patch/addon lives and dies with its master. if a
@@ -1437,21 +3095,58 @@ fn run(
     // containment norms strictly shrink along a chain, so it always ends.
     // solo mode skips this: family-following is a proven pass, and "apply
     // user rules only" must not move anything a user rule didn't name.
+    let family_phase_started = std::time::Instant::now();
     if !solo {
+        // A patch shelf is a real late-load home, not a waiting room. A
+        // patch already placed in one must remain there; its relationship to
+        // its master is enforced later by the global priority graph. Pulling
+        // it into Character Creation/Whiterun/etc. merely because the parent
+        // lives there defeats the whole point of profile-owned patch buckets.
+        let patch_shelves: std::collections::HashSet<String> = roadmap
+            .and_then(|map| map.branch_destinations_for("patches"))
+            .map(|labels| labels.iter().cloned().collect())
+            .unwrap_or_default();
+        for m in &all_mods {
+            if !is_patch_flavoured(&m.lower) {
+                continue;
+            }
+            if let Some(d) = decisions.get_mut(&m.name) {
+                if patch_shelves.contains(&d.from) {
+                    d.want = Some(d.from.clone());
+                    d.why = Why::PatchShelfGuard(d.from.clone());
+                }
+            }
+        }
+
         // parent of each lineage-gated mod = longest contained other norm
         let mut parent_of: HashMap<String, String> = HashMap::new();
         for m in &all_mods {
             let nl = &m.lower;
-            if !patch_flavored(nl) {
+            if !family_child_candidate(nl) {
                 continue;
             }
+            let child_identity = cnorm_of.get(&m.name).map(String::as_str).unwrap_or(&m.norm);
             if let Some(p) = all_mods
                 .iter()
-                .filter(|o| {
-                    let (co, cm) = (cn(o), cn(m));
-                    co != cm && co.len() >= 10 && cm.contains(&co) && !kw.is_never(&o.name, &m.name)
+                .filter_map(|o| {
+                    let parent_identity =
+                        cnorm_of.get(&o.name).map(String::as_str).unwrap_or(&o.norm);
+                    // Raw containment/shared stems are already proven by
+                    // the ordinary matcher. Canonical aliases bridge the
+                    // common case where a real patch uses an acronym rather
+                    // than the base mod's full display name.
+                    family_parent_score(m, o)
+                        .or_else(|| {
+                            family_parent_score_for_names(m, o, child_identity, parent_identity)
+                        })
+                        // `is_never` canonicalizes and allocates strings.
+                        // Ask it only after the cheap title check has found
+                        // a possible parent, rather than for every pair in a
+                        // multi-thousand-mod list.
+                        .and_then(|score| (!kw.is_never(&o.name, &m.name)).then_some((score, o)))
                 })
-                .max_by_key(|o| cn(o).len())
+                .max_by_key(|(score, _)| *score)
+                .map(|(_, parent)| parent)
             {
                 parent_of.insert(m.name.clone(), p.name.clone());
             }
@@ -1465,19 +3160,41 @@ fn run(
             parent_of: &HashMap<String, String>,
             decisions: &HashMap<String, Decision>,
             memo: &mut HashMap<String, String>,
+            visiting: &mut std::collections::HashSet<String>,
         ) -> String {
             if let Some(d) = memo.get(name) {
                 return d.clone();
             }
+            // Name-only families can occasionally form a loop (two asset
+            // packs sharing the same product stem). A dependency hint must
+            // never turn into recursive confetti: hold the repeated member
+            // at its own proposed/current section and let the caller unwind.
+            if !visiting.insert(name.to_string()) {
+                let d = &decisions[name];
+                return d.want.clone().unwrap_or_else(|| d.from.clone());
+            }
             let d = &decisions[name];
-            let explicit = matches!(d.why, Why::ExactRule | Why::CategoryRule(_));
+            if is_priority_anchor_section(&d.from) && !matches!(d.why, Why::ExactRule) {
+                return d.from.clone();
+            }
+            let explicit = matches!(
+                d.why,
+                Why::ExactRule
+                    | Why::CategoryRule(_)
+                    | Why::PatchBucket(_)
+                    | Why::PatchShelfGuard(_)
+                    // A deleted pin's learned home is durable. A title
+                    // family guess must not erase it on a later sort.
+                    | Why::Learned(_)
+            );
             let dest = if explicit {
                 d.want.clone().unwrap_or_else(|| d.from.clone())
             } else if let Some(p) = parent_of.get(name) {
-                resolve(p, parent_of, decisions, memo)
+                resolve(p, parent_of, decisions, memo, visiting)
             } else {
                 d.want.clone().unwrap_or_else(|| d.from.clone())
             };
+            visiting.remove(name);
             memo.insert(name.to_string(), dest.clone());
             dest
         }
@@ -1485,12 +3202,28 @@ fn run(
         let mut memo: HashMap<String, String> = HashMap::new();
         let names: Vec<String> = decisions.keys().cloned().collect();
         for name in &names {
-            let dest = resolve(name, &parent_of, &decisions, &mut memo);
+            let dest = resolve(
+                name,
+                &parent_of,
+                &decisions,
+                &mut memo,
+                &mut std::collections::HashSet::new(),
+            );
             let d = decisions.get_mut(name).unwrap();
-            let followed = parent_of
-                .get(name)
-                .filter(|_| !matches!(d.why, Why::ExactRule | Why::CategoryRule(_)));
+            let followed = parent_of.get(name).filter(|_| {
+                !matches!(
+                    d.why,
+                    Why::ExactRule | Why::CategoryRule(_) | Why::PatchBucket(_) | Why::Learned(_)
+                ) && !matches!(d.why, Why::PatchShelfGuard(_))
+            });
             match followed {
+                // End of List is a terminal, not a family home. A parent
+                // sitting there only means *it* still needs review; it must
+                // never drag every patch and addon into the quarantine.
+                Some(p) if roadmap.is_some_and(|map| map.is_terminal(&dest)) && dest != d.from => {
+                    d.want = None;
+                    d.why = Why::FollowParent(format!("{p} (terminal held)"));
+                }
                 Some(p) if dest != d.from => {
                     d.want = Some(dest);
                     d.why = Why::FollowParent(p.clone());
@@ -1507,305 +3240,540 @@ fn run(
             }
         }
     }
+    let family_phase_elapsed = family_phase_started.elapsed();
+
+    // Reverse-project libloot's solved plugin order through the existing MO2
+    // layout. A plugin with no independently discovered home can inherit a
+    // separator only when its immediate lower and higher solved-order
+    // neighbours already agree on that separator. This is the missing
+    // section-level half of the old "in-section rank only" projection.
+    let libloot_band_phase_started = std::time::Instant::now();
+    if !solo {
+        if let Some(plugin_rank) = libloot_mod_rank {
+            let mut anchors: Vec<(usize, String)> = all_mods
+                .iter()
+                .filter_map(|mod_entry| {
+                    let rank = *plugin_rank.get(&mod_entry.name)?;
+                    let decision = decisions.get(&mod_entry.name)?;
+                    let home = decision.want.as_deref().unwrap_or(&decision.from);
+                    let automatic = roadmap
+                        .map(|map| map.is_automatic_destination(home) && !map.is_terminal(home))
+                        .unwrap_or_else(|| norm(home) != "endoflist");
+                    (automatic && !is_waiting_room(home, rules, roadmap))
+                        .then(|| (rank, home.to_string()))
+                })
+                .collect();
+            anchors.sort_by_key(|(rank, _)| *rank);
+            let mut projected = 0usize;
+            for mod_entry in &all_mods {
+                let Some(rank) = plugin_rank.get(&mod_entry.name).copied() else {
+                    continue;
+                };
+                let Some(destination) = agreed_libloot_band(rank, &anchors) else {
+                    continue;
+                };
+                let decision = decisions.get_mut(&mod_entry.name).expect("decision exists");
+                // Rules, roadmaps, learning, title matches, and patch buckets
+                // already supplied a semantic home. The reverse projection is
+                // specifically for plugin owners that still had no home.
+                if decision.want.is_some() || destination == decision.from {
+                    continue;
+                }
+                let _ = writeln!(
+                    trace,
+                    "  {} | libloot rank {} bracketed by [{}] -> MOVE",
+                    mod_entry.name, rank, destination
+                );
+                decision.want = Some(destination.clone());
+                decision.why = Why::LiblootBand(destination);
+                projected += 1;
+            }
+            let _ = writeln!(
+                trace,
+                "libloot reverse projection: {projected} unhomed plugin owner(s) received an agreed separator band"
+            );
+        }
+    }
+    let libloot_band_phase_elapsed = libloot_band_phase_started.elapsed();
 
     // content parents (plugin-master relationships from the census) live
     // outside the pass 1c scope so pass 2's in-section ordering can also
     // see them - pulling a patch into its master's section is only half
     // the job, it must also sort AFTER the master inside that section.
-    let mut content_parents: HashMap<String, Vec<String>> = HashMap::new();
+    let content_parents: HashMap<String, Vec<String>>;
+    // Unlike the narrower patch-family pass below, this keeps *every*
+    // installed non-base dependency as a safety edge. A hub such as Lux must
+    // not pull its whole ecosystem into its own section, but no candidate is
+    // allowed to land before it either.
+    let mut dependency_parents = libloot_dependencies.cloned().unwrap_or_default();
     // which game? the census root esm answers it without mo2 metadata;
     // no census -> skyrim (pre-detection behavior). base masters, loot
     // folder, everything game-shaped keys off this one struct.
-    let game = game::detect_or_skyrim(&{
-        let mut v: Vec<String> = Vec::new();
-        if let Some(census) = census {
-            v.extend(census.iter().map(|(_, _, i)| i.plugin.clone()));
+    let game = game::detect_with_default(
+        &{
+            let mut v: Vec<String> = Vec::new();
+            if let Some(census) = census {
+                v.extend(census.iter().map(|(_, _, i)| i.plugin.clone()));
+            }
+            v
+        },
+        default_game,
+    );
+    let _ = writeln!(
+        trace,
+        "game: {} (base masters: {})",
+        game.name,
+        game.base_masters.len()
+    );
+    // Build the hard plugin-dependency safety graph independently of LOOT.
+    // LOOT gives valuable ordering metadata, but a missing/stale masterlist
+    // must never make a plugin forget the files named in its own header.
+    if let Some(census) = census {
+        let base_game: Vec<String> = game
+            .base_masters
+            .iter()
+            .map(|master| master.to_ascii_lowercase())
+            .collect();
+        let mut provider: HashMap<String, String> = HashMap::new();
+        for (mod_name, _, info) in census {
+            provider
+                .entry(info.plugin.to_ascii_lowercase())
+                .or_insert_with(|| mod_name.clone());
         }
-        v
+        for (mod_name, _, info) in census {
+            let parents = dependency_parents.entry(mod_name.clone()).or_default();
+            for master in &info.masters {
+                let master = master.to_ascii_lowercase();
+                if base_game.contains(&master) || master.starts_with("cc") {
+                    continue;
+                }
+                if let Some(parent) = provider.get(&master) {
+                    if parent != mod_name {
+                        parents.push(parent.clone());
+                    }
+                }
+            }
+        }
+    }
+    // Header masters are the hard source of truth.  Supplement them only for
+    // a patch title that independently names multiple narrow base anchors:
+    // this preserves FOMOD/optional patch relationships whose selected ESP
+    // header exposes only one side of the title.
+    if !solo {
+        let title_words: HashMap<String, std::collections::HashSet<String>> = all_mods
+            .iter()
+            .map(|mod_entry| {
+                (
+                    mod_entry.name.clone(),
+                    meaningful_patch_tokens(&mod_entry.name),
+                )
+            })
+            .collect();
+        for child in &all_mods {
+            let anchors = multi_parent_patch_title_anchors_cached(child, &all_mods, &title_words);
+            if anchors.is_empty() {
+                continue;
+            }
+            let parents = dependency_parents.entry(child.name.clone()).or_default();
+            let mut added = Vec::new();
+            for anchor in anchors {
+                if !parents.contains(&anchor) {
+                    parents.push(anchor.clone());
+                    added.push(anchor);
+                }
+            }
+            if !added.is_empty() {
+                let _ = writeln!(
+                    trace,
+                    "title multi-parent bridge: [{}] also follows [{}]",
+                    child.name,
+                    added.join(", ")
+                );
+            }
+        }
+    }
+    dependency_parents.retain(|_, parents| {
+        parents.sort();
+        parents.dedup();
+        !parents.is_empty()
     });
-    let _ = writeln!(trace, "game: {} (base masters: {})", game.name, game.base_masters.len());
+    if !dependency_parents.is_empty() {
+        let _ = writeln!(
+            trace,
+            "plugin dependency safety: {} mod(s) have {} direct non-base master edge(s)",
+            dependency_parents.len(),
+            dependency_parents.values().map(Vec::len).sum::<usize>()
+        );
+    }
+    // The libloot header graph is enough for the normal sort. Full record
+    // extraction is an optional diagnostic feature, not a sorting cost.
+    content_parents = dependency_parents.clone();
 
-    // loot masterlist (local file, no download): plugin-level "after" edges
-    // become mod-level hard constraints via the census provider map.
-    let loot_data = if solo { None } else { loot::load(&game) };
+    // LOOT is the first ordering tier. Its explicit `after` rules are
+    // projected from plugins to their owning MO2 mods below; roadmap/category
+    // logic chooses a section afterwards, it never gets to reverse an edge.
+    // Normal GUI sorting is driven by libloot's own masterlist handling and
+    // header load. Keep the older text-masterlist reader only for the
+    // diagnostic census path; otherwise its guessed YAML location produces
+    // noise without contributing an ordering decision.
+    let loot_data = if solo || census.is_none() {
+        None
+    } else {
+        loot::load(&game)
+    };
     let mut loot_after: HashMap<String, Vec<String>> = HashMap::new();
+    // Owning mod -> highest LOOT group rank among its plugins. A mod with
+    // several plugins must honour the latest group it participates in.
+    let mut loot_group_rank: HashMap<String, usize> = HashMap::new();
 
-    // pass 1c: plugin-master family (content-based). modlist file order is
-    // priority: EARLIER = wins = loads later. if mod A's plugin declares
-    // mod B's plugin as a master in its TES4 header, A must not sort
-    // file-LATER than B - that would load the addon before its master.
+    if let (Some(ld), Some(census)) = (&loot_data, census) {
+        let base_game: &[&str] = game.base_masters;
+        let group_ranks = loot::group_ranks(ld);
+        // ESLs are full plugin participants for the left-pane projection.
+        // The extension and the light flag both count: old tooling can leave
+        // one or the other odd, and LOOT still supplies a group either way.
+        let light_plugins = census
+            .iter()
+            .filter(|(_, _, info)| info.is_esl || info.plugin.ends_with(".esl"))
+            .count();
+        for (mod_name, _, info) in census {
+            let plugin = info.plugin.to_ascii_lowercase();
+            let group = ld
+                .groups
+                .get(&plugin)
+                .map(String::as_str)
+                .unwrap_or("default");
+            if let Some(&rank) = group_ranks.get(group) {
+                loot_group_rank
+                    .entry(mod_name.clone())
+                    .and_modify(|old| *old = (*old).max(rank))
+                    .or_insert(rank);
+            }
+        }
+        // A plugin can appear in more than one mod only in a broken/duplicate
+        // install. Keep the first provider deterministically, just as MO2's
+        // virtual filesystem does for the winning copy at scan time.
+        let mut provider: HashMap<&str, &str> = HashMap::new();
+        for (mod_name, _, info) in census {
+            provider.entry(info.plugin.as_str()).or_insert(mod_name);
+        }
+        for (mod_name, _, info) in census {
+            let plugin = info.plugin.to_ascii_lowercase();
+            let Some(targets) = ld.after.get(&plugin) else {
+                continue;
+            };
+            let parents = loot_after.entry(mod_name.clone()).or_default();
+            for target in targets {
+                if base_game.contains(&target.as_str()) || target.starts_with("cc") {
+                    continue;
+                }
+                if let Some(parent) = provider.get(target.as_str()) {
+                    if *parent != mod_name {
+                        parents.push((*parent).to_string());
+                    }
+                }
+            }
+        }
+        loot_after.retain(|_, parents| {
+            parents.sort();
+            parents.dedup();
+            !parents.is_empty()
+        });
+        let _ = writeln!(
+            trace,
+            "loot masterlist: {} ({} literal after/before edge set(s) project to {} mod(s); {} plugin group(s), {} group relation(s) parsed)",
+            ld.path.display(),
+            ld.after.len(),
+            loot_after.len(),
+            ld.groups.len(),
+            ld.group_after.len(),
+        );
+        let _ = writeln!(
+            trace,
+            "loot group projection: {} plugin-owning mod(s) assigned a stable group rank ({} plugin file(s), including {light_plugins} ESL/light plugin(s))",
+            loot_group_rank.len(), census.len()
+        );
+    } else if !solo {
+        let _ = writeln!(
+            trace,
+            "loot masterlist: not found - no LOOT precedence edges available"
+        );
+    }
+
+    // pass 1c: plugin-master family (content-based). Raw modlist order is
+    // inverse to effective MO2 priority. If mod A's plugin declares mod B's
+    // plugin as a master, A must have higher effective priority than B.
     // name-containment can't see short masters like "MLO2"; the plugin
     // header doesn't lie. base-game and
     // creation-club masters are exempt: their provider mods (a "Clean
     // Masters" container, say) sit wherever the user put them and must
     // not drag the entire list after themselves.
-    if let Some(census) = census {
-        let base_game: &[&str] = game.base_masters;
-        // plugin filename -> providing mod (first provider wins)
-        let mut provider: HashMap<&str, &str> = HashMap::new();
-        for (mod_name, _, info) in census {
-            provider.entry(info.plugin.as_str()).or_insert(mod_name);
-        }
-        // hub masters: a plugin that half the list builds on (ussep.esp,
-        // lux.esp...) must NOT drag its children around - they aren't
-        // "its patches", they just require it. over the threshold it's
-        // infrastructure, not a parent. counted as distinct (child mod,
-        // master plugin) pairs - a mod with several plugins all listing
-        // lux.esp is ONE child of lux, not four.
-        const HUB_THRESHOLD: usize = 20;
-        let mut child_count: HashMap<&str, usize> = HashMap::new();
-        let mut seen_pair: std::collections::HashSet<(String, &str)> =
-            std::collections::HashSet::new();
-        for (mod_name, _, info) in census {
-            for mp in info.masters.iter().filter(|mp| {
-                !base_game.contains(&mp.as_str()) && !mp.starts_with("cc")
-            }) {
-                if seen_pair.insert((mod_name.clone(), mp.as_str())) {
-                    *child_count.entry(mp.as_str()).or_insert(0) += 1;
-                }
-            }
-        }
-        // mod -> content parents: other mods whose plugins it depends on.
-        // a mod can ship SEVERAL plugins with different masters (one census
-        // row per plugin) - the parents are the UNION across rows, or the
-        // last row silently drops the others. only patch-flavored children
-        // get pulled - a standalone mod that merely REQUIRES a master
-        // (distinct interiors needs ussep) is not that master's child.
-        let mut cparents: HashMap<String, Vec<String>> = HashMap::new();
-        for (mod_name, _, info) in census {
-            let ps = cparents.entry(mod_name.clone()).or_default();
-            for mp in info.masters.iter() {
-                if base_game.contains(&mp.as_str()) || mp.starts_with("cc") {
-                    continue;
-                }
-                if child_count.get(mp.as_str()).copied().unwrap_or(0) > HUB_THRESHOLD {
-                    continue;
-                }
-                if let Some(m) = provider.get(mp.as_str()) {
-                    if *m != mod_name {
-                        ps.push(m.to_string());
+    if ENFORCE_PLUGIN_EDGES_IN_MOD_SORT {
+        if census.is_some() {
+            // Enforce the complete header/libloot map, including framework
+            // masters: no plugin-owning mod may load before any non-game
+            // master. The in-section pass uses the same map afterward.
+            if !dependency_parents.is_empty() {
+                // Canonical effective priority: raw file index is inverted. Zero
+                // is lowest priority; larger ranks win later.
+                let n_secs = ml.sections.len();
+                let pri_of: HashMap<&str, usize> = ml
+                    .sections
+                    .iter()
+                    .enumerate()
+                    .map(|(i, s)| (s.label.as_str(), n_secs - 1 - i))
+                    .collect();
+                // final destination load-index per mod, recursively: own
+                // decision, but never loading before any content parent
+                fn cresolve(
+                    name: &str,
+                    cparents: &HashMap<String, Vec<String>>,
+                    decisions: &HashMap<String, Decision>,
+                    pri_of: &HashMap<&str, usize>,
+                    memo: &mut HashMap<String, usize>,
+                    depth: usize,
+                ) -> usize {
+                    if let Some(i) = memo.get(name) {
+                        return *i;
                     }
-                }
-            }
-        }
-        cparents.retain(|_, ps| {
-            ps.sort();
-            ps.dedup();
-            !ps.is_empty()
-        });
-        // loot "after" edges: plugin A after plugin B => A's mod loads after
-        // B's mod. every edge is human-verified in the masterlist, so no
-        // patch-flavored gate and no hub exemption - loot afters are
-        // deliberate, not inferred.
-        if let Some(ld) = &loot_data {
-            for (mod_name, _, info) in census {
-                let plugin = info.plugin.to_lowercase();
-                let Some(targets) = ld.after.get(&plugin) else { continue };
-                let ps = loot_after.entry(mod_name.clone()).or_default();
-                for t in targets {
-                    if base_game.contains(&t.as_str()) || t.starts_with("cc") {
-                        continue;
+                    if depth > 64 {
+                        // dependency cycle - bail, don't stack-overflow. under
+                        // max-constraint semantics "no constraint" is 0
+                        return 0;
                     }
-                    if let Some(m) = provider.get(t.as_str()) {
-                        if *m != mod_name {
-                            ps.push(m.to_string());
-                        }
-                    }
-                }
-            }
-            loot_after.retain(|_, ps| {
-                ps.sort();
-                ps.dedup();
-                !ps.is_empty()
-            });
-            let _ = writeln!(
-                trace,
-                "loot masterlist: {} ({} after-rule(s) apply to {} mod(s))",
-                ld.path.display(),
-                ld.after.len(),
-                loot_after.len()
-            );
-        } else {
-            let _ = writeln!(
-                trace,
-                "loot masterlist: not found - update LOOT's masterlist for Skyrim VR to enable"
-            );
-        }
-        content_parents = cparents.clone();
-        if !cparents.is_empty() {
-            // CANONICAL LOAD ORDER: from here on, every index is a LOAD
-            // index - 0 loads first, bigger loads later, and "child loads
-            // after its master" is plain "child index > parent index".
-            // load section index = (n_secs - 1 - file index); the only two
-            // places direction exists are this map and the label lookup
-            // below. nothing else in this function may think about mo2's
-            // file order.
-            let n_secs = ml.sections.len();
-            let lsec_of: HashMap<&str, usize> = ml
-                .sections
-                .iter()
-                .enumerate()
-                .map(|(i, s)| (s.label.as_str(), n_secs - 1 - i))
-                .collect();
-            // final destination load-index per mod, recursively: own
-            // decision, but never loading before any content parent
-            fn cresolve(
-                name: &str,
-                cparents: &HashMap<String, Vec<String>>,
-                decisions: &HashMap<String, Decision>,
-                lsec_of: &HashMap<&str, usize>,
-                memo: &mut HashMap<String, usize>,
-                depth: usize,
-            ) -> usize {
-                if let Some(i) = memo.get(name) {
-                    return *i;
-                }
-                if depth > 64 {
-                    // dependency cycle - bail, don't stack-overflow. under
-                    // max-constraint semantics "no constraint" is 0
-                    return 0;
-                }
-                let d = &decisions[name];
-                let mut dest = d
-                    .want
-                    .as_ref()
-                    .and_then(|w| lsec_of.get(w.as_str()).copied())
-                    .unwrap_or_else(|| lsec_of.get(d.from.as_str()).copied().unwrap_or(0));
-                if let Some(ps) = cparents.get(name) {
-                    for p in ps {
-                        if decisions.contains_key(p) {
-                            let pi = cresolve(p, cparents, decisions, lsec_of, memo, depth + 1);
-                            // child must load AT OR AFTER every content
-                            // parent: constraint = MAX of parent indices
-                            if pi > dest {
-                                dest = pi;
-                            }
-                        }
-                    }
-                }
-                memo.insert(name.to_string(), dest);
-                dest
-            }
-            let mut memo: HashMap<String, usize> = HashMap::new();
-            let names: Vec<String> = decisions.keys().cloned().collect();
-            let mut pulled = 0usize;
-            for name in &names {
-                let Some(ps) = cparents.get(name) else { continue };
-                // a user's !exact pin (or the generated-output guard) is a
-                // hard veto: the family pass must never override it, even
-                // when the pin sorts the mod before a plugin master. the
-                // veto propagates DOWN family chains: a patch following a
-                // pinned master keeps the master's pinned destination - the
-                // user owns the list; we only advise.
-                let anchored = {
-                    let mut cur: &str = name;
-                    let mut hops = 0usize;
-                    loop {
-                        match &decisions[cur].why {
-                            Why::ExactRule | Why::OutputGuard => break true,
-                            Why::FollowParent(p)
-                                if decisions.contains_key(p.as_str()) && hops < 32 =>
-                            {
-                                cur = p;
-                                hops += 1;
-                            }
-                            _ => break false,
-                        }
-                    }
-                };
-                if anchored {
-                    continue;
-                }
-                let di = cresolve(name, &cparents, &decisions, &lsec_of, &mut memo, 0);
-                let cur = {
                     let d = &decisions[name];
-                    d.want
+                    let mut dest = d
+                        .want
                         .as_ref()
-                        .and_then(|w| lsec_of.get(w.as_str()).copied())
-                        .unwrap_or_else(|| lsec_of.get(d.from.as_str()).copied().unwrap_or(0))
-                };
-                if di > cur {
-                    // the child's resolved constraint loads LATER than its
-                    // current destination: as-is it would load before a
-                    // master. a plugin-master edge is a LOAD-ORDER fact -
-                    // plugins.txt owns that, and ripping an established mod
-                    // out of its home section because its esp lists someone
-                    // else's esp as a master is how "Morthal patches" ended
-                    // up in [Performance]. so: only use the pull to FILE an
-                    // unclaimed mod (no rule home, sitting in a dump/parking
-                    // area). an established mod gets a WARN, not a move.
-                    let d0 = &decisions[name];
-                    let from_is_dump = rules
-                        .dump
-                        .iter()
-                        .any(|l| l.eq_ignore_ascii_case(&d0.from));
-                    let claimed = d0.want.is_some() || !from_is_dump;
-                    if claimed {
+                        .and_then(|w| pri_of.get(w.as_str()).copied())
+                        .unwrap_or_else(|| pri_of.get(d.from.as_str()).copied().unwrap_or(0));
+                    if let Some(ps) = cparents.get(name) {
+                        for p in ps {
+                            if decisions.contains_key(p) {
+                                let pi = cresolve(p, cparents, decisions, pri_of, memo, depth + 1);
+                                // Child must have at least every content parent's
+                                // effective priority: constraint = MAX parent rank.
+                                if pi > dest {
+                                    dest = pi;
+                                }
+                            }
+                        }
+                    }
+                    memo.insert(name.to_string(), dest);
+                    dest
+                }
+                let mut memo: HashMap<String, usize> = HashMap::new();
+                let names: Vec<String> = decisions.keys().cloned().collect();
+                let mut pulled = 0usize;
+                for name in &names {
+                    let Some(ps) = dependency_parents.get(name) else {
+                        continue;
+                    };
+                    // End of List is the highest-priority terminal in MO2's
+                    // serialized order. That means a child parked there can
+                    // already load after its masters, so the ordinary
+                    // priority-violation branch below never fires. It is
+                    // still homeless, though. When EVERY direct plugin
+                    // parent resolves to the same real section, filing the
+                    // terminal child beside them is evidence, not a guess.
+                    // Multiple parent homes (a cross-mod compatibility patch)
+                    // remain held for roadmap/rule review.
+                    let terminal_unclaimed = decisions.get(name).is_some_and(|d| {
+                        d.want.is_none() && is_waiting_room(&d.from, rules, roadmap)
+                    });
+                    if terminal_unclaimed {
+                        let mut homes: Vec<(String, String)> = ps
+                            .iter()
+                            .filter_map(|parent| {
+                                let d = decisions.get(parent)?;
+                                let destination = d.want.clone().unwrap_or_else(|| d.from.clone());
+                                (!is_waiting_room(&destination, rules, roadmap))
+                                    .then(|| (parent.clone(), destination))
+                            })
+                            .collect();
+                        homes.sort();
+                        homes.dedup_by(|a, b| a.1 == b.1);
+                        if homes.len() == 1 {
+                            let (parent, destination) =
+                                homes.pop().expect("one agreed parent home");
+                            let _ = writeln!(
+                                trace,
+                                "  {name} | terminal plugin family: master [{parent}] home -> [{destination}]"
+                            );
+                            let d = decisions.get_mut(name).expect("decision exists");
+                            d.want = Some(destination);
+                            d.why = Why::FollowParent(parent);
+                            pulled += 1;
+                            continue;
+                        }
+                    }
+                    let di = cresolve(name, &dependency_parents, &decisions, &pri_of, &mut memo, 0);
+                    let cur = {
+                        let d = &decisions[name];
+                        d.want
+                            .as_ref()
+                            .and_then(|w| pri_of.get(w.as_str()).copied())
+                            .unwrap_or_else(|| pri_of.get(d.from.as_str()).copied().unwrap_or(0))
+                    };
+                    if di > cur {
+                        // the child's resolved constraint loads LATER than its
+                        // Header/libloot master edges are a hard safety rule:
+                        // even a learned home or explicit routing rule cannot
+                        // leave a child before its master. File it in the
+                        // latest master's band, then the in-section pass puts
+                        // it after that master.
                         let strongest = ps
                             .iter()
                             .filter(|p| decisions.contains_key(*p))
                             .max_by_key(|p| memo.get(*p).copied().unwrap_or(0))
                             .cloned()
                             .unwrap_or_default();
-                        let msec = &ml.sections[n_secs - 1 - di].label;
+                        let target = ml.sections[n_secs - 1 - di].label.clone();
+                        // never pull a mod INTO a dump section - it's a waiting
+                        // room, not a destination
+                        if is_waiting_room(&target, rules, roadmap) {
+                            continue;
+                        }
                         let _ = writeln!(
-                            trace,
-                            "  {name} | WARN: plugin master [{strongest}] lives in [{msec}] which loads later than [{from}] - left in place (pin it or check plugins.txt)",
-                            from = d0.from
-                        );
-                        let _ = writeln!(
-                            log,
-                            "WARN  {name} plugin master [{strongest}] is in later-loading [{msec}] - not moved (established home)"
-                        );
-                        out.push(Change {
-                            kind: ChangeKind::Warn,
-                            name: name.clone(),
-                            detail: format!(
-                                "plugin master [{strongest}] sits in later-loading [{msec}] - not moved"
-                            ),
-                            section: d0.from.clone(),
-                        });
-                        continue;
-                    }
-                    // unclaimed mod with nowhere to go: file it with the
-                    // latest-loading parent's band.
-                    let strongest = ps
-                        .iter()
-                        .filter(|p| decisions.contains_key(*p))
-                        .max_by_key(|p| memo.get(*p).copied().unwrap_or(0))
-                        .cloned()
-                        .unwrap_or_default();
-                    let target = ml.sections[n_secs - 1 - di].label.clone();
-                    // never pull a mod INTO a dump section - it's a waiting
-                    // room, not a destination
-                    if rules.dump.iter().any(|l| l.eq_ignore_ascii_case(&target)) {
-                        continue;
-                    }
-                    let _ = writeln!(
                         trace,
                         "  {name} | plugin family: master [{strongest}] loads later | dest -> [{target}]"
                     );
-                    let d = decisions.get_mut(name).unwrap();
-                    d.want = Some(target);
-                    d.why = Why::FollowParent(strongest);
-                    pulled += 1;
+                        let d = decisions.get_mut(name).unwrap();
+                        d.want = Some(target);
+                        d.why = Why::FollowParent(strongest);
+                        pulled += 1;
+                    }
                 }
+                let _ = writeln!(
+                    trace,
+                    "  plugin family: {pulled} mod(s) moved to load after their plugin masters"
+                );
             }
+        }
+    }
+
+    // Build the global graph AFTER every evidence source has been read but
+    // BEFORE separator moves are applied. This is the order-first half of
+    // the sorter: it deliberately does not mutate a bucket yet.
+    if !solo {
+        let mut priority_edges: Vec<PriorityEdge> = Vec::new();
+        // Raw plugin masters stay out of the folder graph: a city patch can
+        // rightly live in Cities while its framework lives in Utilities.
+        // LOOT's explicit `after` records are not a guess, though. They are
+        // projected plugin -> owner mod above and form the first ordering
+        // tier before separator placement is considered.
+        for (child, parents) in &loot_after {
+            for parent in parents {
+                priority_edges.push(PriorityEdge {
+                    after: child.clone(),
+                    before: parent.clone(),
+                    source: "LOOT masterlist",
+                });
+            }
+        }
+        for (winner, loser) in &rules.promote {
+            priority_edges.push(PriorityEdge {
+                after: winner.clone(),
+                before: loser.clone(),
+                // `Rules::promote` contains both shipped VR/NG precedence
+                // rules and per-profile human rules. Keep the diagnostic
+                // honest: once merged, this edge does not carry a source
+                // tag, so calling every one a user rule is just misleading.
+                source: "explicit load-after rule",
+            });
+        }
+        let current_order = effective_priority_names(ml);
+        let current_rank: HashMap<String, usize> = current_order
+            .iter()
+            .enumerate()
+            .map(|(i, name)| (name.clone(), i))
+            .collect();
+        let graph = build_priority_graph(current_order, &priority_edges);
+        let usable_edges = priority_edges
+            .iter()
+            .filter(|edge| {
+                graph.rank.contains_key(&edge.after) && graph.rank.contains_key(&edge.before)
+            })
+            .count();
+        let _ = writeln!(
+            trace,
+            "\n--- global priority graph ---\n  {} installed mod(s), {usable_edges} usable edge(s), {} cycle member(s)",
+            graph.order.len(),
+            graph.cycles.len(),
+        );
+        let mut unsatisfied = 0usize;
+        let mut cross_bucket = 0usize;
+        for edge in &priority_edges {
+            let (Some(&child_rank), Some(&parent_rank)) = (
+                current_rank.get(&edge.after),
+                current_rank.get(&edge.before),
+            ) else {
+                continue;
+            };
+            let child_section = decisions
+                .get(&edge.after)
+                .and_then(|d| d.want.as_deref().or(Some(d.from.as_str())))
+                .unwrap_or("<unmapped>");
+            let parent_section = decisions
+                .get(&edge.before)
+                .and_then(|d| d.want.as_deref().or(Some(d.from.as_str())))
+                .unwrap_or("<unmapped>");
+            if child_section != parent_section {
+                cross_bucket += 1;
+            }
+            if child_rank <= parent_rank {
+                unsatisfied += 1;
+                let wanted_rank = graph.rank.get(&edge.after).copied().unwrap_or(child_rank);
+                let _ = writeln!(
+                    trace,
+                    "  NEEDS ORDER [{}] {} after {} | current {} <= {} | graph rank {} | buckets [{}] -> [{}]",
+                    edge.source,
+                    edge.after,
+                    edge.before,
+                    child_rank,
+                    parent_rank,
+                    wanted_rank,
+                    parent_section,
+                    child_section,
+                );
+            }
+        }
+        if !graph.cycles.is_empty() {
             let _ = writeln!(
                 trace,
-                "  plugin family: {pulled} mod(s) moved to load after their plugin masters"
+                "  CYCLE HOLD: {}",
+                graph
+                    .cycles
+                    .iter()
+                    .take(8)
+                    .cloned()
+                    .collect::<Vec<_>>()
+                    .join(", ")
             );
         }
+        let _ = writeln!(
+            trace,
+            "  graph result: {unsatisfied} unsatisfied edge(s), {cross_bucket} cross-separator edge(s)"
+        );
     }
 
     // trace + collect the surviving moves
     let mut moves: Vec<(String, String, String)> = vec![]; // (mod name, from, to)
     let mut dump_blocked = 0usize;
+    // MO2's file order is inverse priority. Bigger rank means later/higher,
+    // so a dependent must be in a section whose rank is at least its latest
+    // master's rank; the in-section pass below handles the final "after".
+    let section_priority: HashMap<&str, usize> = ml
+        .sections
+        .iter()
+        .enumerate()
+        .map(|(index, section)| (section.label.as_str(), ml.sections.len() - 1 - index))
+        .collect();
     for m in &all_mods {
         let d = &decisions[&m.name];
         // a dump section is a waiting room: nothing ever moves INTO it
         if let Some(w) = &d.want {
-            if *w != d.from && rules.dump.iter().any(|l| l.eq_ignore_ascii_case(w)) {
+            if *w != d.from && is_waiting_room(w, rules, roadmap) {
                 let _ = writeln!(
                     trace,
                     "  {} | BLOCKED: [{}] is a dump section - staying in [{}]",
@@ -1815,14 +3783,54 @@ fn run(
                 continue;
             }
         }
+        if let Some(w) = &d.want {
+            if *w != d.from {
+                let latest_parent = dependency_parents
+                    .get(&m.name)
+                    .into_iter()
+                    .flatten()
+                    .filter_map(|parent| {
+                        let parent_decision = decisions.get(parent)?;
+                        let home = parent_decision
+                            .want
+                            .as_deref()
+                            .unwrap_or(parent_decision.from.as_str());
+                        section_priority
+                            .get(home)
+                            .copied()
+                            .map(|rank| (parent, home, rank))
+                    })
+                    .max_by_key(|(_, _, rank)| *rank);
+                let target_rank = section_priority.get(w.as_str()).copied().unwrap_or(0);
+                if let Some((parent, parent_home, parent_rank)) = latest_parent {
+                    if target_rank <= parent_rank {
+                        let corrected = parent_home.to_string();
+                        let _ = writeln!(
+                            trace,
+                            "  {} | DEPENDENCY FIX: [{}] would load before master [{}] in [{}]; using latest-master home [{}]",
+                            m.name, w, parent, parent_home, corrected
+                        );
+                        if corrected != d.from {
+                            moves.push((m.name.clone(), d.from.clone(), corrected));
+                        }
+                        continue;
+                    }
+                }
+            }
+        }
         let action = match &d.want {
             Some(w) if *w != d.from => format!("MOVE -> [{w}]"),
             _ => "stay".to_string(),
         };
         let _ = writeln!(
             trace,
-            "  {} | cat {} | {} | {}",
-            m.name, d.cat_str, d.why, action
+            "  {} | [{}] -> [{}] | winner: {} | category context: {} | {}",
+            m.name,
+            d.from,
+            d.want.as_deref().unwrap_or(d.from.as_str()),
+            d.why,
+            d.cat_str,
+            action
         );
         if let Some(w) = &d.want {
             if *w != d.from {
@@ -1833,20 +3841,38 @@ fn run(
     // dump-section summary: how many waiting-room mods got filed out, and
     // how many nothing claimed (those need a rule, a category, or a manual
     // decision - the dump is not a home)
-    for dl in &rules.dump {
-        let Some(sec) = ml.sections.iter().find(|s| s.label.eq_ignore_ascii_case(dl)) else {
+    let waiting_rooms: Vec<String> = ml
+        .sections
+        .iter()
+        .filter(|section| is_waiting_room(&section.label, rules, roadmap))
+        .map(|section| section.label.clone())
+        .collect();
+    for dl in &waiting_rooms {
+        let Some(sec) = ml
+            .sections
+            .iter()
+            .find(|s| s.label.eq_ignore_ascii_case(dl))
+        else {
             continue;
         };
-        let staying = sec.mods.iter().filter(|m| {
-            let d = &decisions[&m.name];
-            d.want.is_none() || d.want.as_deref() == Some(sec.label.as_str())
-        }).count();
+        let staying = sec
+            .mods
+            .iter()
+            .filter(|m| {
+                let d = &decisions[&m.name];
+                d.want.is_none() || d.want.as_deref() == Some(sec.label.as_str())
+            })
+            .count();
         let filed = sec.mods.len() - staying;
         let _ = writeln!(
             trace,
             "dump section [{}]: {filed} filed out, {staying} unclaimed{}",
             sec.label,
-            if staying > 0 { " (no rule/category/keyword matched them)" } else { "" }
+            if staying > 0 {
+                " (no rule/category/keyword matched them)"
+            } else {
+                ""
+            }
         );
         let _ = writeln!(
             log,
@@ -1855,11 +3881,13 @@ fn run(
         );
     }
     if dump_blocked > 0 {
-        let _ = writeln!(trace, "dump sections blocked {dump_blocked} inbound move(s)");
+        let _ = writeln!(
+            trace,
+            "dump sections blocked {dump_blocked} inbound move(s)"
+        );
     }
 
     for (name, from, to) in &moves {
-        changes += 1;
         let _ = writeln!(log, "MOVE  {name}   [{from} -> {to}]");
         out.push(Change {
             kind: ChangeKind::Move,
@@ -1878,7 +3906,11 @@ fn run(
     // pass 1b: parked mods (before the first separator) that match a rule
     // get filed into their section - flags ride along, disabled stays disabled
     if !ml.parking.is_empty() {
-        let _ = writeln!(trace, "\n--- pass 1b: parking lot ({} mod(s)) ---", ml.parking.len());
+        let _ = writeln!(
+            trace,
+            "\n--- pass 1b: parking lot ({} mod(s)) ---",
+            ml.parking.len()
+        );
     }
     let mut parked_moves: Vec<(String, String)> = vec![]; // (raw line, to)
     for line in &ml.parking {
@@ -1890,18 +3922,25 @@ fn run(
             name,
         };
         let cat = cats.and_then(|c| c.category_detail_of(&entry.name));
-        let (want, why) = suggest_explained(
-            &entry,
-            rules,
-            cat.as_ref().map(|(_, n)| n.as_str()),
-            &ml.sections,
-        );
+        let learned_home =
+            learning.and_then(|index| index.destination(&entry.name, &section_labels));
+        let (want, why) = if let Some(home) = learned_home.as_deref() {
+            (Some(home), Why::Learned(home.to_string()))
+        } else {
+            suggest_explained(
+                &entry,
+                rules,
+                cat.as_ref().map(|(_, n)| n.as_str()),
+                &ml.sections,
+                roadmap,
+                content_index.and_then(|index| index.get(&entry.name)),
+                reference,
+                Some(kw),
+            )
+        };
         let (want, why) = if (rules.proven_only
-            && matches!(
-                why,
-                Why::CategoryExactMatch(_) | Why::CategoryFuzzy(..) | Why::Keyword(_)
-            ))
-            || (solo && matches!(why, Why::CategoryExactMatch(_) | Why::CategoryFuzzy(..)))
+            && matches!(why, Why::CategoryExactMatch(_) | Why::Keyword(_)))
+            || (solo && matches!(why, Why::CategoryExactMatch(_)))
         {
             (None, Why::NoMatch)
         } else {
@@ -1929,7 +3968,6 @@ fn run(
         }
     }
     for (line, to) in &parked_moves {
-        changes += 1;
         let name = strip_flag(line).trim().to_string();
         let _ = writeln!(log, "MOVE  {name}   [parking lot -> {to}]");
         out.push(Change {
@@ -1953,12 +3991,11 @@ fn run(
     // =====================================================================
     // constraint engine: one canonical placement for every in-section rule.
     //
-    // CANONICAL LOAD ORDER inside each section: index 0 = loads FIRST,
-    // last index = loads last (wins in-section). every constraint reads
-    // "X loads after Y" = X index > Y index. pins are absolute positions.
-    // no code below this point may think in mo2 file order - the only
-    // direction conversions are building `work` (reverse of file) and the
-    // write-back at the end.
+    // CANONICAL PRIORITY inside each section: MO2 serialises HIGHEST
+    // priority first. Work below therefore runs low -> high, so index 0
+    // loses and the final index wins. Every "X loads after Y" edge is
+    // X index > Y index. The only direction conversions are building
+    // `work` (reverse of modlist.txt) and writing it back at the end.
     //
     // application order: family grouping -> conflict-proven enforcement ->
     // promote -> sink/float -> PIN RESTORATION. pins are restored LAST so
@@ -1977,18 +4014,121 @@ fn run(
             }
         }};
     }
+    let constraint_started = std::time::Instant::now();
+    let _ = writeln!(
+        trace,
+        "\n--- timing detail ---\n  initial routing evidence: {initial_decision_elapsed:?}\n  title-family projection: {family_phase_elapsed:?}\n  libloot separator-band projection: {libloot_band_phase_elapsed:?}\n  section assignment, learning, and dependency projection: {:?}",
+        constraint_started.duration_since(assignment_started),
+    );
     for s in &mut ml.sections {
+        if sort_excluded_sections.contains(&s.label)
+            || roadmap.is_some_and(|map| map.is_terminal(&s.label))
+        {
+            continue;
+        }
         let snapshot: Vec<ModEntry> = s.mods.clone(); // mo2 file order
         let n = snapshot.len();
         if n == 0 {
             continue;
         }
 
-        // canonical working copy: load order = file order reversed.
-        // orig_load[name] = original load-order index (for pins + reporting)
+        // modlist.txt starts with the highest-priority row. Reverse it once
+        // so all constraint code can continue to say "later wins" without
+        // confusing a raw file position for a priority.
         let mut work: Vec<ModEntry> = snapshot.iter().rev().cloned().collect();
-        let orig_load: HashMap<String, usize> =
-            work.iter().enumerate().map(|(i, m)| (m.name.clone(), i)).collect();
+        let orig_load: HashMap<String, usize> = work
+            .iter()
+            .enumerate()
+            .map(|(i, m)| (m.name.clone(), i))
+            .collect();
+
+        // Resource/family comparison used to canonicalise and split the
+        // same titles for every pair in a separator. On a 2k profile that
+        // turned a small local relationship test into millions of repeated
+        // allocations. Build these facts once for this shelf instead.
+        let mut canonical_words: HashMap<String, std::collections::HashSet<String>> =
+            HashMap::new();
+        let mut resource_names: std::collections::HashSet<String> =
+            std::collections::HashSet::new();
+        let mut creation_club_names: std::collections::HashSet<String> =
+            std::collections::HashSet::new();
+        for entry in &work {
+            let canonical = kw.canonical(&entry.name);
+            if is_resource_pack(&entry.lower) {
+                resource_names.insert(entry.name.clone());
+            }
+            if norm(&canonical).contains("creationclub") {
+                creation_club_names.insert(entry.name.clone());
+            }
+            canonical_words.insert(
+                entry.name.clone(),
+                canonical
+                    .split_whitespace()
+                    .filter(|word| {
+                        !GENERIC_TOKENS.contains(word)
+                            && !TITLE_GENERIC_TOKENS.contains(word)
+                            && word.len() >= 3
+                    })
+                    .map(str::to_string)
+                    .collect(),
+            );
+        }
+
+        // libloot projection (or the local-parser fallback): only plugin-owning folders receive a group
+        // rank. Sort those entries through the slots they already occupy,
+        // leaving pluginless mods and user-pinned rows exactly where they
+        // are. This gives deterministic order inside a separator without
+        // using a group label as permission to bulldoze separators.
+        let plugin_rank = libloot_mod_rank.unwrap_or(&loot_group_rank);
+        let plugin_rank_source = if libloot_mod_rank.is_some() {
+            "libloot"
+        } else {
+            "LOOT group"
+        };
+        if !solo && !plugin_rank.is_empty() {
+            let slots: Vec<usize> = work
+                .iter()
+                .enumerate()
+                .filter(|(_, mod_entry)| {
+                    !pinned.contains(mod_entry.name.as_str())
+                        && plugin_rank.contains_key(&mod_entry.name)
+                })
+                .map(|(slot, _)| slot)
+                .collect();
+            let mut ordered = slots.clone();
+            ordered.sort_by_key(|slot| {
+                let mod_entry = &work[*slot];
+                (plugin_rank[&mod_entry.name], orig_load[&mod_entry.name])
+            });
+            let replacement: Vec<ModEntry> =
+                ordered.iter().map(|slot| work[*slot].clone()).collect();
+            for (slot, replacement) in slots.iter().zip(replacement) {
+                if work[*slot].name == replacement.name {
+                    continue;
+                }
+                let old = std::mem::replace(&mut work[*slot], replacement.clone());
+                let _ = writeln!(
+                    trace,
+                    "  [{}] {} | {plugin_rank_source} rank {} -> in-section rank {}",
+                    s.label, replacement.name, plugin_rank[&replacement.name], slot,
+                );
+                let _ = writeln!(
+                    log,
+                    "REOR  {} by {plugin_rank_source} within [{}]",
+                    replacement.name, s.label
+                );
+                push_change!(
+                    out,
+                    Change {
+                        kind: ChangeKind::Reorder,
+                        name: replacement.name,
+                        detail: format!("{plugin_rank_source} rank within [{}]", s.label),
+                        section: s.label.clone(),
+                    }
+                );
+                drop(old);
+            }
+        }
 
         // parent relation (direction-free): census content parents beat
         // name guessing - "MCM Helper VR" contains nothing of "SkyUI - VR",
@@ -1996,37 +4136,110 @@ fn run(
         // parent is the in-section mod with the LONGEST norm this mod's
         // name contains (longest = most specific, handles chains like
         // "mod" -> "mod - dlc addon" -> "mod - dlc addon - fix").
-        let idx_of: HashMap<&str, usize> =
-            work.iter().enumerate().map(|(i, m)| (m.name.as_str(), i)).collect();
+        let idx_of: HashMap<&str, usize> = work
+            .iter()
+            .enumerate()
+            .map(|(i, m)| (m.name.as_str(), i))
+            .collect();
         let mut parent: Vec<Option<usize>> = vec![None; n];
+        let mut parent_evidence: Vec<&'static str> = vec!["none"; n];
         for i in 0..n {
             if let Some(ps) = content_parents.get(&work[i].name) {
-                if let Some(p) = ps.iter()
+                if let Some(p) = ps
+                    .iter()
                     .filter_map(|p| idx_of.get(p.as_str()).copied())
                     .max_by_key(|&idx| idx)
                 {
                     parent[i] = Some(p);
+                    parent_evidence[i] = "plugin/master constraint";
                     continue;
                 }
             }
-            let mut best: Option<usize> = None;
+            // Pluginless resource packs still need a deterministic place in
+            // the left-pane priority stack. A clear same-product resource
+            // relation is stronger than loose title-family guessing, but it
+            // only orders the pair within this section; it never invents a
+            // cross-section home.
+            let mut resource_parent: Option<(usize, usize)> = None;
+            for j in 0..n {
+                if i == j {
+                    continue;
+                }
+                let resource = &work[j];
+                let consumer = &work[i];
+                if !resource_names.contains(resource.name.as_str())
+                    || resource_names.contains(consumer.name.as_str())
+                    || (creation_club_names.contains(resource.name.as_str())
+                        && creation_club_names.contains(consumer.name.as_str()))
+                {
+                    continue;
+                }
+                let resource_words = &canonical_words[resource.name.as_str()];
+                let consumer_words = &canonical_words[consumer.name.as_str()];
+                let shared_count = resource_words.intersection(consumer_words).count();
+                let shared_len: usize = resource_words
+                    .intersection(consumer_words)
+                    .map(|word| word.len())
+                    .sum();
+                let has_long_identity = resource_words
+                    .intersection(consumer_words)
+                    .any(|word| word.len() >= 8);
+                if shared_count > 0
+                    && (shared_count >= 2 || has_long_identity)
+                    && !kw.is_never(&consumer.name, &resource.name)
+                {
+                    let score = shared_len + shared_count * 10;
+                    if resource_parent.as_ref().is_none_or(|(_, old)| score > *old) {
+                        resource_parent = Some((j, score));
+                    }
+                }
+            }
+            if let Some((resource, _)) = resource_parent {
+                parent[i] = Some(resource);
+                parent_evidence[i] = "same-product resource evidence";
+                let _ = writeln!(
+                    trace,
+                    "  [{}] resource order: {} above {}",
+                    s.label, work[resource].name, work[i].name
+                );
+                continue;
+            }
+            let mut best: Option<(usize, (u8, usize, std::cmp::Reverse<usize>))> = None;
             for j in 0..n {
                 if i == j {
                     continue;
                 }
                 let (a, b) = (&work[i], &work[j]);
-                let (ca, cb) = (cn(a), cn(b));
-                if ca != cb
-                    && cb.len() >= 10
-                    && ca.contains(&cb)
-                    && !kw.is_never(&a.name, &b.name)
-                    && best.map(|k| cn(&work[k]).len() < cb.len()).unwrap_or(true)
-                {
-                    best = Some(j);
+                if let Some(score) = family_parent_score(a, b) {
+                    if !kw.is_never(&a.name, &b.name) {
+                        if best.as_ref().is_none_or(|(_, old)| score > *old) {
+                            best = Some((j, score));
+                        }
+                    }
                 }
             }
-            parent[i] = best;
+            parent[i] = best.map(|(index, _)| index);
+            if parent[i].is_some() {
+                parent_evidence[i] = "title-family evidence";
+            }
         }
+
+        // Parent indices describe this pre-reorder working vector. Preserve
+        // their names now: later passes legitimately reshuffle `work`, and a
+        // trace that resolves an old index against a new vector tells fairy
+        // tales about which mod was the parent.
+        let parent_name_by_child: HashMap<String, (String, &'static str)> = parent
+            .iter()
+            .enumerate()
+            .filter_map(|(child, parent)| {
+                parent.map(|parent| {
+                    (
+                        work[child].name.clone(),
+                        (work[parent].name.clone(), parent_evidence[child]),
+                    )
+                })
+            })
+            .collect();
 
         // family grouping: every family loads root FIRST, then its children
         // by increasing depth (a patch loads after its master, a patch's
@@ -2048,24 +4261,21 @@ fn run(
             depth_of[i] = depth;
             root_of[i] = cur;
         }
-        // sort key, expressed in load terms: group by the root's original
-        // load position (families with later-loading roots stay later),
-        // parents before children, original position breaks ties.
+        let depth_by_child: HashMap<String, usize> = work
+            .iter()
+            .enumerate()
+            .map(|(index, entry)| (entry.name.clone(), depth_of[index]))
+            .collect();
+        // Keep root groups in their existing top-to-bottom order, then put
+        // each parent above its children. Original position breaks ties.
         // solo mode skips this: family clustering is a proven pass, and an
         // "apply user rules only" write must leave every mod a user rule
         // didn't name exactly where it sits.
         if !solo {
             let mut order: Vec<usize> = (0..n).collect();
-            order.sort_by_key(|&i| {
-                (
-                    std::cmp::Reverse(n - 1 - root_of[i]),
-                    depth_of[i],
-                    std::cmp::Reverse(orig_load[&work[i].name]),
-                )
-            });
+            order.sort_by_key(|&i| (root_of[i], depth_of[i], orig_load[&work[i].name]));
             work = order.iter().map(|&i| work[i].clone()).collect();
         }
-
 
         // -----------------------------------------------------------------
         // SLOT SPACE. pins are absolute: a pinned mod occupies its original
@@ -2114,7 +4324,8 @@ fn run(
                 let wi = u.iter().position(|m| m.name == *win);
                 let li = u.iter().position(|m| m.name == *lose);
                 if let (Some(wi), Some(li)) = (wi, li) {
-                    let _ = writeln!(
+                    let _ =
+                        writeln!(
                         trace,
                         "  [{label}] {win}@{wi} vs {lose}@{li} (load order, later wins): {verdict}",
                         label = s.label,
@@ -2124,14 +4335,16 @@ fn run(
                         let e = u.remove(wi);
                         let nl = u.iter().position(|m| m.name == *lose).unwrap();
                         u.insert(nl + 1, e);
-                        changes += 1;
                         let _ = writeln!(log, "PROM  {win} loads after {lose}");
-                        push_change!(out, Change {
-                            kind: ChangeKind::Promote,
-                            name: win.clone(),
-                            detail: format!("loads after {lose}"),
-                            section: s.label.clone(),
-                        });
+                        push_change!(
+                            out,
+                            Change {
+                                kind: ChangeKind::Promote,
+                                name: win.clone(),
+                                detail: format!("loads after {lose}"),
+                                section: s.label.clone(),
+                            }
+                        );
                     }
                 }
             }
@@ -2148,19 +4361,25 @@ fn run(
                 let _ = writeln!(
                     trace,
                     "  [{sec}] {name}@rank {i}: {verdict}",
-                    verdict = if i == 0 { "already sunk" } else { "SINK to section top (ui)" }
+                    verdict = if i == 0 {
+                        "already sunk"
+                    } else {
+                        "SINK to section top (ui)"
+                    }
                 );
                 if i != 0 {
                     let e = u.remove(i);
                     u.insert(0, e);
-                    changes += 1;
                     let _ = writeln!(log, "SINK  {name} to top of [{sec}] (loses in-section)");
-                    push_change!(out, Change {
-                        kind: ChangeKind::Sink,
-                        name: name.clone(),
-                        detail: format!("top of [{sec}] - loses to everything below it"),
-                        section: sec.clone(),
-                    });
+                    push_change!(
+                        out,
+                        Change {
+                            kind: ChangeKind::Sink,
+                            name: name.clone(),
+                            detail: format!("top of [{sec}] - loses to everything below it"),
+                            section: sec.clone(),
+                        }
+                    );
                 }
             }
 
@@ -2176,19 +4395,32 @@ fn run(
                     trace,
                     "  [{label}] {name}@rank {i}: {verdict}",
                     label = s.label,
-                    verdict = if i == 0 { "already sunk" } else { "SINK (framework, loads early)" }
+                    verdict = if i == 0 {
+                        "already sunk"
+                    } else {
+                        "SINK (framework, lowest priority in section)"
+                    }
                 );
                 if i != 0 {
                     let e = u.remove(i);
                     u.insert(0, e);
-                    changes += 1;
-                    let _ = writeln!(log, "SINK  {name} loads first in [{}] (framework)", s.label);
-                    push_change!(out, Change {
-                        kind: ChangeKind::Sink,
-                        name: name.clone(),
-                        detail: format!("top of [{}] - framework, loads early", s.label),
-                        section: s.label.clone(),
-                    });
+                    let _ = writeln!(
+                        log,
+                        "SINK  {name} to lowest-priority slot in [{}] (framework)",
+                        s.label
+                    );
+                    push_change!(
+                        out,
+                        Change {
+                            kind: ChangeKind::Sink,
+                            name: name.clone(),
+                            detail: format!(
+                                "top of [{}] - framework; lowest priority in this section",
+                                s.label
+                            ),
+                            section: s.label.clone(),
+                        }
+                    );
                 }
             }
 
@@ -2203,19 +4435,25 @@ fn run(
                 let _ = writeln!(
                     trace,
                     "  [{sec}] {name}@rank {i}: {verdict}",
-                    verdict = if i == u.len() - 1 { "already floated" } else { "FLOAT to section bottom (ui)" }
+                    verdict = if i == u.len() - 1 {
+                        "already floated"
+                    } else {
+                        "FLOAT to section bottom (ui)"
+                    }
                 );
                 if i != u.len() - 1 {
                     let e = u.remove(i);
                     u.push(e);
-                    changes += 1;
                     let _ = writeln!(log, "FLOT  {name} to bottom of [{sec}] (wins in-section)");
-                    push_change!(out, Change {
-                        kind: ChangeKind::Float,
-                        name: name.clone(),
-                        detail: format!("bottom of [{sec}] - wins everything in-section"),
-                        section: sec.clone(),
-                    });
+                    push_change!(
+                        out,
+                        Change {
+                            kind: ChangeKind::Float,
+                            name: name.clone(),
+                            detail: format!("bottom of [{sec}] - wins everything in-section"),
+                            section: sec.clone(),
+                        }
+                    );
                 }
             }
 
@@ -2226,13 +4464,17 @@ fn run(
             // grouping hangs a child on ONE display parent; a multi-parent
             // patch would otherwise load after the base mod but before the
             // patch hub that also masters it.)
-            if !content_parents.is_empty() || !loot_after.is_empty() {
+            if ENFORCE_PLUGIN_EDGES_IN_MOD_SORT || !loot_after.is_empty() {
                 for _ in 0..6 {
                     let mut moved = false;
                     for ci in 0..u.len() {
                         let name = u[ci].name.clone();
-                        // census plugin masters + loot masterlist afters
-                        let cps = content_parents.get(&name);
+                        // Raw census masters are opt-in right-pane evidence;
+                        // LOOT's explicit after list is always a real
+                        // left-pane precedence constraint.
+                        let cps = ENFORCE_PLUGIN_EDGES_IN_MOD_SORT
+                            .then(|| content_parents.get(&name))
+                            .flatten();
                         let lps2 = loot_after.get(&name);
                         if cps.is_none() && lps2.is_none() {
                             continue;
@@ -2243,14 +4485,20 @@ fn run(
                             .flat_map(|v| v.iter())
                             .filter_map(|p| abs_pos!(&u, p.as_str()))
                             .max();
-                        let Some(lps) = latest_parent_slot else { continue };
+                        let Some(lps) = latest_parent_slot else {
+                            continue;
+                        };
                         let child_slot = free[ci.min(free.len().saturating_sub(1))];
                         if child_slot < lps {
                             let e = u.remove(ci);
                             let r = free.partition_point(|f| *f <= lps);
                             u.insert(r.min(u.len()), e);
                             moved = true;
-                            let src = if lps2.is_some() && cps.is_none() { "loot" } else { "content DAG" };
+                            let src = if lps2.is_some() && cps.is_none() {
+                                "LOOT"
+                            } else {
+                                "content DAG"
+                            };
                             let _ = writeln!(
                                 trace,
                                 "  [{label}] {name} | {src}: loads after all parents (slot {child_slot} -> past {lps})",
@@ -2278,7 +4526,9 @@ fn run(
                         {
                             continue;
                         }
-                        let Some((_w, shared)) = ci.shared(&a.name, &b.name) else { continue };
+                        let Some((_w, shared)) = ci.shared(&a.name, &b.name) else {
+                            continue;
+                        };
                         if shared < conflicts::MIN_SHARED {
                             continue;
                         }
@@ -2316,7 +4566,6 @@ fn run(
                             let e = u.remove(pi);
                             let r = free.partition_point(|f| *f <= bslot);
                             u.insert(r.min(u.len()), e);
-                            changes += 1;
                             moved = true;
                             let _ = writeln!(
                                 log,
@@ -2338,7 +4587,10 @@ fn run(
                 }
             }
 
-            if u.iter().map(|m| m.name.as_str()).eq(round_start.iter().map(|n| n.as_str())) {
+            if u.iter()
+                .map(|m| m.name.as_str())
+                .eq(round_start.iter().map(|n| n.as_str()))
+            {
                 break; // fixed point: every constraint satisfied simultaneously
             }
         }
@@ -2357,8 +4609,7 @@ fn run(
             work.extend(it); // paranoia: never lose a mod
         }
 
-        // write back: load order -> mo2 file order (the second and final
-        // direction conversion in this function)
+        // Return to MO2's highest-priority-first serialisation.
         s.mods = work.into_iter().rev().collect();
 
         // report every mod whose in-section position changed, with the
@@ -2367,7 +4618,6 @@ fn run(
         for (new_fi, m) in s.mods.iter().enumerate() {
             let old_fi = snapshot.iter().position(|o| o.name == m.name).unwrap();
             if old_fi != new_fi {
-                changes += 1;
                 let _ = writeln!(log, "REOR  {}   [{}]", m.name, s.label);
                 out.push(Change {
                     kind: ChangeKind::Reorder,
@@ -2379,21 +4629,28 @@ fn run(
                     let _ = writeln!(trace, "\n--- constraint placement [{}] ---", s.label);
                     traced_header = true;
                 }
-                let li = n - 1 - new_fi; // final load index
-                let old_li = n - 1 - old_fi;
-                let parent_name = parent[old_li].map(|p| snapshot[n - 1 - p].name.as_str());
+                let priority = n - new_fi;
+                let old_priority = n - old_fi;
+                let parent = parent_name_by_child.get(&m.name);
                 let _ = writeln!(
                     trace,
-                    "  {} | parent {} | depth {} | load index {} -> {} (loads later = wins)",
+                    "  {} | parent {} ({}) | depth {} | effective priority {} -> {} (higher wins)",
                     m.name,
-                    parent_name.unwrap_or("<none>"),
-                    depth_of[old_li],
-                    old_li,
-                    li
+                    parent.map(|(name, _)| name.as_str()).unwrap_or("<none>"),
+                    parent.map(|(_, evidence)| *evidence).unwrap_or("none"),
+                    depth_by_child.get(&m.name).copied().unwrap_or(0),
+                    old_priority,
+                    priority
                 );
             }
         }
     }
+
+    let _ = writeln!(
+        trace,
+        "  in-section priority constraints: {:?}",
+        constraint_started.elapsed(),
+    );
 
     // =====================================================================
     // audit gate: the order is FINAL now - user pins, family pulls,
@@ -2415,8 +4672,7 @@ fn run(
                 for j in (i + 1)..n {
                     let (a, b) = (&s.mods[i], &s.mods[j]);
                     // unticked mods can't conflict - mo2 doesn't load them
-                    if !a.raw.trim_start().starts_with('+')
-                        || !b.raw.trim_start().starts_with('+')
+                    if !a.raw.trim_start().starts_with('+') || !b.raw.trim_start().starts_with('+')
                     {
                         continue;
                     }
@@ -2436,7 +4692,9 @@ fn run(
                     if !patch_flavored(&child.lower) {
                         continue;
                     }
-                    let Some((_w, shared)) = ci.shared(&child.name, &parent_m.name) else { continue };
+                    let Some((_w, shared)) = ci.shared(&child.name, &parent_m.name) else {
+                        continue;
+                    };
                     if shared < conflicts::MIN_SHARED {
                         continue;
                     }
@@ -2466,130 +4724,156 @@ fn run(
         let _ = writeln!(trace, "  conflict audit complete: {fails} violation(s)");
     }
 
-    // gate 2: master-order audit. if the final layout loads a mod before
-    // the mod providing its plugin's master, that's a broken relationship
-    // even when a pin caused it - a pin is a hard veto, but it is no
-    // longer SILENT: the user gets a WARN row, not our blessing.
-    if let Some(census) = census {
-        let base_game: &[&str] = game.base_masters;
-        let mut provider: HashMap<&str, &str> = HashMap::new();
-        for (mod_name, _, info) in census {
-            provider.entry(info.plugin.as_str()).or_insert(mod_name);
-        }
-        // same exemptions as the family constraint: hub masters are
-        // infrastructure the user places deliberately (ussep lives at the
-        // bottom of their list and that's FINE in plugin terms) - without
-        // this gate the audit floods 50+ "loads before ussep" false alarms
-        const HUB_THRESHOLD: usize = 20;
-        let mut child_count: HashMap<&str, usize> = HashMap::new();
-        let mut seen_pair: std::collections::HashSet<(String, &str)> =
-            std::collections::HashSet::new();
-        for (mod_name, _, info) in census {
-            for mp in info.masters.iter().filter(|mp| {
-                !base_game.contains(&mp.as_str()) && !mp.starts_with("cc")
-            }) {
-                if seen_pair.insert((mod_name.clone(), mp.as_str())) {
-                    *child_count.entry(mp.as_str()).or_insert(0) += 1;
-                }
+    // gate 2 is for the right-pane plugin sorter. Keep the implementation
+    // here for that future pass, but don't flood a left-pane mod plan with
+    // plugin-master diagnostics.
+    if ENFORCE_PLUGIN_EDGES_IN_MOD_SORT {
+        if let Some(census) = census {
+            let base_game: &[&str] = game.base_masters;
+            let mut provider: HashMap<&str, &str> = HashMap::new();
+            for (mod_name, _, info) in census {
+                provider.entry(info.plugin.as_str()).or_insert(mod_name);
             }
-        }
-        // final position in CANONICAL LOAD ORDER: name -> (load section
-        // index, load index in section). one tuple compare says it all:
-        // child < parent means the child loads BEFORE its master - broken.
-        let n_secs = ml.sections.len();
-        let mut pos: HashMap<&str, (usize, usize)> = HashMap::new();
-        for (si, s) in ml.sections.iter().enumerate() {
-            let sn = s.mods.len();
-            for (mi, m) in s.mods.iter().enumerate() {
-                if m.raw.trim_start().starts_with('+') {
-                    pos.insert(m.name.as_str(), (n_secs - 1 - si, sn - 1 - mi));
-                }
-            }
-        }
-        let _ = writeln!(trace, "\n--- audit gate: master order ---");
-        let mut fails = 0usize;
-        let mut forced = 0usize;
-        let mut reported: std::collections::HashSet<&str> = std::collections::HashSet::new();
-        for (mod_name, _, info) in census {
-            let Some(&p1) = pos.get(mod_name.as_str()) else { continue };
-            // strongest master = latest-loading provider mod
-            let strongest = info
-                .masters
-                .iter()
-                .filter(|mp| !base_game.contains(&mp.as_str()) && !mp.starts_with("cc"))
-                .filter(|mp| child_count.get(mp.as_str()).copied().unwrap_or(0) <= HUB_THRESHOLD)
-                .filter_map(|mp| provider.get(mp.as_str()))
-                .filter(|pm| **pm != mod_name.as_str())
-                .filter_map(|pm| pos.get(*pm).map(|p2| (*pm, *p2)))
-                .max_by_key(|(_, p2)| *p2);
-            let Some((master_mod, p2)) = strongest else { continue };
-            let inverted = p1 < p2;
-            if inverted && reported.insert(mod_name.as_str()) {
-                fails += 1;
-                // whose call is it? the child's own pin, obviously. but a
-                // PINNED MASTER can make satisfaction impossible: if every
-                // slot above it in the section is also pinned, there is no
-                // legal landing spot for the child and no ordering code
-                // could have fixed it. label those honestly instead of
-                // crying sorter bug.
-                let by_pin = if pinned.contains(mod_name.as_str()) {
-                    true
-                } else if pinned.contains(master_mod) {
-                    let fsec = &ml.sections[n_secs - 1 - p2.0];
-                    let sn = fsec.mods.len();
-                    // slots above the master (load order): file indices
-                    // below sn-1-p2.1. free = occupied by an unpinned mod.
-                    let mut free_above = false;
-                    for slot in (p2.1 + 1)..sn {
-                        let m = &fsec.mods[sn - 1 - slot];
-                        if !pinned.contains(m.name.as_str()) {
-                            free_above = true;
-                            break;
-                        }
+            // same exemptions as the family constraint: hub masters are
+            // infrastructure the user places deliberately (ussep lives at the
+            // bottom of their list and that's FINE in plugin terms) - without
+            // this gate the audit floods 50+ "loads before ussep" false alarms
+            const HUB_THRESHOLD: usize = 20;
+            let mut child_count: HashMap<&str, usize> = HashMap::new();
+            let mut seen_pair: std::collections::HashSet<(String, &str)> =
+                std::collections::HashSet::new();
+            for (mod_name, _, info) in census {
+                for mp in info
+                    .masters
+                    .iter()
+                    .filter(|mp| !base_game.contains(&mp.as_str()) && !mp.starts_with("cc"))
+                {
+                    if seen_pair.insert((mod_name.clone(), mp.as_str())) {
+                        *child_count.entry(mp.as_str()).or_insert(0) += 1;
                     }
-                    !free_above
-                } else {
-                    false
-                };
-                if by_pin {
-                    forced += 1;
                 }
-                let _ = writeln!(
+            }
+            // Final position in canonical effective priority: name -> (section
+            // priority, in-section priority). child <= parent means it cannot
+            // override/follow its master.
+            let n_secs = ml.sections.len();
+            let mut pos: HashMap<&str, (usize, usize)> = HashMap::new();
+            for (si, s) in ml.sections.iter().enumerate() {
+                for (mi, m) in s.mods.iter().enumerate() {
+                    if m.raw.trim_start().starts_with('+') {
+                        pos.insert(m.name.as_str(), (n_secs - 1 - si, s.mods.len() - 1 - mi));
+                    }
+                }
+            }
+            let _ = writeln!(trace, "\n--- audit gate: master order ---");
+            let mut fails = 0usize;
+            let mut forced = 0usize;
+            let mut reported: std::collections::HashSet<&str> = std::collections::HashSet::new();
+            for (mod_name, _, info) in census {
+                let Some(&p1) = pos.get(mod_name.as_str()) else {
+                    continue;
+                };
+                // strongest master = latest-loading provider mod
+                let strongest = info
+                    .masters
+                    .iter()
+                    .filter(|mp| !base_game.contains(&mp.as_str()) && !mp.starts_with("cc"))
+                    .filter(|mp| {
+                        child_count.get(mp.as_str()).copied().unwrap_or(0) <= HUB_THRESHOLD
+                    })
+                    .filter_map(|mp| provider.get(mp.as_str()))
+                    .filter(|pm| **pm != mod_name.as_str())
+                    .filter_map(|pm| pos.get(*pm).map(|p2| (*pm, *p2)))
+                    .max_by_key(|(_, p2)| *p2);
+                let Some((master_mod, p2)) = strongest else {
+                    continue;
+                };
+                let inverted = p1 < p2;
+                if inverted && reported.insert(mod_name.as_str()) {
+                    fails += 1;
+                    // whose call is it? the child's own pin, obviously. but a
+                    // PINNED MASTER can make satisfaction impossible: if every
+                    // slot above it in the section is also pinned, there is no
+                    // legal landing spot for the child and no ordering code
+                    // could have fixed it. label those honestly instead of
+                    // crying sorter bug.
+                    let by_pin = if pinned.contains(mod_name.as_str()) {
+                        true
+                    } else if pinned.contains(master_mod) {
+                        let fsec = &ml.sections[n_secs - 1 - p2.0];
+                        // Raw-file slots before the master have higher effective
+                        // priority. A free one is occupied by an unpinned mod.
+                        let mut free_above = false;
+                        for slot in (p2.1 + 1)..fsec.mods.len() {
+                            let m = &fsec.mods[fsec.mods.len() - 1 - slot];
+                            if !pinned.contains(m.name.as_str()) {
+                                free_above = true;
+                                break;
+                            }
+                        }
+                        !free_above
+                    } else {
+                        false
+                    };
+                    if by_pin {
+                        forced += 1;
+                    }
+                    let _ = writeln!(
                     trace,
                     "  AUDIT FAIL {mod_name} loads before its master {master_mod} (load {:?} < {:?}){}",
                     p1, p2,
                     if by_pin { " [forced by user pin]" } else { "" }
                 );
-                let _ = writeln!(
-                    log,
-                    "WARN  {mod_name} loads before its master {master_mod}"
-                );
-                out.push(Change {
-                    kind: ChangeKind::Warn,
-                    name: mod_name.clone(),
-                    detail: format!(
-                        "[master order] loads before its master {master_mod}"
-                    ),
-                    section: ml.sections[n_secs - 1 - p1.0].label.clone(),
-                });
+                    let _ = writeln!(log, "WARN  {mod_name} loads before its master {master_mod}");
+                    out.push(Change {
+                        kind: ChangeKind::Warn,
+                        name: mod_name.clone(),
+                        detail: format!("[master order] loads before its master {master_mod}"),
+                        section: ml.sections[n_secs - 1 - p1.0].label.clone(),
+                    });
+                }
             }
-        }
-        let _ = writeln!(
+            let _ = writeln!(
             trace,
             "  master-order audit complete: {fails} violation(s) ({forced} forced by user pins)"
         );
+        }
     }
 
-    changes
-}
+    // Separator positioning is its own late, explicit phase. It cannot
+    // interfere with mod-family or plugin-master calculations above, and
+    // appears as a first-class preview row before any write happens.
+    pin_managed_creation_club_shelf(ml, roadmap, out, trace, log);
 
+    // Several ordering passes can legitimately move the same mod while the
+    // plan is converging (libloot rank first, then the final constraint pass).
+    // The latter is the canonical result, so report exactly one REOR row per
+    // mod instead of making the preview look as though it will reorder the
+    // same folder twice.
+    let mut final_reorders = std::collections::HashSet::<String>::new();
+    let mut compact = Vec::with_capacity(out.len());
+    for change in std::mem::take(out).into_iter().rev() {
+        if change.kind == ChangeKind::Reorder && !final_reorders.insert(change.name.clone()) {
+            continue;
+        }
+        compact.push(change);
+    }
+    compact.reverse();
+    *out = compact;
+    out.len()
+}
 
 // ---- category report ----
 // every mo2 category actually in use by this list's mods, with counts and
 // whether it auto-matches a separator name. this is the bridge between
 // nexus/mo2 categories and a custom separator layout: anything marked
 // "no match" needs an @ rule in rules.txt to sort by category.
-fn category_report(ml: &Modlist, cats: &Categories, rules: &Rules) -> String {
+fn category_report(
+    ml: &Modlist,
+    cats: &Categories,
+    rules: &Rules,
+    roadmap: Option<&section_map::SectionMap>,
+) -> String {
     let mut counts: HashMap<String, usize> = HashMap::new();
     let mut uncategorized = 0usize;
     for s in &ml.sections {
@@ -2606,10 +4890,9 @@ fn category_report(ml: &Modlist, cats: &Categories, rules: &Rules) -> String {
     let mut out = String::new();
     let _ = writeln!(out, "{:<40} {:>5}   maps to", "category", "mods");
     for (name, n) in &rows {
-        // same bridge the sorter uses: explicit @ rule first (marked @ so
-        // you can tell pinned mappings from guesses), then exact norm match,
-        // then fuzzy shared-token. fuzzy hits are marked with ~ so you can
-        // see which mappings are guesses worth pinning down with an @ rule
+        // Same bridge the sorter uses. This view must never call the old
+        // fuzzy helper; reporting an imaginary fuzzy placement next to a
+        // conservative sorter is just lying with extra steps.
         let cn = norm(name);
         // mirror the sorter's @ rule check exactly (exact lowercase match)
         let cl = name.to_lowercase();
@@ -2620,13 +4903,18 @@ fn category_report(ml: &Modlist, cats: &Categories, rules: &Rules) -> String {
             .map(|(_, s)| s.clone());
         let target = match at_rule {
             Some(s) => format!("@ {s}"),
-            None => match ml.sections.iter().find(|s| norm(&s.label) == cn) {
-                Some(s) => s.label.clone(),
-                None => match fuzzy_match_section(name, &ml.sections, false) {
-                    Some(label) => format!("~ {label} (fuzzy)"),
-                    None => "- no matching separator (add an @ rule)".to_string(),
-                },
-            },
+            None => roadmap
+                .and_then(|map| {
+                    map.destination_for_category(name)
+                        .map(|d| format!("roadmap {d}"))
+                })
+                .or_else(|| {
+                    ml.sections
+                        .iter()
+                        .find(|s| norm(&s.label) == cn)
+                        .map(|s| format!("exact {0}", s.label))
+                })
+                .unwrap_or_else(|| "- no reviewed roadmap match".to_string()),
         };
         let _ = writeln!(out, "{name:<40} {n:>5}   {target}");
     }
@@ -2717,6 +5005,19 @@ fn main() -> ExitCode {
         std::process::exit(2);
     });
     let mut ml = parse(&text);
+    let section_labels: Vec<String> = ml.sections.iter().map(|s| s.label.clone()).collect();
+    let roadmap = match section_map::load_or_create(Path::new(file), &section_labels) {
+        Ok(map) => {
+            if map.created {
+                eprintln!("separator roadmap created: {}", map.path.display());
+            }
+            Some(map)
+        }
+        Err(e) => {
+            eprintln!("couldn't create separator roadmap: {e}");
+            None
+        }
+    };
     // --user-rules-only: built-in cascade off, guess tiers off - only the
     // user's own rules plus proven data (loot/conflict/census/family) act
     let user_rules_only = args.iter().any(|a| a == "--user-rules-only");
@@ -2738,7 +5039,11 @@ fn main() -> ExitCode {
         let ini = ConflictIndex::ini_path(mlp)?;
         if ConflictIndex::is_fresh(mlp) {
             if let Some(ci) = ConflictIndex::load_checked(&ini, &mods_dir) {
-                eprintln!("conflict index: {} pair(s) from {}", ci.pairs.len(), ini.display());
+                eprintln!(
+                    "conflict index: {} pair(s) from {}",
+                    ci.pairs.len(),
+                    ini.display()
+                );
                 return Some(ci);
             }
             eprintln!("conflict cache belongs to a different instance - rescanning");
@@ -2761,7 +5066,7 @@ fn main() -> ExitCode {
     // category report mode: show the category -> separator bridge, then bail
     if cmd == "categories" {
         match &cats {
-            Some(c) => print!("{}", category_report(&ml, c, &rules)),
+            Some(c) => print!("{}", category_report(&ml, c, &rules, roadmap.as_ref())),
             None => eprintln!(
                 "no categories.dat / mods folder found near {file} - \
                  run me from inside mo2 so i can see the instance"
@@ -2774,24 +5079,31 @@ fn main() -> ExitCode {
     // plugin census from a posted log, so a reported sort can be reproduced
     // exactly without their mods folder. format per line:
     //   "  plugin.esp (Mod Name) esm esl | masters: a.esp, b.esp | GRUP:n"
-    let census: Option<Vec<(String, String, crate::plugins::PluginInfo)>> =
-        opt("--census-log").and_then(|p| {
+    let census: Option<Vec<(String, String, crate::plugins::PluginInfo)>> = opt("--census-log")
+        .and_then(|p| {
             let text = fs::read_to_string(p).ok()?;
             let mut out = Vec::new();
             for line in text.lines() {
                 let l = line.trim_start();
                 let Some(paren) = l.find(" (") else { continue };
-                let Some(close) = l[paren..].find(") ") else { continue };
+                let Some(close) = l[paren..].find(") ") else {
+                    continue;
+                };
                 let plugin = l[..paren].to_string();
                 let mod_name = l[paren + 2..paren + close].to_string();
                 let rest = &l[paren + close + 2..];
-                let Some(mpos) = rest.find("masters: ") else { continue };
+                let Some(mpos) = rest.find("masters: ") else {
+                    continue;
+                };
                 let after = &rest[mpos + 9..];
                 let masters_str = after.split('|').next().unwrap_or("").trim();
                 let masters = if masters_str.is_empty() || masters_str == "-" {
                     vec![]
                 } else {
-                    masters_str.split(',').map(|s| s.trim().to_string()).collect()
+                    masters_str
+                        .split(',')
+                        .map(|s| s.trim().to_string())
+                        .collect()
                 };
                 let flags = &rest[..mpos];
                 out.push((
@@ -2804,6 +5116,8 @@ fn main() -> ExitCode {
                         is_esl: flags.contains("esl"),
                         record_count: 0,
                         groups: vec![],
+                        records: vec![],
+                        keywords: vec![],
                     },
                 ));
             }
@@ -2828,6 +5142,13 @@ fn main() -> ExitCode {
         conflicts.as_ref(),
         census.as_deref(),
         &kw,
+        roadmap.as_ref(),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
         false,
         &mut trace,
     );
@@ -2841,7 +5162,7 @@ fn main() -> ExitCode {
         let mut ml2 = parse(&text);
         let (urules, ufiles) = load_rules_for(None, Some(Path::new(file)), true);
         if ufiles.is_empty() {
-            println!("\nno modslut_rules.txt found - nothing of yours to apply");
+            println!("\nno profile rules found - nothing of yours to apply");
             return ExitCode::SUCCESS;
         }
         let mut log2 = String::new();
@@ -2856,6 +5177,13 @@ fn main() -> ExitCode {
             None,
             None,
             &kw,
+            roadmap.as_ref(),
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
             true,
             &mut trace2,
         );
@@ -2891,7 +5219,9 @@ fn main() -> ExitCode {
         let out = opt("-o").unwrap_or_else(|| {
             let p = Path::new(file);
             let stem = p.file_stem().unwrap().to_string_lossy();
-            p.with_file_name(format!("{stem}.sorted.txt")).to_string_lossy().into_owned()
+            p.with_file_name(format!("{stem}.sorted.txt"))
+                .to_string_lossy()
+                .into_owned()
         });
         fs::write(&out, serialize(&ml)).unwrap_or_else(|e| {
             eprintln!("couldn't write {out}: {e}");
@@ -2906,6 +5236,15 @@ fn main() -> ExitCode {
 mod tests {
     use super::*;
 
+    #[test]
+    fn modlist_round_trip_keeps_mo2s_on_disk_separator_direction() {
+        // Users see Section B then B1, then Section A then A1. MO2 stores
+        // that visual order backwards, with each separator after its mods.
+        // Parsing and serializing without a sort must be byte-stable.
+        let source = "# This file was automatically generated by Mod Organizer.\n+B1\n-Section B_separator\n+A1\n+Section A_separator\n";
+        assert_eq!(serialize(&parse(source)), source);
+    }
+
     fn kw_fixture() -> Keywords {
         let mut kw = Keywords::default();
         Keywords::parse_into(
@@ -2917,6 +5256,328 @@ mod tests {
             &mut kw,
         );
         kw
+    }
+
+    #[test]
+    fn priority_graph_obeys_dependency_without_scrambling_unrelated_mods() {
+        let nodes = vec!["base".into(), "unrelated".into(), "patch".into()];
+        let graph = build_priority_graph(
+            nodes,
+            &[PriorityEdge {
+                after: "patch".into(),
+                before: "base".into(),
+                source: "test",
+            }],
+        );
+        assert_eq!(graph.order, vec!["base", "unrelated", "patch"]);
+        assert!(graph.rank["patch"] > graph.rank["base"]);
+        assert!(graph.cycles.is_empty());
+    }
+
+    #[test]
+    fn priority_graph_keeps_cycle_members_without_dropping_them() {
+        let nodes = vec!["a".into(), "b".into(), "c".into()];
+        let graph = build_priority_graph(
+            nodes,
+            &[
+                PriorityEdge {
+                    after: "a".into(),
+                    before: "b".into(),
+                    source: "test",
+                },
+                PriorityEdge {
+                    after: "b".into(),
+                    before: "a".into(),
+                    source: "test",
+                },
+            ],
+        );
+        assert_eq!(graph.order.len(), 3);
+        assert_eq!(graph.cycles, vec!["a", "b"]);
+        assert_eq!(graph.order.first(), Some(&"c".to_string()));
+    }
+
+    #[test]
+    fn armour_category_blocks_body_compatibility_keyword_move() {
+        let mut rules = Rules::empty();
+        rules
+            .keyword
+            .push(("3ba".into(), vec![], "Skin & Body".into()));
+        let mod_entry = ModEntry {
+            raw: "+Example Armour 3BA".into(),
+            name: "Example Armour 3BA".into(),
+            lower: "example armour 3ba".into(),
+            norm: norm("Example Armour 3BA"),
+        };
+        let sections = vec![Section {
+            sep_line: "-Skin & Body_separator".into(),
+            label: "Skin & Body".into(),
+            mods: vec![],
+        }];
+        let (destination, why) = suggest_explained(
+            &mod_entry,
+            &rules,
+            Some("Armour"),
+            &sections,
+            None,
+            None,
+            None,
+            None,
+        );
+        assert!(destination.is_none());
+        assert!(matches!(why, Why::CategoryGuard(keyword) if keyword == "3ba"));
+    }
+
+    #[test]
+    fn armor_record_evidence_uses_three_distinct_left_pane_concepts() {
+        assert_eq!(
+            armor_route_concept("Tera Armour Conversion for CBBE"),
+            "armor-converted"
+        );
+        assert_eq!(armor_route_concept("Steel Armor Retexture"), "armor-base");
+        assert_eq!(armor_route_concept("ELLE Viper 3BA"), "armor-new");
+    }
+
+    #[test]
+    fn patch_family_uses_a_long_shared_product_stem_when_titles_diverge() {
+        let parent = ModEntry {
+            raw: "+Alternate Perspective - Alternate Start".into(),
+            name: "Alternate Perspective - Alternate Start".into(),
+            lower: "alternate perspective - alternate start".into(),
+            norm: norm("Alternate Perspective - Alternate Start"),
+        };
+        let patch = ModEntry {
+            raw: "+Alternate Perspective - Assorted Fixes and Patches".into(),
+            name: "Alternate Perspective - Assorted Fixes and Patches".into(),
+            lower: "alternate perspective - assorted fixes and patches".into(),
+            norm: norm("Alternate Perspective - Assorted Fixes and Patches"),
+        };
+        assert!(family_parent_score(&patch, &parent).is_some());
+        assert!(family_parent_score(&parent, &patch).is_none());
+    }
+
+    #[test]
+    fn multi_parent_patch_title_anchors_each_named_base_not_a_broad_sibling() {
+        let make = |name: &str| ModEntry {
+            raw: format!("+{name}"),
+            name: name.into(),
+            lower: name.to_ascii_lowercase(),
+            norm: norm(name),
+        };
+        let patch = make("Realistic RS Children and Alternate Perspective Patch");
+        let rs_children = make("Realistic RS Children Overhaul");
+        let alternate_start = make("Alternate Perspective - Alternate Start");
+        let broad_sibling = make("Helgen and Alternate Perspective NPC replacer");
+        assert_eq!(
+            multi_parent_patch_title_anchors(
+                &patch,
+                &[
+                    patch.clone(),
+                    rs_children.clone(),
+                    alternate_start.clone(),
+                    broad_sibling
+                ],
+            ),
+            vec![alternate_start.name, rs_children.name]
+        );
+    }
+
+    #[test]
+    fn libloot_reverse_projection_requires_matching_rank_brackets() {
+        let anchors = vec![
+            (10, "Frameworks".to_string()),
+            (20, "Frameworks".to_string()),
+            (30, "Gameplay".to_string()),
+        ];
+        assert_eq!(
+            agreed_libloot_band(15, &anchors),
+            Some("Frameworks".to_string())
+        );
+        assert_eq!(agreed_libloot_band(25, &anchors), None);
+        assert_eq!(agreed_libloot_band(5, &anchors), None);
+    }
+
+    #[test]
+    fn pluginless_asset_addon_follows_a_long_product_stem() {
+        let parent = ModEntry {
+            raw: "+Septentrional Landscapes SE - 8K".into(),
+            name: "Septentrional Landscapes SE - 8K".into(),
+            lower: "septentrional landscapes se - 8k".into(),
+            norm: norm("Septentrional Landscapes SE - 8K"),
+        };
+        let child = ModEntry {
+            raw: "+Septentrional Parallax 2K".into(),
+            name: "Septentrional Parallax 2K".into(),
+            lower: "septentrional parallax 2k".into(),
+            norm: norm("Septentrional Parallax 2K"),
+        };
+        assert!(asset_addon_flavored(&child.lower));
+        assert!(family_parent_score(&child, &parent).is_some());
+        assert!(family_parent_score(&parent, &child).is_none());
+    }
+
+    #[test]
+    fn alias_identity_links_smim_fix_to_its_renamed_parent() {
+        let mut kw = Keywords::default();
+        Keywords::parse_into(DEFAULT_KEYWORDS, &mut kw);
+        let parent = ModEntry {
+            raw: "+Static Mesh Improvement Mod".into(),
+            name: "Static Mesh Improvement Mod".into(),
+            lower: "static mesh improvement mod".into(),
+            norm: norm("Static Mesh Improvement Mod"),
+        };
+        let child = ModEntry {
+            raw: "+SMIM Fix".into(),
+            name: "SMIM Fix".into(),
+            lower: "smim fix".into(),
+            norm: norm("SMIM Fix"),
+        };
+        assert!(family_parent_score_for_names(
+            &child,
+            &parent,
+            &kw.cnorm(&child.name),
+            &kw.cnorm(&parent.name),
+        )
+        .is_some());
+    }
+
+    #[test]
+    fn generic_essentials_label_is_never_a_patch_master() {
+        let patch = ModEntry {
+            raw: "+The Timelost Dwemer SE - ESSENTIALS PATCHER".into(),
+            name: "The Timelost Dwemer SE - ESSENTIALS PATCHER".into(),
+            lower: "the timelost dwemer se - essentials patcher".into(),
+            norm: norm("The Timelost Dwemer SE - ESSENTIALS PATCHER"),
+        };
+        let generic = ModEntry {
+            raw: "+Essentials".into(),
+            name: "Essentials".into(),
+            lower: "essentials".into(),
+            norm: norm("Essentials"),
+        };
+        assert!(family_parent_score(&patch, &generic).is_none());
+    }
+
+    #[test]
+    fn title_match_uses_a_unique_meaningful_separator_token() {
+        let sections = secs(&["Trees and Flora", "Rocks & Mountains", "End of List"]);
+        assert_eq!(
+            title_match_section("Yggdrasil - World Tree Redux", &sections, None)
+                .map(|(section, _)| section),
+            Some("Trees and Flora")
+        );
+        assert_eq!(
+            title_match_section("Riton Mountains (Dark Grey)", &sections, None)
+                .map(|(section, _)| section),
+            Some("Rocks & Mountains")
+        );
+    }
+
+    #[test]
+    fn title_match_holds_generic_or_ambiguous_titles() {
+        let sections = secs(&[
+            "Consistency Patches",
+            "Miscellaneous Compatibility Patches",
+            "New Followers and NPCs",
+            "Follower Management",
+        ]);
+        assert!(title_match_section("Some Random Patch", &sections, None).is_none());
+        assert!(title_match_section("Follower Thing", &sections, None).is_none());
+    }
+
+    #[test]
+    fn patch_title_needs_one_clear_section_anchor() {
+        let races = secs(&[
+            "Races",
+            "Consistency Patches",
+            "Follower Compatibility Patches",
+            "End of List",
+        ]);
+        assert_eq!(
+            unique_patch_title_section("Race Compatibility - At Your Own Pace Patch", &races, None)
+                .map(|(section, _)| section),
+            Some("Races")
+        );
+
+        let ambiguous = secs(&["Whiterun", "Lux (Lighting)", "End of List"]);
+        assert!(unique_patch_title_section("Whiterun Lighting Patch", &ambiguous, None).is_none());
+    }
+
+    #[test]
+    fn title_match_rejects_branding_and_format_words() {
+        let sections = secs(&[
+            "Unofficial Skyrim Modders Patch Emporium",
+            "General World Improvement",
+            "Optimized Texture Baseline",
+            "Player Homes",
+            "Weather Systems",
+            "New Monsters",
+        ]);
+        for title in [
+            "Skyrim Search SE",
+            "Yggdrasil World Redux",
+            "Any Texture Pack",
+            "Player-exclusive HDT-SMP Armors",
+            "A Modular System",
+            "Pigeons - Mihail Monsters and Animals",
+            "Paraphernalia - Magicka - Remove Finger Shadow from Spell Light",
+            "Object Categorization Framework",
+        ] {
+            assert!(
+                title_match_section(title, &sections, None).is_none(),
+                "{title} must not route on generic branding"
+            );
+        }
+    }
+
+    #[test]
+    fn roadmap_branches_keep_cities_narrow_and_new_worlds_out_of_them() {
+        let sections = secs(&[
+            "Whiterun",
+            "New Lands and Quests",
+            "Minor Town and City Overhauls",
+            "Expanded Cities, Towns, and Villages",
+        ]);
+        let tomato = ModEntry {
+            raw: "+Tomato's Whiterun - Complex Parallax".into(),
+            name: "Tomato's Whiterun - Complex Parallax".into(),
+            lower: "tomato's whiterun - complex parallax".into(),
+            norm: norm("Tomato's Whiterun - Complex Parallax"),
+        };
+        assert_eq!(
+            roadmap_branch(&tomato, None, &sections, None, None).map(|(s, _)| s),
+            Some("Whiterun")
+        );
+
+        let vvardenfell = ModEntry {
+            raw: "+Vvardenfell - The New South".into(),
+            name: "Vvardenfell - The New South".into(),
+            lower: "vvardenfell - the new south".into(),
+            norm: norm("Vvardenfell - The New South"),
+        };
+        let content = crate::content_index::ModContent {
+            plugins: 1,
+            facts: vec![crate::content_index::Fact {
+                concept: "worldspace".into(),
+                confidence: 86,
+            }],
+        };
+        assert_eq!(
+            roadmap_branch(&vvardenfell, None, &sections, Some(&content), None).map(|(s, _)| s),
+            Some("New Lands and Quests")
+        );
+
+        let patch = ModEntry {
+            raw: "+Whiterun Lighting Patch".into(),
+            name: "Whiterun Lighting Patch".into(),
+            lower: "whiterun lighting patch".into(),
+            norm: norm("Whiterun Lighting Patch"),
+        };
+        assert!(roadmap_branch(&patch, None, &sections, None, None).is_none());
+        assert_eq!(
+            roadmap_branch(&tomato, Some("Patches"), &sections, None, None).map(|(s, _)| s),
+            Some("Whiterun")
+        );
     }
 
     #[test]
@@ -2945,7 +5606,57 @@ mod tests {
     #[test]
     fn kw_family_siblings_share_order_identity() {
         let kw = kw_fixture();
-        assert_eq!(kw.canonical("PapyrusUtil VR"), kw.canonical("PapyrusUtil SE"));
+        assert_eq!(
+            kw.canonical("PapyrusUtil VR"),
+            kw.canonical("PapyrusUtil SE")
+        );
+    }
+
+    #[test]
+    fn resource_pack_orders_before_an_aliased_consumer() {
+        let mut kw = Keywords::default();
+        Keywords::parse_into("[alias]\nCities of the North = COTN\n", &mut kw);
+        let make_entry = |name: &str| ModEntry {
+            raw: format!("+{name}"),
+            name: name.to_string(),
+            lower: name.to_ascii_lowercase(),
+            norm: norm(name),
+        };
+        let resource = make_entry("COTN Resources");
+        let consumer = make_entry("Cities of the North - Dawnstar");
+        assert!(resource_parent_score(&resource, &consumer, &kw).is_some());
+        assert!(resource_parent_score(&consumer, &resource, &kw).is_none());
+    }
+
+    #[test]
+    fn generic_creation_club_words_do_not_create_resource_family() {
+        let kw = Keywords::default();
+        let make_entry = |name: &str| ModEntry {
+            raw: format!("+{name}"),
+            name: name.to_string(),
+            lower: name.to_ascii_lowercase(),
+            norm: norm(name),
+        };
+        let resource = make_entry("Creation Club Asset Patch");
+        let consumer = make_entry("Creation Club - Umbra");
+        assert!(resource_parent_score(&resource, &consumer, &kw).is_none());
+    }
+
+    #[test]
+    fn creation_club_collection_prefix_is_not_a_patch_family() {
+        let child = ModEntry {
+            raw: "+Creation Club Asset Patch".into(),
+            name: "Creation Club Asset Patch".into(),
+            lower: "creation club asset patch".into(),
+            norm: norm("Creation Club Asset Patch"),
+        };
+        let parent = ModEntry {
+            raw: "+Creation Club - Arms of Chaos".into(),
+            name: "Creation Club - Arms of Chaos".into(),
+            lower: "creation club arms of chaos".into(),
+            norm: norm("Creation Club - Arms of Chaos"),
+        };
+        assert!(family_parent_score(&child, &parent).is_none());
     }
 
     #[test]
@@ -2953,7 +5664,10 @@ mod tests {
         let kw = kw_fixture();
         assert!(kw.is_never("CBBE Body Slide", "3BA Amazing Body"));
         assert!(kw.is_never("3BA Amazing Body", "CBBE Body Slide"));
-        assert!(kw.is_never("ETHEREAL COSMOS - Special Edition", "ETHEREAL CLOUDS - Special Edition"));
+        assert!(kw.is_never(
+            "ETHEREAL COSMOS - Special Edition",
+            "ETHEREAL CLOUDS - Special Edition"
+        ));
         assert!(!kw.is_never("CBBE Body Slide", "CBBE Outfits"));
     }
 
@@ -2962,6 +5676,16 @@ mod tests {
         let kw = Keywords::default();
         assert_eq!(kw.canonical("Some Mod SE"), "some mod se"); // no strip entries loaded
         assert!(!kw.is_never("CBBE", "3BA"));
+    }
+
+    #[test]
+    fn keyword_rules_require_whole_words() {
+        let pandorable = keyword_words("Pandorable's NPCs");
+        assert!(!keyword_matches(&pandorable, "pandora"));
+        let engine = keyword_words("Pandora Behaviour Engine");
+        assert!(keyword_matches(&engine, "pandora"));
+        let sky_patcher = keyword_words("A SkyPatcher config");
+        assert!(keyword_matches(&sky_patcher, "skypatcher"));
     }
 
     fn secs(labels: &[&str]) -> Vec<Section> {
@@ -2976,9 +5700,58 @@ mod tests {
     }
 
     #[test]
+    fn managed_creation_club_shelf_is_pinned_at_visible_top() {
+        // Raw modlist order is inverse to MO2's left pane. Start with CC
+        // below General in the visible list and verify only the CC shelf is
+        // promoted, producing an explicit separator preview row.
+        let mut sections = secs(&["End", "Creation Club", "General"]);
+        sections[1].mods.push(ModEntry {
+            raw: "+ccBGSSSE001-Fish.esm".into(),
+            name: "ccBGSSSE001-Fish.esm".into(),
+            lower: "ccbgssse001-fish.esm".into(),
+            norm: norm("ccBGSSSE001-Fish.esm"),
+        });
+        let mut ml = Modlist {
+            header: "# test".into(),
+            parking: Vec::new(),
+            sections,
+            trailing: Vec::new(),
+        };
+        let mut changes = Vec::new();
+        let mut trace = String::new();
+        let mut log = String::new();
+        pin_managed_creation_club_shelf(&mut ml, None, &mut changes, &mut trace, &mut log);
+        let visible: Vec<&str> = ml.sections.iter().rev().map(|s| s.label.as_str()).collect();
+        assert_eq!(visible, vec!["Creation Club", "General", "End"]);
+        assert!(changes
+            .iter()
+            .any(|change| change.kind == ChangeKind::Separator));
+        assert!(trace.contains("managed Creation Club shelf"));
+    }
+
+    #[test]
+    fn generated_output_escapes_end_of_list_to_outputs() {
+        let sections = secs(&["End of List", "Outputs", "Trees and Flora"]);
+        let output = ModEntry {
+            raw: "+Output - DynDOLOD".into(),
+            name: "Output - DynDOLOD".into(),
+            lower: "output - dyndolod".into(),
+            norm: norm("Output - DynDOLOD"),
+        };
+        let rules = Rules::empty();
+        let (destination, why) =
+            suggest_explained(&output, &rules, None, &sections, None, None, None, None);
+        assert_eq!(destination, Some("Outputs"));
+        assert!(matches!(why, Why::OutputGuard));
+    }
+
+    #[test]
     fn fuzzy_exact_norm_wins() {
         let s = secs(&["Landscape and Environment", "Landscape"]);
-        assert_eq!(fuzzy_match_section("landscape", &s, true), Some("Landscape"));
+        assert_eq!(
+            fuzzy_match_section("landscape", &s, true),
+            Some("Landscape")
+        );
     }
 
     #[test]
@@ -3019,7 +5792,10 @@ mod tests {
     #[test]
     fn fuzzy_distinctive_token_beats_generic() {
         // "bug" is distinctive: the bug-fix section beats the weapons section
-        let s = secs(&["Weapons, Armour, Clothing, and Clutter Fixes", "Essential Bug Fixes"]);
+        let s = secs(&[
+            "Weapons, Armour, Clothing, and Clutter Fixes",
+            "Essential Bug Fixes",
+        ]);
         assert_eq!(
             fuzzy_match_section("Bug Fixes", &s, true),
             Some("Essential Bug Fixes")
@@ -3059,21 +5835,38 @@ mod tests {
         // regardless of list order
         let s = secs(&["Special Load After Lighting Mods", "Lux (Lighting)"]);
         assert_eq!(resolve_concept("Lighting", &s).unwrap().0, "Lux (Lighting)");
-        let s = secs(&["Male Body Additions", "Skin & Body", "OBody and Bodyslide Presets"]);
+        let s = secs(&[
+            "Male Body Additions",
+            "Skin & Body",
+            "OBody and Bodyslide Presets",
+        ]);
         assert_eq!(resolve_concept("Body", &s).unwrap().0, "Skin & Body");
-        let s = secs(&["Interface - Controller Bindings", "Interface - Menus", "Interface - VR Specific"]);
-        assert_eq!(resolve_concept("Interface", &s).unwrap().0, "Interface - Menus");
+        let s = secs(&[
+            "Interface - Controller Bindings",
+            "Interface - Menus",
+            "Interface - VR Specific",
+        ]);
+        assert_eq!(
+            resolve_concept("Interface", &s).unwrap().0,
+            "Interface - Menus"
+        );
     }
 
     #[test]
     fn concept_multiword_hits_word_sequence() {
         let s = secs(&["Interface - VR Specific", "VR Controller Bindings"]);
-        assert_eq!(resolve_concept("VR Specific", &s).unwrap().0, "Interface - VR Specific");
+        assert_eq!(
+            resolve_concept("VR Specific", &s).unwrap().0,
+            "Interface - VR Specific"
+        );
     }
 
     #[test]
     fn plural_sep_beats_long_compound() {
-        let s = secs(&["Extension Frameworks - Animation & Behavior Engine", "Animations"]);
+        let s = secs(&[
+            "Extension Frameworks - Animation & Behavior Engine",
+            "Animations",
+        ]);
         assert_eq!(resolve_concept("Animation", &s).unwrap().0, "Animations");
     }
 
@@ -3082,8 +5875,16 @@ mod tests {
         // a label that already says the concept (any shared word) is not
         // silent - renaming it would be noise
         assert!(shared_stem("Skin & Body", "Body, Face, and Hair", 3));
-        assert!(shared_stem("Expanded Cities, Towns, and Villages", "Cities, Towns, Villages, and Hamlets", 3));
-        assert!(shared_stem("Unofficial Skyrim Modders Patch Emporium", "Modders Resources", 3));
+        assert!(shared_stem(
+            "Expanded Cities, Towns, and Villages",
+            "Cities, Towns, Villages, and Hamlets",
+            3
+        ));
+        assert!(shared_stem(
+            "Unofficial Skyrim Modders Patch Emporium",
+            "Modders Resources",
+            3
+        ));
         assert!(!shared_stem("Ya Filthy Animal", "nsfw", 3));
         assert!(!shared_stem("Animals", "Creatures and Mounts", 3));
         // concept coverage: every content word must appear in the label
@@ -3126,15 +5927,28 @@ mod tests {
     fn resolve_targets_drops_dead_rules_keeps_promote() {
         let s = secs(&["Gameplay"]);
         let mut r = Rules::empty();
-        r.exact.push(("Some Mod".into(), "Nonexistent Section".into()));
+        r.exact
+            .push(("Some Mod".into(), "Nonexistent Section".into()));
         r.exact.push(("Other Mod".into(), "gameplay".into())); // norm match
         r.promote.push(("A VR".into(), "A".into()));
         let mut trace = String::new();
-        let out = resolve_targets(&r, &s, &mut trace);
+        let out = resolve_targets(&r, &s, None, &mut trace);
         assert_eq!(out.exact.len(), 1);
         assert_eq!(out.exact[0].0, "Other Mod");
         assert_eq!(out.exact[0].1, "Gameplay");
         assert_eq!(out.promote.len(), 1); // promote rhs is a mod name - untouched
         assert!(trace.contains("no matching separator"));
+    }
+
+    #[test]
+    fn terminal_names_are_not_built_into_the_sorter() {
+        // A roadmap owns terminal semantics. A random separator with the
+        // familiar name must remain ordinary when that profile has not made
+        // it terminal, while an explicit user dump remains a waiting room.
+        assert!(!is_waiting_room("End of List", &Rules::empty(), None));
+        let mut rules = Rules::empty();
+        rules.dump.push("Scratch Shelf".into());
+        assert!(is_waiting_room("Scratch Shelf", &rules, None));
+        assert!(!is_waiting_room("Gameplay", &Rules::empty(), None));
     }
 }

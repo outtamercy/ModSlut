@@ -8,24 +8,47 @@
 // offsets, ARMO bodt slots, KWDA material formids) for true functional
 // categorization.
 
+use flate2::read::ZlibDecoder;
 use std::fs;
 use std::io::{Read, Seek, SeekFrom};
 use std::path::Path;
 
 #[derive(Clone, Debug)]
 pub struct PluginInfo {
-    pub plugin: String,             // file name, e.g. "USSEP.esp"
-    pub masters: Vec<String>,       // MAST entries, in order
-    pub is_esm: bool,               // header flag 0x1
-    pub is_esl: bool,               // header flag 0x200
-    pub record_count: u32,          // HEDR numRecords
-    pub groups: Vec<(String, u32)>, // top-level GRUP label -> count
+    pub plugin: String,              // file name, e.g. "USSEP.esp"
+    pub masters: Vec<String>,        // MAST entries, in order
+    pub is_esm: bool,                // header flag 0x1
+    pub is_esl: bool,                // header flag 0x200
+    pub record_count: u32,           // HEDR numRecords
+    pub groups: Vec<(String, u32)>,  // top-level GRUP label -> count
+    pub records: Vec<(String, u32)>, // actual record signature -> count
+    // Resolved KWDA form IDs from semantic record types. Example:
+    // "skyrim.esm|0006bbd2" (ArmorHeavy). Kept as counts so a mod with one
+    // accidental override cannot outweigh a real equipment collection.
+    pub keywords: Vec<(String, u32)>,
+}
+
+// The normal ModSlut sort does not need to interpret plugin contents.  It
+// only needs to know which MO2 folder owns a plugin filename so libloot's
+// solved order can be projected back into the left pane.  Keep that cheap
+// inventory separate from the optional header/record census.
+#[derive(Clone, Debug)]
+pub struct PluginOwner {
+    pub mod_name: String,
+    pub section: String,
+    pub plugin: String,
+    pub path: std::path::PathBuf,
 }
 
 impl PluginInfo {
-    // one-line census for the debug trace: "WEAP:5 NPC_:12 CELL:3"
+    // one-line record census for the debug trace: "WEAP:5 NPC_:12 CELL:3"
     pub fn census_line(&self) -> String {
-        self.groups
+        let source = if self.records.is_empty() {
+            &self.groups
+        } else {
+            &self.records
+        };
+        source
             .iter()
             .map(|(g, n)| format!("{g}:{n}"))
             .collect::<Vec<_>>()
@@ -37,6 +60,178 @@ const REC_HEADER: usize = 24;
 
 fn u32le(b: &[u8], off: usize) -> u32 {
     u32::from_le_bytes([b[off], b[off + 1], b[off + 2], b[off + 3]])
+}
+
+fn bump(counts: &mut Vec<(String, u32)>, signature: &[u8]) {
+    let signature = String::from_utf8_lossy(signature).to_string();
+    match counts.iter_mut().find(|(sig, _)| *sig == signature) {
+        Some((_, count)) => *count += 1,
+        None => counts.push((signature, 1)),
+    }
+}
+
+fn semantic_keyword_record(signature: &[u8]) -> bool {
+    matches!(
+        signature,
+        b"ARMO" | b"WEAP" | b"AMMO" | b"NPC_" | b"RACE" | b"SPEL" | b"MGEF"
+    )
+}
+
+fn keyword_key(form_id: u32, masters: &[String]) -> String {
+    let master_index = (form_id >> 24) as usize;
+    let source = masters
+        .get(master_index)
+        .map(String::as_str)
+        .unwrap_or("self");
+    format!("{source}|{:08x}", form_id & 0x00ff_ffff)
+}
+
+fn record_keyword_ids(
+    data: &[u8],
+    flags: u32,
+    masters: &[String],
+    keywords: &mut Vec<(String, u32)>,
+) {
+    // Compressed records start with their uncompressed byte count, followed
+    // by a zlib payload. If a malformed record won't inflate, skip that one
+    // record - categorizing a mod is never worth crashing the sort preview.
+    let inflated;
+    let data = if flags & 0x0004_0000 != 0 {
+        if data.len() < 4 {
+            return;
+        }
+        let mut decoder = ZlibDecoder::new(&data[4..]);
+        let mut out = Vec::with_capacity(u32le(data, 0) as usize);
+        if decoder.read_to_end(&mut out).is_err() {
+            return;
+        }
+        inflated = out;
+        &inflated[..]
+    } else {
+        data
+    };
+    let mut off = 0usize;
+    while off + 6 <= data.len() {
+        let kind = &data[off..off + 4];
+        let size = u16::from_le_bytes([data[off + 4], data[off + 5]]) as usize;
+        let body = off + 6;
+        if body + size > data.len() {
+            return;
+        }
+        if kind == b"KWDA" {
+            for chunk in data[body..body + size].chunks_exact(4) {
+                let id = u32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]);
+                bump(keywords, keyword_key(id, masters).as_bytes());
+            }
+        }
+        off = body + size;
+    }
+}
+
+// Walk a GRUP's nested headers, seeking over record payloads. We count the
+// actual record signatures, not merely the presence of a top-level GRUP.
+// Malformed input stops its own branch; a weird plugin never gets to nuke a
+// sort preview.
+fn scan_group_records(
+    file: &mut fs::File,
+    end: u64,
+    depth: u8,
+    records: &mut Vec<(String, u32)>,
+    masters: &[String],
+    keywords: &mut Vec<(String, u32)>,
+) {
+    if depth > 64 {
+        return;
+    }
+    loop {
+        let Ok(pos) = file.stream_position() else {
+            return;
+        };
+        if pos.saturating_add(REC_HEADER as u64) > end {
+            return;
+        }
+        let mut header = [0u8; REC_HEADER];
+        if file.read_exact(&mut header).is_err() {
+            return;
+        }
+        let size = u32le(&header, 4) as u64;
+        if &header[0..4] == b"GRUP" {
+            if size < REC_HEADER as u64 || pos.saturating_add(size) > end {
+                return;
+            }
+            let child_end = pos + size;
+            scan_group_records(file, child_end, depth + 1, records, masters, keywords);
+            if file.seek(SeekFrom::Start(child_end)).is_err() {
+                return;
+            }
+        } else {
+            let record_end = pos.saturating_add(REC_HEADER as u64).saturating_add(size);
+            if record_end > end {
+                return;
+            }
+            bump(records, &header[0..4]);
+            if semantic_keyword_record(&header[0..4]) {
+                let mut data = vec![0u8; size as usize];
+                if file.read_exact(&mut data).is_err() {
+                    return;
+                }
+                record_keyword_ids(&data, u32le(&header, 8), masters, keywords);
+            } else if file.seek(SeekFrom::Start(record_end)).is_err() {
+                return;
+            }
+        }
+    }
+}
+
+fn scan_bytes_records(
+    bytes: &[u8],
+    pos: &mut usize,
+    end: usize,
+    depth: u8,
+    records: &mut Vec<(String, u32)>,
+    masters: &[String],
+    keywords: &mut Vec<(String, u32)>,
+) {
+    if depth > 64 {
+        return;
+    }
+    while pos.saturating_add(REC_HEADER) <= end && pos.saturating_add(REC_HEADER) <= bytes.len() {
+        let start = *pos;
+        let header = &bytes[start..start + REC_HEADER];
+        let size = u32le(header, 4) as usize;
+        if &header[0..4] == b"GRUP" {
+            if size < REC_HEADER || start.saturating_add(size) > end {
+                return;
+            }
+            let mut child = start + REC_HEADER;
+            let child_end = start + size;
+            scan_bytes_records(
+                bytes,
+                &mut child,
+                child_end,
+                depth + 1,
+                records,
+                masters,
+                keywords,
+            );
+            *pos = child_end;
+        } else {
+            let record_end = start.saturating_add(REC_HEADER).saturating_add(size);
+            if record_end > end {
+                return;
+            }
+            bump(records, &header[0..4]);
+            if semantic_keyword_record(&header[0..4]) {
+                record_keyword_ids(
+                    &bytes[start + REC_HEADER..record_end],
+                    u32le(header, 8),
+                    masters,
+                    keywords,
+                );
+            }
+            *pos = record_end;
+        }
+    }
 }
 
 // parse a .esp/.esm/.esl. returns None on anything malformed - a weird file
@@ -85,9 +280,13 @@ pub fn parse_plugin(path: &Path) -> Option<PluginInfo> {
         off = body + ssize;
     }
 
-    // top-level GRUPs: read each 24-byte header, then seek past its payload
+    // top-level GRUPs: preserve the lightweight old summary, then recurse
+    // through their headers to count actual records by signature.
     let mut groups: Vec<(String, u32)> = Vec::new();
+    let mut records: Vec<(String, u32)> = Vec::new();
+    let mut keywords: Vec<(String, u32)> = Vec::new();
     loop {
+        let group_start = f.stream_position().ok()?;
         let mut gh = [0u8; REC_HEADER];
         if f.read_exact(&mut gh).is_err() {
             break; // clean EOF or truncation - either way, census over
@@ -102,8 +301,16 @@ pub fn parse_plugin(path: &Path) -> Option<PluginInfo> {
                 Some((_, n)) => *n += 1,
                 None => groups.push((label, 1)),
             }
+            let group_end = group_start.saturating_add(size);
+            scan_group_records(&mut f, group_end, 1, &mut records, &masters, &mut keywords);
+            if f.seek(SeekFrom::Start(group_end)).is_err() {
+                break;
+            }
+            continue;
         }
-        if f.seek(SeekFrom::Current(size as i64 - REC_HEADER as i64)).is_err() {
+        if f.seek(SeekFrom::Current(size as i64 - REC_HEADER as i64))
+            .is_err()
+        {
             break;
         }
     }
@@ -115,6 +322,8 @@ pub fn parse_plugin(path: &Path) -> Option<PluginInfo> {
         is_esl: flags & 0x200 != 0,
         record_count,
         groups,
+        records,
+        keywords,
     })
 }
 
@@ -155,6 +364,8 @@ pub fn parse_plugin_bytes(bytes: &[u8], file_name: &str) -> Option<PluginInfo> {
     // [4 "GRUP"][u32 total size][4 label][i32 group type]... - for the
     // census we only need the label and the skip distance.
     let mut groups: Vec<(String, u32)> = Vec::new();
+    let mut records: Vec<(String, u32)> = Vec::new();
+    let mut keywords: Vec<(String, u32)> = Vec::new();
     let mut pos = data_end;
     while pos + REC_HEADER <= bytes.len() {
         let sig = &bytes[pos..pos + 4];
@@ -168,6 +379,17 @@ pub fn parse_plugin_bytes(bytes: &[u8], file_name: &str) -> Option<PluginInfo> {
                 Some((_, n)) => *n += 1,
                 None => groups.push((label, 1)),
             }
+            let mut child = pos + REC_HEADER;
+            let end = pos + size;
+            scan_bytes_records(
+                bytes,
+                &mut child,
+                end,
+                1,
+                &mut records,
+                &masters,
+                &mut keywords,
+            );
         }
         pos += size;
     }
@@ -179,6 +401,8 @@ pub fn parse_plugin_bytes(bytes: &[u8], file_name: &str) -> Option<PluginInfo> {
         is_esl: flags & 0x200 != 0,
         record_count,
         groups,
+        records,
+        keywords,
     })
 }
 
@@ -201,6 +425,28 @@ pub fn plugins_in_mod(mod_dir: &Path) -> Vec<std::path::PathBuf> {
     out
 }
 
+pub fn plugin_owners(mods: &[(String, String)], mods_dir: &Path) -> Vec<PluginOwner> {
+    let mut owners = Vec::new();
+    for (mod_name, section) in mods {
+        let root = mods_dir.join(mod_name);
+        if !root.is_dir() {
+            continue;
+        }
+        for path in plugins_in_mod(&root) {
+            let Some(plugin) = path.file_name().and_then(|name| name.to_str()) else {
+                continue;
+            };
+            owners.push(PluginOwner {
+                mod_name: mod_name.clone(),
+                section: section.clone(),
+                plugin: plugin.to_ascii_lowercase(),
+                path,
+            });
+        }
+    }
+    owners
+}
+
 // a master-order violation: plugin loads before something it requires
 pub struct MasterViolation {
     pub mod_name: String,
@@ -219,7 +465,11 @@ pub struct MasterViolation {
 // so a sort never makes the cache stale.
 
 pub fn census_cache_path(modlist: &Path) -> std::path::PathBuf {
-    modlist.with_file_name("plugin_census.cache")
+    crate::migrate_profile_file(
+        modlist,
+        "plugin_census.cache",
+        modlist.with_file_name("plugin_census.cache"),
+    )
 }
 
 // fnv-1a over the sorted enabled mod names (std's DefaultHasher isn't
@@ -240,9 +490,13 @@ pub fn census_fingerprint(enabled: &[(String, String)]) -> u64 {
 }
 
 pub fn save_census(path: &Path, fp: u64, census: &[(String, String, PluginInfo)]) {
-    let mut out = format!("#modslut-census-v1 {fp:016x}\n");
+    let mut out = format!("#modslut-census-v3 {fp:016x}\n");
     for (mod_name, _sec, info) in census {
-        let flags = format!("{}{}", if info.is_esm { "e" } else { "" }, if info.is_esl { "l" } else { "" });
+        let flags = format!(
+            "{}{}",
+            if info.is_esm { "e" } else { "" },
+            if info.is_esl { "l" } else { "" }
+        );
         let masters = info.masters.join(",");
         let groups = info
             .groups
@@ -250,12 +504,25 @@ pub fn save_census(path: &Path, fp: u64, census: &[(String, String, PluginInfo)]
             .map(|(g, n)| format!("{g}:{n}"))
             .collect::<Vec<_>>()
             .join(",");
+        let records = info
+            .records
+            .iter()
+            .map(|(g, n)| format!("{g}:{n}"))
+            .collect::<Vec<_>>()
+            .join(",");
+        let keywords = info
+            .keywords
+            .iter()
+            .map(|(key, n)| format!("{key}:{n}"))
+            .collect::<Vec<_>>()
+            .join(",");
         // tabs are safe: mo2 mod names can't contain them
         out.push_str(&format!(
-            "{mod_name}\t{}\t{flags}\t{}\t{masters}\t{groups}\n",
+            "{mod_name}\t{}\t{flags}\t{}\t{masters}\t{groups}\t{records}\t{keywords}\n",
             info.plugin, info.record_count
         ));
     }
+    crate::ensure_profile_data_parent(path).ok();
     std::fs::write(path, out).ok();
 }
 
@@ -265,14 +532,14 @@ pub fn load_census(path: &Path, fp: u64) -> Option<Vec<(String, PluginInfo)>> {
     let text = std::fs::read_to_string(path).ok()?;
     let mut lines = text.lines();
     let head = lines.next()?;
-    let stored = head.strip_prefix("#modslut-census-v1 ")?;
+    let stored = head.strip_prefix("#modslut-census-v3 ")?;
     if stored != format!("{fp:016x}") {
         return None;
     }
     let mut out = Vec::new();
     for l in lines {
         let f: Vec<&str> = l.split('\t').collect();
-        if f.len() != 6 {
+        if f.len() != 8 {
             return None; // corrupt line - rescan everything
         }
         let masters = if f[4].is_empty() {
@@ -283,9 +550,31 @@ pub fn load_census(path: &Path, fp: u64) -> Option<Vec<(String, PluginInfo)>> {
         let groups = if f[5].is_empty() {
             vec![]
         } else {
-            f[5]
-                .split(',')
-                .filter_map(|p| p.rsplit_once(':').map(|(g, n)| (g.to_string(), n.parse().unwrap_or(0))))
+            f[5].split(',')
+                .filter_map(|p| {
+                    p.rsplit_once(':')
+                        .map(|(g, n)| (g.to_string(), n.parse().unwrap_or(0)))
+                })
+                .collect()
+        };
+        let records = if f[6].is_empty() {
+            vec![]
+        } else {
+            f[6].split(',')
+                .filter_map(|p| {
+                    p.rsplit_once(':')
+                        .map(|(g, n)| (g.to_string(), n.parse().unwrap_or(0)))
+                })
+                .collect()
+        };
+        let keywords = if f[7].is_empty() {
+            vec![]
+        } else {
+            f[7].split(',')
+                .filter_map(|p| {
+                    p.rsplit_once(':')
+                        .map(|(key, n)| (key.to_string(), n.parse().unwrap_or(0)))
+                })
                 .collect()
         };
         out.push((
@@ -297,6 +586,8 @@ pub fn load_census(path: &Path, fp: u64) -> Option<Vec<(String, PluginInfo)>> {
                 is_esl: f[2].contains('l'),
                 record_count: f[3].parse().unwrap_or(0),
                 groups,
+                records,
+                keywords,
             },
         ));
     }
@@ -312,7 +603,9 @@ pub fn violations_from_census(
     let pos_of = |name: &str| load_order.iter().position(|p| p == name);
     let mut violations = Vec::new();
     for (mod_name, section, info) in census {
-        let Some(my_pos) = pos_of(&info.plugin) else { continue };
+        let Some(my_pos) = pos_of(&info.plugin) else {
+            continue;
+        };
         for master in &info.masters {
             // masters we don't even have enabled are mo2's red-text
             // problem, not ours - only ordering is checked here
@@ -347,7 +640,9 @@ pub fn master_violations(
             continue;
         }
         for p in plugins_in_mod(&dir) {
-            let Some(info) = parse_plugin(&p) else { continue };
+            let Some(info) = parse_plugin(&p) else {
+                continue;
+            };
             census.push((mod_name.clone(), section.clone(), info));
         }
     }
@@ -400,6 +695,56 @@ mod tests {
         assert_eq!(
             info.groups,
             vec![("WEAP".to_string(), 2), ("NPC_".to_string(), 1)]
+        );
+        assert!(info.records.is_empty());
+    }
+
+    #[test]
+    fn parses_the_light_flag_on_an_esl_plugin() {
+        let mut bytes = fake_plugin();
+        bytes[8..12].copy_from_slice(&(0x1u32 | 0x200).to_le_bytes());
+        let info = parse_plugin_bytes(&bytes, "test.esl").unwrap();
+        assert!(info.is_esm);
+        assert!(info.is_esl);
+    }
+
+    #[test]
+    fn counts_actual_record_headers_inside_groups() {
+        let mut bytes = Vec::new();
+        bytes.extend_from_slice(b"WEAP");
+        bytes.extend_from_slice(&0u32.to_le_bytes());
+        bytes.extend_from_slice(&[0u8; 16]);
+        let mut pos = 0;
+        let mut records = Vec::new();
+        let mut keywords = Vec::new();
+        scan_bytes_records(
+            &bytes,
+            &mut pos,
+            bytes.len(),
+            0,
+            &mut records,
+            &[],
+            &mut keywords,
+        );
+        assert_eq!(records, vec![("WEAP".to_string(), 1)]);
+    }
+
+    #[test]
+    fn resolves_kwda_ids_against_plugin_masters() {
+        let mut data = Vec::new();
+        data.extend_from_slice(b"KWDA");
+        data.extend_from_slice(&8u16.to_le_bytes());
+        // Skyrim.esm master index 0: ArmorHeavy and ArmorCuirass.
+        data.extend_from_slice(&0x0006_BBD2u32.to_le_bytes());
+        data.extend_from_slice(&0x0006_C0ECu32.to_le_bytes());
+        let mut keywords = Vec::new();
+        record_keyword_ids(&data, 0, &["skyrim.esm".into()], &mut keywords);
+        assert_eq!(
+            keywords,
+            vec![
+                ("skyrim.esm|0006bbd2".into(), 1),
+                ("skyrim.esm|0006c0ec".into(), 1),
+            ]
         );
     }
 }
