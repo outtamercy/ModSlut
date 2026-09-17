@@ -1,0 +1,12 @@
+[theme]
+name = "Paper White Mono"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+background_image = "background.svg"
+panel_bg = "#20242BDD"
+toolbar_bg = "#141820"
+accent = "#000000"
+card_bg = "#20242BDD"
+selection_bg = "#000000"

@@ -1,0 +1,11 @@
+[theme]
+name = "Parchment v1.1 by Bob"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+panel_bg = "#20242BDD"
+toolbar_bg = "#141820"
+accent = "#0CA6FF"
+card_bg = "#20242BDD"
+selection_bg = "#0CA6FF"

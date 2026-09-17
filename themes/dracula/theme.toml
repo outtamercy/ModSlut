@@ -1,0 +1,11 @@
+[theme]
+name = "dracula"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+panel_bg = "#3c3f41"
+toolbar_bg = "#3c3f41"
+accent = "#4b6eaf"
+card_bg = "#2222bb"
+selection_bg = "#22bb22"

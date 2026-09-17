@@ -1,0 +1,11 @@
+[theme]
+name = "Night Eyes"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+panel_bg = "#20242BDD"
+toolbar_bg = "#141820"
+accent = "#001133"
+card_bg = "#20242BDD"
+selection_bg = "#001133"

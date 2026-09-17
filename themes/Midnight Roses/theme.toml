@@ -1,0 +1,12 @@
+[theme]
+name = "Midnight Roses"
+author = "ModSlut"
+version = "1.0"
+
+[colors]
+background_image = "midnight-roses.png"
+panel_bg = "#2C1C3ACD"
+toolbar_bg = "#180D28"
+accent = "#D672D8"
+card_bg = "#2A1638E6"
+selection_bg = "#4D2762"

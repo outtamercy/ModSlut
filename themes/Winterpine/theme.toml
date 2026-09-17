@@ -1,0 +1,12 @@
+[theme]
+name = "Winterpine"
+author = "ModSlut"
+version = "1.0"
+
+[colors]
+background_image = "winterpine.png"
+panel_bg = "#1C2D36CD"
+toolbar_bg = "#0E1B22"
+accent = "#66BDE8"
+card_bg = "#172A34E8"
+selection_bg = "#2B4B5A"

@@ -1,0 +1,12 @@
+[theme]
+name = "Skybound Nebula"
+author = "ModSlut"
+version = "1.0"
+
+[colors]
+background_image = "skybound-nebula.png"
+panel_bg = "#18263ACD"
+toolbar_bg = "#0D1625"
+accent = "#4A90E2"
+card_bg = "#14253AE6"
+selection_bg = "#1E3D5B"

@@ -1,0 +1,12 @@
+[theme]
+name = "vs15 Dark Yellow"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+background_image = "background.png"
+panel_bg = "#2d2d30"
+toolbar_bg = "#2d2d30"
+accent = "#3f3f46"
+card_bg = "#1e1e1e"
+selection_bg = "#9a9a00"

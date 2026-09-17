@@ -1,0 +1,12 @@
+[theme]
+name = "Ember Coast"
+author = "ModSlut"
+version = "1.0"
+
+[colors]
+background_image = "ember-coast.png"
+panel_bg = "#312525CD"
+toolbar_bg = "#1C171C"
+accent = "#DC7C42"
+card_bg = "#322424E8"
+selection_bg = "#5B3B32"

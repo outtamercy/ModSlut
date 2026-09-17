@@ -1,0 +1,12 @@
+[theme]
+name = "Transparent Style Morrowind"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+background_image = "background.png"
+panel_bg = "#000000"
+toolbar_bg = "#000000"
+accent = "#4A90E2"
+card_bg = "#504d3d"
+selection_bg = "#4A90E2"

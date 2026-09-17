@@ -1,0 +1,11 @@
+[theme]
+name = "dark"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+panel_bg = "#2F3031"
+toolbar_bg = "#2F3031"
+accent = "#D9E6EA"
+card_bg = "#292A2B"
+selection_bg = "#484F53"

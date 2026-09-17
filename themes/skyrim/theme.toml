@@ -1,0 +1,12 @@
+[theme]
+name = "skyrim"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+background_image = "background.png"
+panel_bg = "#000000"
+toolbar_bg = "#000000"
+accent = "#000000"
+card_bg = "#5F5F5E"
+selection_bg = "#141414"
