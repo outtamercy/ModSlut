@@ -1,0 +1,12 @@
+[theme]
+name = "Black Hand   Sithis"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+background_image = "background.png"
+panel_bg = "#0c0814"
+toolbar_bg = "#0c0814"
+accent = "#8f45ff"
+card_bg = "#0c0814"
+selection_bg = "#8f45ff"

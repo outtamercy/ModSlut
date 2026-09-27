@@ -1,0 +1,12 @@
+[theme]
+name = "Black Hand"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+background_image = "background.png"
+panel_bg = "#050406"
+toolbar_bg = "#050406"
+accent = "#2b080e"
+card_bg = "#050406"
+selection_bg = "#2b080e"

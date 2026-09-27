@@ -1,0 +1,12 @@
+[theme]
+name = "Black Hand   Night Mother"
+author = "Imported from MO2 stylesheet"
+version = "1.0"
+
+[colors]
+background_image = "background.png"
+panel_bg = "#120507"
+toolbar_bg = "#120507"
+accent = "#d61c38"
+card_bg = "#120507"
+selection_bg = "#d61c38"
